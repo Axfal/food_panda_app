@@ -1,5 +1,4 @@
-import 'package:bloc_clean_coding/data/response/status.dart';
-
+import 'package:excellent_trade_app/data/response/status.dart';
 
 class ApiResponse<T> {
   final Status status;
@@ -10,9 +9,11 @@ class ApiResponse<T> {
 
   const ApiResponse.loading() : this._(status: Status.loading);
 
-  const ApiResponse.completed(T data) : this._(status: Status.completed, data: data);
+  const ApiResponse.completed(T data)
+    : this._(status: Status.completed, data: data);
 
-  const ApiResponse.error(String message) : this._(status: Status.error, message: message);
+  const ApiResponse.error(String message)
+    : this._(status: Status.error, message: message);
 
   @override
   String toString() {

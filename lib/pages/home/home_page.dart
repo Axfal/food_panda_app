@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../Utils/constants/app_colors.dart';
-
 import '../../globalWidgets/PrimeryWidgets/customeBottonNavBar.dart';
 import '../Campaign/Campain_page.dart';
 import 'widgets/Explore/explore_Widget.dart';
