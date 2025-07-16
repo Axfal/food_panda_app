@@ -2,7 +2,7 @@ import 'dart:convert'; // Importing dart:convert for JSON encoding and decoding
 
 import 'package:flutter/material.dart'; // Importing Flutter material library
 
-import '../../model/user/user_model.dart'; // Importing the user model for user data
+import '../../model/user/login_model.dart'; // Importing the user model for user data
 import '../storage/local_storage.dart'; // Importing local storage for storing user data
 
 /// A singleton class for managing user session data.

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../Utils/constants/app_colors.dart';
 import '../../l10n/app_localizations.dart';
 import '../../service/splash/splash_service.dart';
 
@@ -24,7 +25,7 @@ class _SplashViewState extends State<SplashView>
 
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(microseconds: 1000),
     );
 
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
@@ -48,18 +49,20 @@ class _SplashViewState extends State<SplashView>
     final splashText = AppLocalizations.of(context)!.splashScreen;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFF2B85),
+      backgroundColor: AppColors.primary,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ScaleTransition(
               scale: _scaleAnimation,
-              child: Image.asset(
-                'assets/logo/panda_logo.webp',
-                height: MediaQuery.of(context).size.height * 0.25,
+              child: const Icon(
+                Icons.broken_image,
+                size: 80, // or adjust as needed
+                color: Colors.grey,
               ),
             ),
+
             const SizedBox(height: 24),
             Text(
               splashText,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../color/color.dart';
+
+import '../../Utils/constants/app_colors.dart';
 import 'loading_widget.dart';
 
 //custom round button component, we will used this widget show to show button
@@ -25,7 +26,7 @@ class RoundButton extends StatelessWidget {
                 ? const LoadingWidget()
                 : Text(
               title,
-              style: const TextStyle(color: AppColors.whiteColor),
+              style: TextStyle(color: AppColors.white),
             )));
   }
 }

@@ -47,7 +47,6 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   children: [
                     h_CustomeAppBar(),
-
                     /// Search Bar
                     Container(
                       height: 56.h,

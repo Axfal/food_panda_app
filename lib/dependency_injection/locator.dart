@@ -1,6 +1,3 @@
-
-
-
 import 'dependency_injection.dart';
 
 // GetIt is a package used for service locator or to manage dependency injection
