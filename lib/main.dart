@@ -1,4 +1,5 @@
 // import 'package:excellent_trade_app/pages/home/home_page.dart';
+import 'package:excellent_trade_app/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,12 +20,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme()),
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
-        home: RestaurantDeatailPage(
-          imgpath: 'assets/images/res_logos/burgerLab.png',
-          title: 'Burger Lab' + '-' + 'Johar Town',
-          rating: 4.5,
-          reviewsCount: 4000,
-        ),
+        home: HomePage(),
         //homepage(),
       ),
     );

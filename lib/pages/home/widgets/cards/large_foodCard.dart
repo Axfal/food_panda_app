@@ -103,7 +103,7 @@ class LargeFoodCard extends StatelessWidget {
                       Icons.star,
                       color: Colors.orange,
                       size: 12,
-                      fontWeight: AppWeights.bold,
+                      // fontWeight: AppWeights.bold,
                     ),
                     SizedBox(width: 4),
                     Text(
