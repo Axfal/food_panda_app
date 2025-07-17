@@ -58,7 +58,7 @@ class _SplashViewState extends State<SplashView>
               scale: _scaleAnimation,
               child: const Icon(
                 Icons.broken_image,
-                size: 80, // or adjust as needed
+                size: 80,
                 color: Colors.grey,
               ),
             ),

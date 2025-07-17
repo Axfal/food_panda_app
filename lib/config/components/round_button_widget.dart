@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import '../../Utils/constants/app_colors.dart';
 import 'loading_widget.dart';
 
-//custom round button component, we will used this widget show to show button
-// this widget is generic, we can change it and this change will appear across the app
 class RoundButton extends StatelessWidget {
   final String title;
   final bool loading;
@@ -20,13 +18,27 @@ class RoundButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-        onPressed: onPress,
-        child: Center(
-            child: loading
-                ? const LoadingWidget()
-                : Text(
-              title,
-              style: TextStyle(color: AppColors.white),
-            )));
+      onPressed: loading ? null : onPress,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.primary, // Foodpanda primary color
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30), // pill shape
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        elevation: 3,
+      ),
+      child: Center(
+        child: loading
+            ? const LoadingWidget()
+            : Text(
+          title,
+          style: const TextStyle(
+            color: AppColors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+      ),
+    );
   }
 }

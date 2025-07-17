@@ -1,3 +1,4 @@
+
 import 'package:excellent_trade_app/pages/pages_export.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +15,7 @@ class Routes {
         );
       case RoutesName.login:
         return MaterialPageRoute(
-          builder: (BuildContext context) => const EmailPage(),
+          builder: (BuildContext context) => const LoginScreen(),
         );
 
       default:
