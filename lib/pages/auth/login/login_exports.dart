@@ -10,5 +10,5 @@ export 'package:excellent_trade_app/data/response/status.dart';
 export 'package:excellent_trade_app/utils/extensions/flush_bar_extension.dart';
 export 'package:excellent_trade_app/pages/auth/login/widgets/email_input.dart';
 export 'package:excellent_trade_app/pages/auth/login/widgets/password_input_widget.dart';
-export 'package:excellent_trade_app/pages/auth/widgets/custom_text_field.dart';
+export 'package:excellent_trade_app/config/components/custom_text_field.dart';
 export 'package:excellent_trade_app/pages/auth/login/widgets/submit_button_widget.dart';
