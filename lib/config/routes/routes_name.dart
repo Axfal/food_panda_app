@@ -7,6 +7,10 @@ class RoutesName {
 
   static const String signup = 'signup_screen' ;
 
+  static const String forgot = 'forgot_screen' ;
+
+  static const String verifyOtp = 'verify_otp';
+
   static const String home = 'home_screen' ;
 
 

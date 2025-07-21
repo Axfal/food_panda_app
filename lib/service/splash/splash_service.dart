@@ -14,7 +14,7 @@ class SplashServices {
               const Duration(seconds: 2),
               () => Navigator.pushNamedAndRemoveUntil(
                 context,
-                RoutesName.home,
+                RoutesName.login,
                 (route) => false,
               ),
             );

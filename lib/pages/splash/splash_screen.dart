@@ -56,23 +56,20 @@ class _SplashViewState extends State<SplashView>
           children: [
             ScaleTransition(
               scale: _scaleAnimation,
-              child: const Icon(
-                Icons.broken_image,
-                size: 80,
-                color: Colors.grey,
-              ),
+              child: Image.asset('assets/logo/food_bazar_logo.png'),
             ),
 
-            const SizedBox(height: 24),
-            Text(
-              splashText,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-              ),
-              textAlign: TextAlign.center,
-            ),
+
+            // const SizedBox(height: 24),
+            // Text(
+            //   splashText,
+            //   style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            //     color: Colors.white,
+            //     fontWeight: FontWeight.bold,
+            //     fontSize: 22,
+            //   ),
+            //   textAlign: TextAlign.center,
+            // ),
           ],
         ),
       ),

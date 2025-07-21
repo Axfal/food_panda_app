@@ -1,0 +1,14 @@
+export 'package:flutter/material.dart';
+export 'package:excellent_trade_app/config/components/custom_text_field.dart';
+export 'package:intl_phone_field/intl_phone_field.dart';
+export 'package:excellent_trade_app/l10n/app_localizations.dart';
+export 'package:excellent_trade_app/utils/extensions/validations_exception.dart';
+export 'package:excellent_trade_app/Utils/constants/app_colors.dart';
+export 'package:excellent_trade_app/pages/auth/signup/widget/confirm_password_input.dart';
+export 'package:excellent_trade_app/pages/auth/signup/widget/email_input.dart';
+export 'package:excellent_trade_app/pages/auth/signup/widget/password_input.dart';
+export 'package:excellent_trade_app/pages/auth/signup/widget/phone_input.dart';
+export 'package:excellent_trade_app/pages/auth/signup/widget/user_name_input.dart';
+export 'package:excellent_trade_app/config/components/custom_phone_field.dart';
+export 'package:excellent_trade_app/config/components/round_button_widget.dart';
+export 'package:excellent_trade_app/pages/auth/signup/widget/signup_button.dart';

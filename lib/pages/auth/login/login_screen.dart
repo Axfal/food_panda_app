@@ -41,7 +41,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Image.asset('assets/logo/panda_logo.webp', height: 110),
+                      Image.asset(
+                        'assets/logo/food_bazar_logo.png',
+                        height: 280,
+                        width: 280,
+                        fit: BoxFit.contain,
+                      ),
 
                       const SizedBox(height: 32),
 
@@ -57,18 +62,55 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       const SizedBox(height: 16),
 
-                      TextButton(
-                        onPressed: () {
-                          // TODO: Navigate to forgot password screen
-                        },
-                        child: Text(
-                          "Forgot Password",
-                          // AppLocalizations.of(context)!.forgotPassword,
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.w600,
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () {
+                           Navigator.pushNamed(context, RoutesName.forgot);
+                          },
+                          child: Text(
+                            "Forgot Password?",
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      Divider(
+                        thickness: 1,
+                        color: AppColors.grey.withValues(alpha: 0.4),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Don't have an account?",
+                            style: TextStyle(
+                              color: AppColors.black,
+                              fontSize: 14,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, RoutesName.signup);
+                            },
+                            child: Text(
+                              "Sign Up",
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

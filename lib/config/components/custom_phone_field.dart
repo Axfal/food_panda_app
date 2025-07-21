@@ -1,52 +1,37 @@
-import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomPhoneField extends StatelessWidget {
   final String label;
   final String hintText;
-  final IconData? prefixIcon;
-  final IconData? suffixIcon;
-  final bool obscureText;
   final TextEditingController controller;
   final FocusNode focusNode;
-  final TextInputType keyboardType;
-  final TextInputAction textInputAction;
+  final String initialCountryCode;
   final Function(String)? onChanged;
+  final TextInputAction textInputAction;
   final String? Function(String?)? validator;
-  final VoidCallback? onSuffixTap;
 
-  const CustomTextField({
+  const CustomPhoneField({
     super.key,
     required this.label,
     required this.hintText,
     required this.controller,
     required this.focusNode,
-    required this.keyboardType,
-    required this.textInputAction,
+    this.initialCountryCode = 'PK',
     this.onChanged,
+    required this.textInputAction,
     this.validator,
-    this.prefixIcon,
-    this.suffixIcon,
-    this.obscureText = false,
-    this.onSuffixTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return TextFormField(
+    return IntlPhoneField(
       controller: controller,
       focusNode: focusNode,
-      keyboardType: keyboardType,
-      cursorColor: Colors.black,
-      textInputAction: textInputAction,
-      obscureText: obscureText,
-      onChanged: onChanged,
-      validator: validator,
+      cursorColor: AppColors.black,
       style: const TextStyle(
         fontSize: 16,
-        // fontWeight: FontWeight.w500,
         color: AppColors.black,
       ),
       decoration: InputDecoration(
@@ -71,22 +56,11 @@ class CustomTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: AppColors.primary, width: 1.5),
         ),
-        prefixIcon: prefixIcon != null
-            ? Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Icon(prefixIcon, color: Colors.grey),
-              )
-            : null,
-        suffixIcon: suffixIcon != null
-            ? GestureDetector(
-                onTap: onSuffixTap,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Icon(suffixIcon, color: Colors.grey),
-                ),
-              )
-            : null,
       ),
+      initialCountryCode: initialCountryCode,
+      keyboardType: TextInputType.phone,
+      textInputAction: textInputAction,
+      onChanged: (phone) => onChanged?.call(phone.completeNumber),
     );
   }
 }
