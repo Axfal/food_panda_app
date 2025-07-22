@@ -13,5 +13,4 @@ abstract class AuthApiRepository {
 
   Future<dynamic> sigInOTP(dynamic data);
 
-  Future<dynamic> signUp(dynamic data);
 }

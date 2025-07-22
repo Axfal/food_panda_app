@@ -7,3 +7,9 @@ export 'package:excellent_trade_app/pages/auth/forgot_password/widget/email_inpu
 export 'package:excellent_trade_app/pages/auth/forgot_password/widget/forgot_button.dart';
 export 'package:excellent_trade_app/Utils/constants/app_colors.dart';
 export 'package:excellent_trade_app/config/routes/route_export.dart';
+export 'package:flutter_bloc/flutter_bloc.dart';
+export 'package:excellent_trade_app/dependency_injection/locator.dart';
+export 'package:excellent_trade_app/config/routes/routes_name.dart';
+export 'package:excellent_trade_app/data/response/status.dart';
+export 'package:excellent_trade_app/utils/extensions/flush_bar_extension.dart';
+export 'package:excellent_trade_app/bloc/auth/forgot_password/forgot_password_bloc.dart';

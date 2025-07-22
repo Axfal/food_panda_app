@@ -5,8 +5,7 @@ GetIt getIt = GetIt.instance;
 
 class ServiceLocator {
   void servicesLocator() {
-    getIt.registerLazySingleton<AuthApiRepository>(() => AuthHttpApiRepository()); // Registering AuthHttpApiRepository as a lazy singleton for AuthApiRepository
-    // getIt.registerLazySingleton<MoviesApiRepository>(() => MoviesHttpApiRepository()); // Registering MoviesHttpApiRepository as a lazy singleton for MoviesApiRepository
+    getIt.registerLazySingleton<AuthApiRepository>(() => AuthHttpApiRepository());
   }
 
 }

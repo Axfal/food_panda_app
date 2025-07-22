@@ -14,7 +14,7 @@ class _EmailInputWidgetState extends State<EmailInputWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginStates>(
-      buildWhen: (current, previous) => false,
+      buildWhen: (current, previous) => previous.email != current.email,
       builder: (context, state) {
         return CustomTextField(
           label: AppLocalizations.of(context)!.email,

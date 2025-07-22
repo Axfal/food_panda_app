@@ -59,6 +59,7 @@ class CustomPhoneField extends StatelessWidget {
       ),
       initialCountryCode: initialCountryCode,
       keyboardType: TextInputType.phone,
+      dropdownIcon: Icon(Icons.arrow_drop_down, color: Colors.black),
       textInputAction: textInputAction,
       onChanged: (phone) => onChanged?.call(phone.completeNumber),
     );

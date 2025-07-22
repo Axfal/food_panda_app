@@ -6,10 +6,29 @@ class SignupButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RoundButton(
-      title: "Create Account",
-      onPress: () {
-        if (formKey.currentState!.validate()) {}
+    return BlocConsumer<SignupBloc, SignupStates>(
+      buildWhen: (current, previous) =>
+          current.signupApi.status != previous.signupApi.status,
+      listener: (context, state) {
+        if (formKey.currentState!.validate()) {
+          if (state.signupApi.status == Status.error) {
+            context.flushBarErrorMessage(
+              message: state.signupApi.message.toString(),
+            );
+          }
+        }
+        if (state.signupApi.status == Status.completed) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            RoutesName.login,
+            (route) => false,
+          );
+        }
+      },
+      builder: (context, state) {
+        return RoundButton(title: "Create Account", onPress: () {
+          context.read<SignupBloc>().add(SignupApi());
+        });
       },
     );
   }

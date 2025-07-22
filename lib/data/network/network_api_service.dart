@@ -44,8 +44,11 @@ class NetworkApiService implements BaseApiServices {
   }
 
   @override
-  Future<dynamic> postApi(String url, dynamic data,
-      {Map<String, String>? headers}) async {
+  Future<dynamic> postApi(
+    String url,
+    dynamic data, {
+    Map<String, String>? headers,
+  }) async {
     if (kDebugMode) {
       print('POST $url');
       print('Body: $data');
@@ -54,10 +57,10 @@ class NetworkApiService implements BaseApiServices {
     try {
       final response = await http
           .post(
-        Uri.parse(url),
-        headers: getHeaders(customHeaders: headers),
-        body: jsonEncode(data),
-      )
+            Uri.parse(url),
+            headers: getHeaders(customHeaders: headers),
+            body: jsonEncode(data),
+          )
           .timeout(timeoutDuration);
       return _returnResponse(response);
     } on SocketException {
@@ -68,17 +71,20 @@ class NetworkApiService implements BaseApiServices {
   }
 
   @override
-  Future<dynamic> putApi(String url, dynamic data,
-      {Map<String, String>? headers}) async {
+  Future<dynamic> putApi(
+    String url,
+    dynamic data, {
+    Map<String, String>? headers,
+  }) async {
     if (kDebugMode) print('PUT $url');
 
     try {
       final response = await http
           .put(
-        Uri.parse(url),
-        headers: getHeaders(customHeaders: headers),
-        body: jsonEncode(data),
-      )
+            Uri.parse(url),
+            headers: getHeaders(customHeaders: headers),
+            body: jsonEncode(data),
+          )
           .timeout(timeoutDuration);
       return _returnResponse(response);
     } on SocketException {
@@ -89,8 +95,7 @@ class NetworkApiService implements BaseApiServices {
   }
 
   @override
-  Future<dynamic> deleteApi(String url,
-      {Map<String, String>? headers}) async {
+  Future<dynamic> deleteApi(String url, {Map<String, String>? headers}) async {
     if (kDebugMode) print('DELETE $url');
 
     try {
@@ -106,17 +111,20 @@ class NetworkApiService implements BaseApiServices {
   }
 
   @override
-  Future<dynamic> patchApi(String url, dynamic data,
-      {Map<String, String>? headers}) async {
+  Future<dynamic> patchApi(
+    String url,
+    dynamic data, {
+    Map<String, String>? headers,
+  }) async {
     if (kDebugMode) print('PATCH $url');
 
     try {
       final response = await http
           .patch(
-        Uri.parse(url),
-        headers: getHeaders(customHeaders: headers),
-        body: jsonEncode(data),
-      )
+            Uri.parse(url),
+            headers: getHeaders(customHeaders: headers),
+            body: jsonEncode(data),
+          )
           .timeout(timeoutDuration);
       return _returnResponse(response);
     } on SocketException {

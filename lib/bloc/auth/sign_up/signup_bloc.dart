@@ -12,7 +12,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupStates> {
     on<ConfirmPasswordChange>(_onConfirmPasswordChanged);
     on<PhoneChange>(_phoneChange);
     on<CountryCodeChange>(_onCountryCodeChange);
-    on<SignupApi>((event, emit) {});
+    on<SignupApi>(_onFormSubmitted);
   }
 
   void _onEmailChanged(EmailChange event, Emitter<SignupStates> emit) {

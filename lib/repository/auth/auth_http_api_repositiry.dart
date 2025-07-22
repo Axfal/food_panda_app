@@ -11,32 +11,26 @@ class AuthHttpApiRepository implements AuthApiRepository {
   }
 
   @override
-  Future<dynamic> signupApi(data) {
-    // TODO: implement signupApi
-    throw UnimplementedError();
+  Future<dynamic> signupApi(data) async {
+    dynamic response = await _apiServices.postApi(AppUrl.signUp, data);
+    return response;
   }
 
   @override
-  Future logoutApi(data) {
-    // TODO: implement logoutApi
-    throw UnimplementedError();
+  Future logoutApi(data) async {
+    dynamic response = await _apiServices.postApi(AppUrl.logout, data);
+    return response;
   }
 
   @override
-  Future sigInOTP(data) {
-    // TODO: implement sigInOTP
-    throw UnimplementedError();
+  Future sigInOTP(data) async {
+    dynamic response = await _apiServices.postApi(AppUrl.sigInOTP, data);
+    return response;
   }
 
   @override
-  Future signUp(data) {
-    // TODO: implement signUp
-    throw UnimplementedError();
-  }
-
-  @override
-  Future verifyOTP(data) {
-    // TODO: implement verifyOTP
-    throw UnimplementedError();
+  Future verifyOTP(data) async {
+    dynamic response = await _apiServices.postApi(AppUrl.verifyOTP, data);
+    return response;
   }
 }
