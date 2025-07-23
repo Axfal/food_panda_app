@@ -9,13 +9,21 @@ class ForgotScreen extends StatefulWidget {
 
 class _ForgotScreenState extends State<ForgotScreen> {
   final _formKey = GlobalKey<FormState>();
+  late ForgotPasswordBloc _forgotPasswordBloc;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _forgotPasswordBloc = ForgotPasswordBloc(authApiRepository: getIt());
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
-        child: GestureDetector(
+        child: BlocProvider(create: (_) => _forgotPasswordBloc, child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Center(
             child: SingleChildScrollView(
@@ -69,7 +77,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
               ),
             ),
           ),
-        ),
+        ),)
       ),
     );
   }
