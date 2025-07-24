@@ -23,61 +23,64 @@ class _ForgotScreenState extends State<ForgotScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
-        child: BlocProvider(create: (_) => _forgotPasswordBloc, child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    const SizedBox(height: 40),
+        child: BlocProvider(
+          create: (_) => _forgotPasswordBloc,
+          child: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 40),
 
-                    Image.asset(
-                      'assets/logo/food_bazar_logo.png',
-                      height: 160,
-                      width: 160,
-                      fit: BoxFit.contain,
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    Text(
-                      "Forgot Password?",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
+                      Image.asset(
+                        'assets/logo/food_bazar_logo.png',
+                        height: 160,
+                        width: 160,
+                        fit: BoxFit.contain,
                       ),
-                    ),
 
-                    const SizedBox(height: 8),
+                      const SizedBox(height: 24),
 
-                    Text(
-                      "Enter your registered email and we’ll send you a link to reset your password.",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey.shade700,
+                      Text(
+                        "Forgot Password?",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primary,
+                        ),
                       ),
-                      textAlign: TextAlign.center,
-                    ),
 
-                    const SizedBox(height: 32),
+                      const SizedBox(height: 8),
 
-                    const EmailInput(),
+                      Text(
+                        "Enter your registered email and we’ll send you a link to reset your password.",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey.shade700,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
 
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 32),
 
-                    ForgotButton(formKey: _formKey),
+                      const EmailInput(),
 
-                    const SizedBox(height: 16),
-                  ],
+                      const SizedBox(height: 24),
+
+                      ForgotButton(formKey: _formKey),
+
+                      const SizedBox(height: 16),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),)
+        ),
       ),
     );
   }

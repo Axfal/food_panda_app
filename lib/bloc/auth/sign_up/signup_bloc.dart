@@ -1,5 +1,5 @@
 import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
-import 'package:excellent_trade_app/pages/auth/login/login_exports.dart';
+
 part 'signup_event.dart';
 part 'signup_state.dart';
 

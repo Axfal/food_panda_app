@@ -23,10 +23,12 @@ class _EmailInputState extends State<EmailInput> {
           prefixIcon: Icons.email_outlined,
           controller: emailController,
           focusNode: focusNode,
-          keyboardType: TextInputType.emailAddress,
+          keyboardType: TextInputType.text,
           textInputAction: TextInputAction.next,
           onChanged: (value) {
-            print('Email typed: $value');
+            if (kDebugMode) {
+              print('Email typed: $value');
+            }
             try {
               context.read<SignupBloc>().add(EmailChange(email: value));
             } catch (e) {
