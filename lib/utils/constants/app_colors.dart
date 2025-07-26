@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color primary = Colors.teal; //Color(0xFFD70F64); // Panda Pink
+  static const Color primary = Color(0xFFD40000);
   static const Color lightPink = Color.fromARGB(
     255,
     251,

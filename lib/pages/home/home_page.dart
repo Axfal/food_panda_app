@@ -3,6 +3,7 @@ import 'package:excellent_trade_app/pages/home/widgets/discountCardList/discount
 import 'package:excellent_trade_app/pages/screen_01.dart';
 import 'package:excellent_trade_app/pages/screen_02.dart';
 import 'package:excellent_trade_app/pages/screen_03.dart';
+import 'package:excellent_trade_app/pages/screen_04.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -67,6 +68,12 @@ class _HomePageState extends State<HomePage> {
                     MaterialPageRoute(builder: (context) => Screen03()),
                   );
                 }
+               else if (value == 'Screen 04') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Screen04()),
+                  );
+                }
               },
               itemBuilder: (BuildContext context) => [
                 PopupMenuItem(
@@ -80,6 +87,10 @@ class _HomePageState extends State<HomePage> {
                 PopupMenuItem(
                   value: 'Screen 03',
                   child: Text('Screen 03', style: GoogleFonts.poppins()),
+                ),
+               PopupMenuItem(
+                  value: 'Screen 04',
+                  child: Text('Screen 04', style: GoogleFonts.poppins()),
                 ),
               ],
             ),
