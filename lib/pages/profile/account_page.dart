@@ -30,293 +30,243 @@ class _AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.white,
-          automaticallyImplyLeading: false,
-          toolbarHeight: 50,
-          titleSpacing: 0,
-          title: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              children: [
-                Text(
-                  "Accounts",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: AppWeights.semiBold,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                const Spacer(),
-                InkWell(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => SettingsPage()),
-                  ),
-                  child: const Icon(Icons.settings_outlined, size: 20),
-                ),
-              ],
-            ),
-          ),
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(1),
-            child: Container(
-              color: AppColors.textSecondary.withOpacity(0.25),
-              height: 1,
-            ),
-          ),
-        ),
+    return Scaffold(
+      appBar: buildModernAppBar(context),
 
-        backgroundColor: AppColors.background,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 5),
-                    Text(
-                      "Your Name",
-                      style: GoogleFonts.montserrat(
+      backgroundColor: AppColors.background,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 5),
+                  Text(
+                    "Muhammad Anfal",
+                    style: GoogleFonts.montserrat(
+                      fontWeight: AppWeights.extraBold,
+                      fontSize: 20,
+                      color: Colors.black,
+                    ),
+                  ),
+                  GestureDetector(
+                    child: const Text(
+                      "anfalshah72@gmail.com",
+                      style: TextStyle(
+                        fontSize: 12,
                         fontWeight: AppWeights.extraBold,
-                        fontSize: 20,
+                        color: Colors.black,
                       ),
                     ),
-                    GestureDetector(
-                      child: const Text(
-                        "View Profile",
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: AppWeights.extraBold,
+                    onTap: () {},
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Container(
+                      height: 100,
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Ads',
+                          style: TextStyle(color: Colors.black),
                         ),
                       ),
-                      onTap: () {},
                     ),
-                    const SizedBox(height: 25),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 5,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: buildIconCard(
+                          imagePath: 'assets/images/icons/order.png',
+                          label: 'Order',
+                          onTap: () => {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => PastOrdersPage(),
+                              ),
+                            ),
+                          },
+                        ),
                       ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF5C1C94),
-                        borderRadius: BorderRadius.circular(5),
+                      const SizedBox(width: 18),
+                      Expanded(
+                        child: buildIconCard(
+                          icon: LucideIcons.heart,
+                          label: 'Favourites',
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => FavouritesPage()),
+                          ),
+                        ),
                       ),
+                      const SizedBox(width: 18),
+                      Expanded(
+                        child: buildIconCard(
+                          icon: LucideIcons.mapPin,
+                          label: 'Addresses',
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => AddressesPage()),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: AppColors.textSecondary.withValues(alpha: 0.55),
+                        width: 0.5,
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
                       child: Row(
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: 230,
-                                child: Text(
-                                  "Save With pandapro! Free for 14 days",
-                                  style: TextStyle(
-                                    color: AppColors.white,
-                                    fontWeight: AppWeights.extraBold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Row(
-                                children: const [
-                                  Text(
-                                    "Start your free trial",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: AppColors.white,
-                                    ),
-                                  ),
-                                  SizedBox(width: 4),
-                                  Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.circle,
-                                        color: AppColors.white,
-                                        size: 16,
-                                      ),
-                                      Icon(
-                                        CupertinoIcons.chevron_right,
-                                        size: 12,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
+                        children: const [
+                          Image(
+                            image: AssetImage(
+                              "assets/images/icons/pandaPay.png",
+                            ),
+                            height: 20,
                           ),
-                          const Spacer(),
-                          Image.asset(
-                            "assets/images/pandapro.png",
-                            height: 80,
-                            width: 80,
-                          ),
+                          SizedBox(width: 4),
+                          Text("Pandapay Credit"),
+                          Spacer(),
+                          Text("Rs 0.00"),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: buildIconCard(
-                            imagePath: 'assets/images/icons/order.png',
-                            label: 'Order',
-                            onTap: () => {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => PastOrdersPage(),
-                                ),
-                              ),
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 18),
-                        Expanded(
-                          child: buildIconCard(
-                            icon: LucideIcons.heart,
-                            label: 'Favourites',
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => FavouritesPage(),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 18),
-                        Expanded(
-                          child: buildIconCard(
-                            icon: LucideIcons.mapPin,
-                            label: 'Addresses',
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => AddressesPage(),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 12,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: AppColors.textSecondary.withOpacity(0.55),
-                          width: 0.5,
-                        ),
-                      ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              color: AppColors.white,
+              child: Column(
+                children: [
+                  buildSectionList(
+                    heading: "Perks for you",
+                    items: [
+                      {
+                        'icon': LucideIcons.crown,
+                        'label': 'Become a pro',
+                        'onTap': () => debugPrint('Become a pro tapped'),
+                      },
+                      {
+                        'icon': LucideIcons.trophy,
+                        'label': 'panda rewards',
+                        'onTap': () => debugPrint('panda rewards tapped'),
+                      },
+                      {
+                        'icon': LucideIcons.ticket,
+                        'label': 'Vouchers',
+                        'onTap': () => debugPrint('Vouchers tapped'),
+                      },
+                      {
+                        'icon': LucideIcons.gift,
+                        'label': 'Invite friends',
+                        'onTap': () => debugPrint('Invite friends tapped'),
+                      },
+                    ],
+                  ),
+                  buildSectionList(
+                    heading: "General",
+                    items: [
+                      {
+                        'icon': CupertinoIcons.question_circle,
+                        'label': 'Help center',
+                        'onTap': () => debugPrint('Help center tapped'),
+                      },
+                      {
+                        'icon': LucideIcons.building2,
+                        'label': 'foodpanda for business',
+                        'onTap': () => debugPrint('business tapped'),
+                      },
+                      {
+                        'icon': LucideIcons.file,
+                        'label': 'Terms&policies',
+                        'onTap': () => debugPrint('terms tapped'),
+                      },
+                    ],
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height: 60,
+                      width: double.infinity,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: const [
-                            Image(
-                              image: AssetImage(
-                                "assets/images/icons/pandaPay.png",
-                              ),
-                              height: 20,
-                            ),
-                            SizedBox(width: 4),
-                            Text("Pandapay Credit"),
-                            Spacer(),
-                            Text("Rs 0.00"),
-                          ],
+                        child: CustomButton(
+                          text: "Log Out",
+                          bgcolor: AppColors.white,
+                          onTap: () => const {},
+                          color: AppColors.black,
+                          border: true,
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Container(
-                color: AppColors.white,
-                child: Column(
-                  children: [
-                    buildSectionList(
-                      heading: "Perks for you",
-                      items: [
-                        {
-                          'icon': LucideIcons.crown,
-                          'label': 'Become a pro',
-                          'onTap': () => debugPrint('Become a pro tapped'),
-                        },
-                        {
-                          'icon': LucideIcons.trophy,
-                          'label': 'panda rewards',
-                          'onTap': () => debugPrint('panda rewards tapped'),
-                        },
-                        {
-                          'icon': LucideIcons.ticket,
-                          'label': 'Vouchers',
-                          'onTap': () => debugPrint('Vouchers tapped'),
-                        },
-                        {
-                          'icon': LucideIcons.gift,
-                          'label': 'Invite friends',
-                          'onTap': () => debugPrint('Invite friends tapped'),
-                        },
-                      ],
-                    ),
-                    buildSectionList(
-                      heading: "General",
-                      items: [
-                        {
-                          'icon': CupertinoIcons.question_circle,
-                          'label': 'Help center',
-                          'onTap': () => debugPrint('Help center tapped'),
-                        },
-                        {
-                          'icon': LucideIcons.building2,
-                          'label': 'foodpanda for business',
-                          'onTap': () => debugPrint('business tapped'),
-                        },
-                        {
-                          'icon': LucideIcons.file,
-                          'label': 'Terms&policies',
-                          'onTap': () => debugPrint('terms tapped'),
-                        },
-                      ],
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        height: 60,
-                        width: double.infinity,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CustomButton(
-                            text: "Log Out",
-                            bgcolor: AppColors.white,
-                            onTap: () => const {},
-                            color: AppColors.black,
-                            border: true,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-        bottomNavigationBar: CustomBottomNavBar(
-          currentIndex: _selectedIndex,
-          onTap: _onNavItemTapped,
+      ),
+      bottomNavigationBar: CustomBottomNavBar(
+        currentIndex: _selectedIndex,
+        onTap: _onNavItemTapped,
+      ),
+    );
+  }
+
+  AppBar buildModernAppBar(BuildContext context) {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: Colors.white,
+      automaticallyImplyLeading: false,
+      toolbarHeight: 60,
+      titleSpacing: 16,
+      title: Text(
+        'Account',
+        style: GoogleFonts.poppins(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+        ),
+      ),
+      actions: [
+        IconButton(
+          splashRadius: 24,
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => SettingsPage()),
+          ),
+          icon: Icon(Icons.settings_outlined, size: 24, color: Colors.black87),
+        ),
+        const SizedBox(width: 12),
+      ],
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(1),
+        child: Container(
+          color: AppColors.textSecondary.withValues(alpha: 0.2),
+          height: 1,
         ),
       ),
     );
@@ -335,7 +285,9 @@ Widget buildIconCard({
     child: Container(
       padding: const EdgeInsets.fromLTRB(12, 20, 12, 8),
       decoration: BoxDecoration(
-        border: Border.all(color: AppColors.textSecondary.withOpacity(0.25)),
+        border: Border.all(
+          color: AppColors.textSecondary.withValues(alpha: 0.25),
+        ),
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
         boxShadow: const [
@@ -394,7 +346,7 @@ Widget buildSectionList({
             ),
             Divider(
               height: 1,
-              color: AppColors.textSecondary.withOpacity(0.25),
+              color: AppColors.textSecondary.withValues(alpha: 0.25),
             ),
           ],
         );
