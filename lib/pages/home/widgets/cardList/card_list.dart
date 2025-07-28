@@ -1,3 +1,4 @@
+import 'package:excellent_trade_app/config/routes/route_export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -62,6 +63,7 @@ class CardList extends StatelessWidget {
                 width: 300,
                 margin: EdgeInsets.only(right: 8),
                 child: LargeFoodCard(
+                  onTap: () => Navigator.pushNamed(context, RoutesName.productDetails),
                   imagePath: card['imagePath'],
                   title: card['title'],
                   rating: card['rating'],

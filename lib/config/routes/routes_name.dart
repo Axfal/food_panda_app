@@ -13,5 +13,6 @@ class RoutesName {
 
   static const String home = 'home_screen' ;
 
+  static const String productDetails = 'product_details' ;
 
 }

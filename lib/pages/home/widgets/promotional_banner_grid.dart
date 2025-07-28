@@ -20,103 +20,71 @@ class PromotionalBannerWithGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(6.0),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Text block
+          /// Text Block
           Expanded(
             flex: 2,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 10.h),
+                SizedBox(height: 6.h),
                 Text(
-                  "With up to 30% off,\nfoodpanda sambhal le ga!",
-                  style: GoogleFonts.montserrat(
-                    fontSize: 18,
-                    fontWeight: AppWeights.extraBold, // still w900
-                    color: AppColors.textPrimary,
+                  "With up to 30% off,\nFoodpanda sambhal le ga!",
+                  style: GoogleFonts.poppins(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.white,
+                    height: 1.4,
                   ),
-                  // const TextStyle(
-                  //   fontSize: 15,
-                  //   fontWeight: FontWeight.w900,
-                  //   color: AppColors.textPrimary,
-                  // ),
                 ),
-                TextButton(
-                  onPressed: () {},
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    minimumSize: const Size(50, 30),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  child: const Row(
-                    children: [
-                      Text(
-                        "Order now",
-
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: AppColors.primary,
-                          fontWeight: AppWeights.medium,
+                SizedBox(height: 6.h),
+                GestureDetector(
+                  onTap: () {
+                    // Your navigation or logic here
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 8.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30.r),
+                      border: Border.all(color: Colors.white),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "Order now",
+                          style: GoogleFonts.poppins(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primary,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 4),
-                      Icon(
-                        Icons.arrow_forward,
-                        color: AppColors.primary,
-                        size: 14,
-                      ),
-                    ],
+                        SizedBox(width: 6.w),
+                        Icon(
+                          Icons.arrow_forward_rounded,
+                          size: 16.sp,
+                          color: AppColors.primary,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 12),
-          // 2x2 grid
-          SizedBox(
-            width: 100.w,
-            height: 100.w,
-            child: GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: restaurants.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 7,
-                crossAxisSpacing: 7,
-              ),
-              itemBuilder: (context, index) {
-                final restaurant = restaurants[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/restaurant',
-                      arguments: restaurant['name'],
-                    );
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: AppColors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.black.withOpacity(0.1),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    // padding: const EdgeInsets.all(8),
-                    child: Image.asset(restaurant['image'], fit: BoxFit.cover),
-                  ),
-                );
-              },
-            ),
-          ),
+
+          SizedBox(width: 20.w),
+
+          /// logo
+          Image.asset('assets/logo/app_logo.png', height: 150),
         ],
       ),
     );

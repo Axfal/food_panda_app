@@ -1,6 +1,7 @@
 import 'package:excellent_trade_app/config/routes/route_export.dart';
 
 
+
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -20,14 +21,19 @@ class Routes {
         return MaterialPageRoute(
           builder: (BuildContext context) => const ForgotScreen(),
         );
+       case RoutesName.verifyOtp:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const VerifyOtpScreen()
+        );
       case RoutesName.home:
         return MaterialPageRoute(
             builder: (BuildContext context) => const HomePage()
         );
-      case RoutesName.verifyOtp:
+      case RoutesName.productDetails:
         return MaterialPageRoute(
-            builder: (BuildContext context) => const VerifyOtpScreen()
+            builder: (BuildContext context) => const ProductDetailsScreen()
         );
+
       default:
         return MaterialPageRoute(
           builder: (_) {

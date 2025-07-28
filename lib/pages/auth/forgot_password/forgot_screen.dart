@@ -37,7 +37,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
                       const SizedBox(height: 40),
 
                       Image.asset(
-                        'assets/logo/food_bazar_logo.png',
+                        'assets/logo/app_logo.png',
                         height: 160,
                         width: 160,
                         fit: BoxFit.contain,

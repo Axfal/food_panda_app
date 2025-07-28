@@ -58,6 +58,7 @@ class TopRestaurantsPage extends StatelessWidget {
                       return Container(
                         margin: const EdgeInsets.only(bottom: 16),
                         child: LargeFoodCard(
+                          onTap: (){},
                           imagePath: card['imagePath'],
                           title: card['title'],
                           rating: card['rating'],

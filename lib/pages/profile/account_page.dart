@@ -1,11 +1,11 @@
 import 'package:excellent_trade_app/Utils/constants/appWeight.dart';
 import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
+import 'package:excellent_trade_app/config/components/round_button_widget.dart';
 import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/customeButtons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-
 import '../../globalWidgets/PrimeryWidgets/customeBottonNavBar.dart';
 import 'subPages/addresses_page.dart';
 import 'subPages/fav_page.dart';
@@ -31,202 +31,146 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildModernAppBar(context),
-
+      appBar: buildAppBar(context),
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 8),
+              Text(
+                "Muhammad Anfal",
+                style: GoogleFonts.montserrat(
+                  fontWeight: AppWeights.extraBold,
+                  fontSize: 20,
+                  color: Colors.black,
+                ),
+              ),
+              GestureDetector(
+                child: const Text(
+                  "anfalshah72@gmail.com",
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: AppWeights.extraBold,
+                    color: Colors.black54,
+                  ),
+                ),
+                onTap: () {},
+              ),
+              const SizedBox(height: 20),
+              Container(
+                height: 100,
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+                child: const Center(
+                  child: Text(
+                    'Ad Placeholder',
+                    style: TextStyle(color: Colors.black87),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
                 children: [
-                  SizedBox(height: 5),
-                  Text(
-                    "Muhammad Anfal",
-                    style: GoogleFonts.montserrat(
-                      fontWeight: AppWeights.extraBold,
-                      fontSize: 20,
-                      color: Colors.black,
-                    ),
-                  ),
-                  GestureDetector(
-                    child: const Text(
-                      "anfalshah72@gmail.com",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: AppWeights.extraBold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    onTap: () {},
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: Container(
-                      height: 100,
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.grey.shade300),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Ads',
-                          style: TextStyle(color: Colors.black),
-                        ),
+                  Expanded(
+                    child: buildIconCard(
+                      imagePath: 'assets/images/icons/order.png',
+                      label: 'Orders',
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => PastOrdersPage()),
                       ),
                     ),
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: buildIconCard(
-                          imagePath: 'assets/images/icons/order.png',
-                          label: 'Order',
-                          onTap: () => {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => PastOrdersPage(),
-                              ),
-                            ),
-                          },
-                        ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: buildIconCard(
+                      icon: LucideIcons.heart,
+                      label: 'Favourites',
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => FavouritesPage()),
                       ),
-                      const SizedBox(width: 18),
-                      Expanded(
-                        child: buildIconCard(
-                          icon: LucideIcons.heart,
-                          label: 'Favourites',
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => FavouritesPage()),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 18),
-                      Expanded(
-                        child: buildIconCard(
-                          icon: LucideIcons.mapPin,
-                          label: 'Addresses',
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => AddressesPage()),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                  const SizedBox(height: 20),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: AppColors.textSecondary.withValues(alpha: 0.55),
-                        width: 0.5,
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: const [
-                          Image(
-                            image: AssetImage(
-                              "assets/images/icons/pandaPay.png",
-                            ),
-                            height: 20,
-                          ),
-                          SizedBox(width: 4),
-                          Text("Pandapay Credit"),
-                          Spacer(),
-                          Text("Rs 0.00"),
-                        ],
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: buildIconCard(
+                      icon: LucideIcons.mapPin,
+                      label: 'Addresses',
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => AddressesPage()),
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
-            Container(
-              color: AppColors.white,
-              child: Column(
-                children: [
-                  buildSectionList(
-                    heading: "Perks for you",
-                    items: [
-                      {
-                        'icon': LucideIcons.crown,
-                        'label': 'Become a pro',
-                        'onTap': () => debugPrint('Become a pro tapped'),
-                      },
-                      {
-                        'icon': LucideIcons.trophy,
-                        'label': 'panda rewards',
-                        'onTap': () => debugPrint('panda rewards tapped'),
-                      },
-                      {
-                        'icon': LucideIcons.ticket,
-                        'label': 'Vouchers',
-                        'onTap': () => debugPrint('Vouchers tapped'),
-                      },
-                      {
-                        'icon': LucideIcons.gift,
-                        'label': 'Invite friends',
-                        'onTap': () => debugPrint('Invite friends tapped'),
-                      },
-                    ],
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: AppColors.textSecondary.withAlpha(55),
+                    width: 0.5,
                   ),
-                  buildSectionList(
-                    heading: "General",
-                    items: [
-                      {
-                        'icon': CupertinoIcons.question_circle,
-                        'label': 'Help center',
-                        'onTap': () => debugPrint('Help center tapped'),
-                      },
-                      {
-                        'icon': LucideIcons.building2,
-                        'label': 'foodpanda for business',
-                        'onTap': () => debugPrint('business tapped'),
-                      },
-                      {
-                        'icon': LucideIcons.file,
-                        'label': 'Terms&policies',
-                        'onTap': () => debugPrint('terms tapped'),
-                      },
-                    ],
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      height: 60,
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CustomButton(
-                          text: "Log Out",
-                          bgcolor: AppColors.white,
-                          onTap: () => const {},
-                          color: AppColors.black,
-                          border: true,
-                        ),
-                      ),
+                ),
+                child: Row(
+                  children: const [
+                    Image(
+                      image: AssetImage("assets/images/icons/pandaPay.png"),
+                      height: 20,
                     ),
-                  ),
-                ],
+                    SizedBox(width: 8),
+                    Text("Pandapay Credit"),
+                    Spacer(),
+                    Text("Rs 0.00"),
+                  ],
+                ),
               ),
-            ),
-          ],
+              buildItemList(
+                heading: 'Perks for you',
+                titles: [
+                  'Try pandapro for free',
+                  'Panda rewards',
+                  'Vouchers',
+                  'Invite friends',
+                ],
+                icons: [
+                  Icons.card_giftcard_outlined,
+                  Icons.star_border,
+                  Icons.local_offer_outlined,
+                  Icons.group_add_outlined,
+                ],
+                onTap: () {},
+              ),
+              buildItemList(
+                heading: 'General',
+                titles: [
+                  'Help Center',
+                  'Foodpanda for business',
+                  'Terms & Policies',
+                ],
+                icons: [
+                  Icons.help_outline,
+                  Icons.business_center_outlined,
+                  Icons.policy_outlined,
+                ],
+                onTap: () {},
+              ),
+              const SizedBox(height: 20),
+              RoundButton(title: 'Logout', onPress: (){})
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: CustomBottomNavBar(
@@ -236,10 +180,10 @@ class _AccountPageState extends State<AccountPage> {
     );
   }
 
-  AppBar buildModernAppBar(BuildContext context) {
+  AppBar buildAppBar(BuildContext context) {
     return AppBar(
       elevation: 0,
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.primary,
       automaticallyImplyLeading: false,
       toolbarHeight: 60,
       titleSpacing: 16,
@@ -248,7 +192,7 @@ class _AccountPageState extends State<AccountPage> {
         style: GoogleFonts.poppins(
           fontSize: 20,
           fontWeight: FontWeight.w600,
-          color: Colors.black,
+          color: Colors.white,
         ),
       ),
       actions: [
@@ -258,17 +202,56 @@ class _AccountPageState extends State<AccountPage> {
             context,
             MaterialPageRoute(builder: (_) => SettingsPage()),
           ),
-          icon: Icon(Icons.settings_outlined, size: 24, color: Colors.black87),
+          icon: const Icon(Icons.settings_outlined, size: 24, color: Colors.white),
         ),
         const SizedBox(width: 12),
       ],
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),
         child: Container(
-          color: AppColors.textSecondary.withValues(alpha: 0.2),
+          color: AppColors.textSecondary.withAlpha(50),
           height: 1,
         ),
       ),
+    );
+  }
+
+  Widget buildItemList({
+    required String heading,
+    required List<String> titles,
+    required List<IconData> icons,
+    required VoidCallback onTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 20.0, bottom: 8.0),
+          child: Text(
+            heading,
+            style: GoogleFonts.montserrat(
+              fontWeight: AppWeights.extraBold,
+              fontSize: 16,
+              color: Colors.black,
+            ),
+          ),
+        ),
+        ...List.generate(titles.length, (index) {
+          return ListTile(
+            leading: Icon(icons[index], color: Colors.black87),
+            title: Text(
+              titles[index],
+              style: GoogleFonts.montserrat(
+                fontWeight: AppWeights.medium,
+                fontSize: 14,
+                color: Colors.black,
+              ),
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios, color: Colors.black54, size: 16),
+            onTap: onTap,
+          );
+        }),
+      ],
     );
   }
 }
@@ -286,7 +269,7 @@ Widget buildIconCard({
       padding: const EdgeInsets.fromLTRB(12, 20, 12, 8),
       decoration: BoxDecoration(
         border: Border.all(
-          color: AppColors.textSecondary.withValues(alpha: 0.25),
+          color: AppColors.textSecondary.withAlpha(64),
         ),
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -310,47 +293,5 @@ Widget buildIconCard({
         ],
       ),
     ),
-  );
-}
-
-Widget buildSectionList({
-  required String heading,
-  required List<Map<String, dynamic>> items,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
-        child: Text(
-          heading,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-      ),
-      SizedBox(height: 8),
-      ...items.map((item) {
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListTile(
-                leading: Icon(item['icon'], size: 20),
-                title: Text(
-                  item['label'],
-                  style: const TextStyle(fontSize: 14),
-                ),
-                trailing: const Icon(Icons.arrow_forward_ios, size: 15),
-                dense: true,
-                onTap: item['onTap'] ?? () {},
-              ),
-            ),
-            Divider(
-              height: 1,
-              color: AppColors.textSecondary.withValues(alpha: 0.25),
-            ),
-          ],
-        );
-      }).toList(),
-    ],
   );
 }

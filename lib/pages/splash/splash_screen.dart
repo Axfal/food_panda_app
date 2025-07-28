@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../Utils/constants/app_colors.dart';
 import '../../l10n/app_localizations.dart';
 import '../../service/splash/splash_service.dart';
@@ -25,10 +28,10 @@ class _SplashViewState extends State<SplashView>
 
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(microseconds: 1000),
+      duration: const Duration(milliseconds: 1000),
     );
 
-    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+    _scaleAnimation = Tween<double>(begin: 0.85, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: Curves.easeOutBack,
@@ -56,20 +59,23 @@ class _SplashViewState extends State<SplashView>
           children: [
             ScaleTransition(
               scale: _scaleAnimation,
-              child: Image.asset('assets/logo/food_bazar_logo.png'),
+              child: Image.asset(
+                'assets/logo/app_logo.png',
+                height: 220.h,
+              ),
             ),
-
-
-            // const SizedBox(height: 24),
-            // Text(
-            //   splashText,
-            //   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            //     color: Colors.white,
-            //     fontWeight: FontWeight.bold,
-            //     fontSize: 22,
-            //   ),
-            //   textAlign: TextAlign.center,
-            // ),
+            ScaleTransition(
+              scale: _scaleAnimation,
+              child: Text(
+                splashText,
+                style: GoogleFonts.poppins(
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
           ],
         ),
       ),
