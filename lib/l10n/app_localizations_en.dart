@@ -55,4 +55,5 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noInternetConnection => 'No Internet Connection';
 
   @override
-  String 
+  String get logout => 'Logout';
+}

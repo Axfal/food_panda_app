@@ -55,4 +55,5 @@ class AppLocalizationsEs extends AppLocalizations {
   String get noInternetConnection => 'Sin conexión a internet';
 
   @override
-  String get logo
+  String get logout => 'Cerrar sesión';
+}

@@ -1,3 +1,4 @@
+import 'package:excellent_trade_app/config/components/round_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -168,12 +169,171 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       ),
                     ],
                   ),
-                  Text("Other customers also order these", style: GoogleFonts.poppins(color: Colors.black54))
+                  Text(
+                    "Other customers also order these",
+                    style: GoogleFonts.poppins(color: Colors.black54),
+                  ),
                 ],
               ),
             ),
+            optionalItemsWidget("Sada Biryani", '180.20', '220.25'),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.keyboard_arrow_down,
+                    size: 30,
+                    color: Colors.black,
+                  ),
+                  Text(
+                    "View 2 more",
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black,
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 18.h),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Divider(thickness: 1, color: Colors.black12),
+            ),
+            SizedBox(height: 8.h),
+            instructionWidget(),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.white,
+        elevation: 12,
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(width: 8.w),
+
+            /// Quantity Control
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+
+              children: [
+                counterWidget(Icons.remove, () {}),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12.w),
+                  child: Text(
+                    "1",
+                    style: GoogleFonts.poppins(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                counterWidget(Icons.add, () {}),
+              ],
+            ),
+
+            /// Add to Cart Button
+            SizedBox(
+              height: 45.h,
+              child: ElevatedButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.shopping_cart_outlined, size: 18),
+                label: Text(
+                  "Add to Cart",
+                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                ),
+              ),
+            ),
+            SizedBox(width: 4.w),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget instructionWidget() => Padding(
+    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Special Instructions",
+          style: GoogleFonts.poppins(
+            fontSize: 16.sp,
+            color: Colors.black87,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        SizedBox(height: 4.h),
+        Text(
+          "Let us know if you have allergies or want us to avoid anything.",
+          style: GoogleFonts.poppins(fontSize: 13.sp, color: Colors.black54),
+        ),
+        SizedBox(height: 18.h),
+        TextField(
+          maxLines: 3,
+          cursorColor: Colors.black87,
+          keyboardType: TextInputType.text,
+          style: GoogleFonts.poppins(fontSize: 13.sp),
+          decoration: InputDecoration(
+            // labelText: 'Instruction',
+            hintText: 'e.g. No mayo, extra spicy',
+            hintStyle: GoogleFonts.poppins(color: Colors.grey),
+            labelStyle: GoogleFonts.poppins(color: Colors.black87),
+            filled: true,
+            fillColor: Colors.grey.shade100,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 12.w,
+              vertical: 12.h,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.r),
+              borderSide: BorderSide(color: Colors.black),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.r),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.r),
+              borderSide: BorderSide(color: AppColors.primary),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+
+  Widget counterWidget(IconData icon, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(30),
+      child: Container(
+        padding: EdgeInsets.all(8.r),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 4,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Icon(icon, size: 20.sp, color: Colors.black87),
       ),
     );
   }
@@ -296,6 +456,87 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget optionalItemsWidget(String title, String price, String original) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      child: Column(
+        children: List.generate(4, (index) {
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 6.h),
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Checkbox(
+                value: index % 2 == 0 ? true : false,
+                onChanged: (value) {},
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(1.r),
+                ),
+                // fillColor: MaterialStateProperty.all(AppColors.primary),
+                activeColor: AppColors.primary,
+                checkColor: Colors.white,
+                side: BorderSide(color: AppColors.primary, width: 1.5),
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                visualDensity: VisualDensity.compact,
+              ),
+
+              title: Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(6.r),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Icon(
+                      Icons.fastfood,
+                      size: 24.sp,
+                      color: Colors.deepOrangeAccent,
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: GoogleFonts.poppins(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black87,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              trailing: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    price,
+                    style: GoogleFonts.poppins(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13.sp,
+                    ),
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    original,
+                    style: GoogleFonts.poppins(
+                      fontSize: 11.sp,
+                      color: Colors.grey,
+                      decoration: TextDecoration.lineThrough,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }),
       ),
     );
   }

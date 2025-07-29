@@ -1,7 +1,6 @@
 import 'package:excellent_trade_app/config/routes/route_export.dart';
 
 
-
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -32,6 +31,10 @@ class Routes {
       case RoutesName.productDetails:
         return MaterialPageRoute(
             builder: (BuildContext context) => const ProductDetailsScreen()
+        );
+   case RoutesName.cartSection:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const CartSection()
         );
 
       default:

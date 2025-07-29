@@ -1,4 +1,6 @@
 import 'package:excellent_trade_app/pages/home/widgets/discountCardList/discount_data.dart';
+import 'package:excellent_trade_app/pages/screen_01.dart';
+import 'package:excellent_trade_app/pages/screen_03.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +8,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../Utils/constants/app_colors.dart';
 import '../../globalWidgets/PrimeryWidgets/customeBottonNavBar.dart';
 import '../Campaign/Campain_page.dart';
+import '../apply_voucher.dart';
+import '../screen_02.dart';
 import 'widgets/Explore/explore_Widget.dart';
 import 'widgets/brand_list.dart';
 import '../data/card_data.dart';
@@ -38,57 +42,57 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.lightPink,
-      // appBar: AppBar(
-      //   title: Text("Test screens"),
-      //   backgroundColor: Colors.blue,
-      //   actions: [
-      //     PopupMenuButton<String>(
-      //       icon: const Icon(Icons.more_vert, color: Colors.black),
-      //       onSelected: (value) {
-      //         if (value == 'Screen 01') {
-      //           Navigator.push(
-      //             context,
-      //             MaterialPageRoute(builder: (context) => Screen01()),
-      //           );
-      //         } else if (value == 'Screen 02') {
-      //           Navigator.push(
-      //             context,
-      //             MaterialPageRoute(builder: (context) => Screen02()),
-      //           );
-      //         } else if (value == 'Screen 03') {
-      //           Navigator.push(
-      //             context,
-      //             MaterialPageRoute(builder: (context) => Screen03()),
-      //           );
-      //         }
-      //        else if (value == 'Screen 04') {
-      //           Navigator.push(
-      //             context,
-      //             MaterialPageRoute(builder: (context) => ApplyVoucher()),
-      //           );
-      //         }
-      //       },
-      //       itemBuilder: (BuildContext context) => [
-      //         PopupMenuItem(
-      //           value: 'Screen 01',
-      //           child: Text('Screen 01', style: GoogleFonts.poppins()),
-      //         ),
-      //         PopupMenuItem(
-      //           value: 'Screen 02',
-      //           child: Text('Screen 02', style: GoogleFonts.poppins()),
-      //         ),
-      //         PopupMenuItem(
-      //           value: 'Screen 03',
-      //           child: Text('Screen 03', style: GoogleFonts.poppins()),
-      //         ),
-      //        PopupMenuItem(
-      //           value: 'Screen 04',
-      //           child: Text('Screen 04', style: GoogleFonts.poppins()),
-      //         ),
-      //       ],
-      //     ),
-      //   ],
-      // ),
+      appBar: AppBar(
+        title: Text("Test screens"),
+        backgroundColor: Colors.blue,
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert, color: Colors.black),
+            onSelected: (value) {
+              if (value == 'Screen 01') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Screen01()),
+                );
+              } else if (value == 'Screen 02') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Screen02()),
+                );
+              } else if (value == 'Screen 03') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Screen03()),
+                );
+              }
+             else if (value == 'Screen 04') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ApplyVoucher()),
+                );
+              }
+            },
+            itemBuilder: (BuildContext context) => [
+              PopupMenuItem(
+                value: 'Screen 01',
+                child: Text('Screen 01', style: GoogleFonts.poppins()),
+              ),
+              PopupMenuItem(
+                value: 'Screen 02',
+                child: Text('Screen 02', style: GoogleFonts.poppins()),
+              ),
+              PopupMenuItem(
+                value: 'Screen 03',
+                child: Text('Screen 03', style: GoogleFonts.poppins()),
+              ),
+             PopupMenuItem(
+                value: 'Screen 04',
+                child: Text('Screen 04', style: GoogleFonts.poppins()),
+              ),
+            ],
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
