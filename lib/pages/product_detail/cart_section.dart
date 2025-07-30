@@ -1,9 +1,8 @@
 import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
+import 'package:excellent_trade_app/config/routes/route_export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../../config/routes/routes_name.dart';
 
 class CartSection extends StatefulWidget {
   const CartSection({super.key});
@@ -23,11 +22,38 @@ class _CartSectionState extends State<CartSection> {
           onPressed: () => Navigator.pop(context),
           icon: Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
-        title: Text("Cart", style: GoogleFonts.poppins(fontSize: 20.sp, fontWeight: FontWeight.w700, color: Colors.white)),
+        title: Text(
+          "Cart",
+          style: GoogleFonts.poppins(
+            fontSize: 20.sp,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
+            /// Step Indicator
+            /// Step Indicator
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+              child: IntrinsicHeight(
+                // Ensures equal height for line and steps
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    stepItem("1", "Menu", isCompleted: true),
+                    stepLine(isActive: true),
+                    stepItem("2", "Cart", isActive: true),
+                    stepLine(isActive: false),
+                    stepItem("3", "Checkout"),
+                  ],
+                ),
+              ),
+            ),
+
             estimatedDelivery(),
             ...List.generate(4, (index) => itemsWidget()),
           ],
@@ -49,7 +75,7 @@ class _CartSectionState extends State<CartSection> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              /// Total Summary Row
+              /// Total Summary
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
                 decoration: BoxDecoration(
@@ -59,7 +85,7 @@ class _CartSectionState extends State<CartSection> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    /// Left Section
+                    /// Left
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -73,7 +99,7 @@ class _CartSectionState extends State<CartSection> {
                         ),
                         SizedBox(height: 4.h),
                         GestureDetector(
-                          onTap: () {}, // Expand summary
+                          onTap: () {},
                           child: Text(
                             "See summary",
                             style: GoogleFonts.poppins(
@@ -87,7 +113,7 @@ class _CartSectionState extends State<CartSection> {
                       ],
                     ),
 
-                    /// Right Section
+                    /// Right
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
@@ -121,9 +147,7 @@ class _CartSectionState extends State<CartSection> {
                 width: double.infinity,
                 height: 48.h,
                 child: ElevatedButton.icon(
-                  onPressed: () {
-                    // handle confirmation
-                  },
+                  onPressed: () => Navigator.pushNamed(context, RoutesName.checkout),
                   icon: Icon(Icons.location_on_outlined, size: 18.sp),
                   label: Text(
                     "Confirm payment & address",
@@ -136,7 +160,7 @@ class _CartSectionState extends State<CartSection> {
                     backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14.r),
+                      borderRadius: BorderRadius.circular(6.r),
                     ),
                     elevation: 4,
                   ),
@@ -146,11 +170,63 @@ class _CartSectionState extends State<CartSection> {
           ),
         ),
       ),
-
-
     );
   }
 
+  /// Step Item
+  Widget stepItem(
+    String number,
+    String label, {
+    bool isActive = false,
+    bool isCompleted = false,
+  }) {
+    final bgColor = isCompleted || isActive
+        ? AppColors.primary
+        : Colors.grey.shade300;
+
+    final content = isCompleted
+        ? Icon(Icons.check, color: Colors.white, size: 16.sp)
+        : Text(
+            number,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 13.sp,
+              fontWeight: FontWeight.bold,
+            ),
+          );
+
+    return Column(
+      children: [
+        CircleAvatar(radius: 16.r, backgroundColor: bgColor, child: content),
+
+        // SizedBox(height: 6.h),
+        // Text(
+        //   label,
+        //   maxLines: 2,
+        //   overflow: TextOverflow.ellipsis,
+        //   textAlign: TextAlign.center,
+        //   style: GoogleFonts.poppins(
+        //     fontSize: 11.sp,
+        //     fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+        //     color: isActive ? AppColors.primary : Colors.black54,
+        //   ),
+        // ),
+      ],
+    );
+  }
+
+  /// Step Line
+  Widget stepLine({bool isActive = false}) {
+    return Expanded(
+      child: Container(
+        height: 4.h,
+        // margin: EdgeInsets.only(bottom: 16.h),
+        color: isActive ? AppColors.primary : Colors.grey.shade300,
+      ),
+    );
+  }
+
+  /// Estimated Delivery
   Widget estimatedDelivery() => Padding(
     padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
     child: Container(
@@ -159,11 +235,7 @@ class _CartSectionState extends State<CartSection> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 8,
-            offset: Offset(0, 4),
-          ),
+          BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 4)),
         ],
       ),
       child: Row(
@@ -175,7 +247,11 @@ class _CartSectionState extends State<CartSection> {
               color: AppColors.primary.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.delivery_dining, color: AppColors.primary, size: 24.sp),
+            child: Icon(
+              Icons.delivery_dining,
+              color: AppColors.primary,
+              size: 24.sp,
+            ),
           ),
           SizedBox(width: 14.w),
           Expanded(
@@ -200,9 +276,7 @@ class _CartSectionState extends State<CartSection> {
                 ),
                 SizedBox(height: 6.h),
                 GestureDetector(
-                  onTap: () {
-                    // Handle "Change" logic
-                  },
+                  onTap: () {},
                   child: Text(
                     "Change",
                     style: GoogleFonts.poppins(
@@ -220,6 +294,7 @@ class _CartSectionState extends State<CartSection> {
     ),
   );
 
+  /// Cart Item
   Widget itemsWidget() => Padding(
     padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
     child: Container(
@@ -228,11 +303,7 @@ class _CartSectionState extends State<CartSection> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 6,
-            offset: Offset(0, 3),
-          ),
+          BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
         ],
       ),
       child: Row(
@@ -299,6 +370,7 @@ class _CartSectionState extends State<CartSection> {
     ),
   );
 
+  /// Plus / Minus Button
   Widget counterWidget(IconData icon, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,

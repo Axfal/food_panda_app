@@ -1,4 +1,5 @@
 import 'package:excellent_trade_app/config/routes/route_export.dart';
+import 'package:excellent_trade_app/pages/product_detail/checkout_screen.dart';
 
 
 class Routes {
@@ -35,6 +36,10 @@ class Routes {
    case RoutesName.cartSection:
         return MaterialPageRoute(
             builder: (BuildContext context) => const CartSection()
+        );
+   case RoutesName.checkout:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const CheckoutScreen()
         );
 
       default:

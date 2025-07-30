@@ -17,4 +17,6 @@ class RoutesName {
 
   static const String cartSection = 'cart_Section';
 
+  static const String checkout = 'check_out';
+
 }
