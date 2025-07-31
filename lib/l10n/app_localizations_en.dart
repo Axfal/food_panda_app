@@ -43,7 +43,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get submitting => 'Submitting...';
 
   @override
-  String get splashScreen => 'FoodPanda';
+  String get splashScreen => 'FoodMate';
 
   @override
   String get popularShows => 'Popular Shows';

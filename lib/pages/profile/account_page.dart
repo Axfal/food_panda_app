@@ -1,12 +1,14 @@
 import 'package:excellent_trade_app/Utils/constants/appWeight.dart';
 import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
 import 'package:excellent_trade_app/config/components/round_button_widget.dart';
+import 'package:excellent_trade_app/config/routes/route_export.dart';
 import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/customeButtons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../globalWidgets/PrimeryWidgets/customeBottonNavBar.dart';
+import '../../service/session_manager/session_controller.dart';
 import 'subPages/addresses_page.dart';
 import 'subPages/fav_page.dart';
 import 'subPages/order_page.dart';
@@ -168,7 +170,9 @@ class _AccountPageState extends State<AccountPage> {
                 onTap: () {},
               ),
               const SizedBox(height: 20),
-              RoundButton(title: 'Logout', onPress: (){})
+              RoundButton(title: 'Logout', onPress: () async {
+                await SessionController().logoutUser(context);
+              },),
             ],
           ),
         ),
@@ -198,11 +202,12 @@ class _AccountPageState extends State<AccountPage> {
       actions: [
         IconButton(
           splashRadius: 24,
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => SettingsPage()),
+          onPressed: () => Navigator.pushNamed(context, RoutesName.setting),
+          icon: const Icon(
+            Icons.settings_outlined,
+            size: 24,
+            color: Colors.white,
           ),
-          icon: const Icon(Icons.settings_outlined, size: 24, color: Colors.white),
         ),
         const SizedBox(width: 12),
       ],
@@ -247,7 +252,11 @@ class _AccountPageState extends State<AccountPage> {
                 color: Colors.black,
               ),
             ),
-            trailing: const Icon(Icons.arrow_forward_ios, color: Colors.black54, size: 16),
+            trailing: const Icon(
+              Icons.arrow_forward_ios,
+              color: Colors.black54,
+              size: 16,
+            ),
             onTap: onTap,
           );
         }),
@@ -268,9 +277,7 @@ Widget buildIconCard({
     child: Container(
       padding: const EdgeInsets.fromLTRB(12, 20, 12, 8),
       decoration: BoxDecoration(
-        border: Border.all(
-          color: AppColors.textSecondary.withAlpha(64),
-        ),
+        border: Border.all(color: AppColors.textSecondary.withAlpha(64)),
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
         boxShadow: const [

@@ -1,3 +1,4 @@
+import 'package:excellent_trade_app/config/routes/route_export.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../Utils/constants/app_colors.dart';
@@ -53,27 +54,30 @@ class BrandList extends StatelessWidget {
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: Column(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.asset(
-                          Brands[index]['image'],
-                          width: 80,
-                          height: 70,
-                          fit: BoxFit.cover,
+                  child: GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, RoutesName.restaurantItems),
+                    child: Column(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset(
+                            Brands[index]['image'],
+                            width: 80,
+                            height: 70,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 7),
-                      Text(
-                        Brands[index]['label'],
-                        style: const TextStyle(
-                          fontWeight: AppWeights.medium,
-                          fontSize: 12,
-                          color: AppColors.textPrimary,
+                        const SizedBox(height: 7),
+                        Text(
+                          Brands[index]['label'],
+                          style: const TextStyle(
+                            fontWeight: AppWeights.medium,
+                            fontSize: 12,
+                            color: AppColors.textPrimary,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },

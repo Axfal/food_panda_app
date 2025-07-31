@@ -1,4 +1,5 @@
 import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
+import 'package:excellent_trade_app/config/routes/route_export.dart';
 import 'package:flutter/material.dart';
 
 import '../cards/promo_deal_card.dart';
@@ -48,12 +49,15 @@ class DiscountDealList extends StatelessWidget {
               padding: const EdgeInsets.only(left: 12),
               itemBuilder: (context, index) {
                 final meal = filteredDeals[index];
-                return PromoDealCard(
-                  image: meal['image'],
-                  title: meal['title'],
-                  price: meal['price'],
-                  originalPrice: meal['originalPrice'],
-                  delivery: meal['delivery'],
+                return GestureDetector(
+                  onTap: () => Navigator.pushNamed(context, RoutesName.productDetails),
+                  child: PromoDealCard(
+                    image: meal['image'],
+                    title: meal['title'],
+                    price: meal['price'],
+                    originalPrice: meal['originalPrice'],
+                    delivery: meal['delivery'],
+                  ),
                 );
               },
             ),

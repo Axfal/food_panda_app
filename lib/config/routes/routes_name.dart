@@ -19,4 +19,14 @@ class RoutesName {
 
   static const String checkout = 'check_out';
 
+  static const String menu = 'menu';
+
+  static const String restaurantItems = 'restaurant_items';
+
+  static const String orderNow = 'order_now';
+
+  static const String applyForVoucher = 'apply_for_voucher';
+
+  static const String setting = 'setting';
+
 }

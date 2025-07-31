@@ -73,7 +73,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               },
             ),
             paymentMethodWidget(),
-            orderSummaryWidget()
+            orderSummaryWidget(),
           ],
         ),
       ),
@@ -193,6 +193,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       ),
     );
   }
+
   Widget orderSummaryWidget() => Padding(
     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
     child: Container(
@@ -236,15 +237,19 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               Expanded(
                 child: Text(
                   "1x Beef Pulao 1KG with Podina Raita",
-                  style: GoogleFonts.poppins(fontSize: 14.sp,color: Colors.black),
+                  style: GoogleFonts.poppins(
+                    fontSize: 14.sp,
+                    color: Colors.black,
+                  ),
                 ),
               ),
               Text(
                 'Rs. 1499.40',
                 style: GoogleFonts.poppins(
                   fontSize: 14.sp,
-                  fontWeight: FontWeight.w500
-                    ,color: Colors.black),
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                ),
               ),
             ],
           ),
@@ -262,7 +267,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           SizedBox(height: 8.h),
           InkWell(
             onTap: () {
-              // Open voucher screen or dialog
+             Navigator.pushNamed(context, RoutesName.applyForVoucher);
             },
             borderRadius: BorderRadius.circular(8.r),
             child: Container(
@@ -270,7 +275,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               decoration: BoxDecoration(
                 color: Colors.grey.shade100,
                 borderRadius: BorderRadius.circular(8.r),
-                border: Border.all(color: AppColors.primary.withValues(alpha: .089)),
+                border: Border.all(
+                  color: AppColors.primary.withValues(alpha: .089),
+                ),
               ),
               child: Row(
                 children: [
@@ -307,8 +314,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           amount,
           style: GoogleFonts.poppins(
             fontSize: 14.sp,
-            fontWeight: FontWeight.w500
-              , color: Colors.black45),
+            fontWeight: FontWeight.w500,
+            color: Colors.black45,
+          ),
         ),
       ],
     ),

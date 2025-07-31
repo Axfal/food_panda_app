@@ -1,3 +1,4 @@
+import 'package:excellent_trade_app/config/routes/route_export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -44,7 +45,7 @@ class PromotionalBannerWithGrid extends StatelessWidget {
                 SizedBox(height: 6.h),
                 GestureDetector(
                   onTap: () {
-                    // Your navigation or logic here
+                    Navigator.pushNamed(context, RoutesName.orderNow);
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(
@@ -84,7 +85,7 @@ class PromotionalBannerWithGrid extends StatelessWidget {
           SizedBox(width: 20.w),
 
           /// logo
-          Image.asset('assets/logo/app_logo.png', height: 150),
+          Image.asset('assets/logo/bike.png', height: 150),
         ],
       ),
     );

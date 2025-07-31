@@ -1,14 +1,14 @@
 import 'package:google_fonts/google_fonts.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
 
-class Screen02 extends StatefulWidget {
-  const Screen02({super.key});
+class RestaurantItemScreen extends StatefulWidget {
+  const RestaurantItemScreen({super.key});
 
   @override
-  State<Screen02> createState() => _Screen02State();
+  State<RestaurantItemScreen> createState() => _RestaurantItemScreenState();
 }
 
-class _Screen02State extends State<Screen02> with TickerProviderStateMixin {
+class _RestaurantItemScreenState extends State<RestaurantItemScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(

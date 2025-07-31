@@ -1,12 +1,13 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
-import 'package:excellent_trade_app/main.dart';
-import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/material.dart';
 
-class Screen01 extends StatelessWidget {
-  const Screen01({super.key});
+import '../Utils/constants/app_colors.dart';
+import '../config/routes/routes_name.dart';
+
+class MenuScreen extends StatelessWidget {
+  const MenuScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +134,7 @@ class Screen01 extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.05),
+                  color: AppColors.primary.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: Row(
@@ -233,9 +234,9 @@ class Screen01 extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: AppColors.primary.withOpacity(0.2)),
+        side: BorderSide(color: AppColors.primary.withValues(alpha: 0.2)),
       ),
-      color: AppColors.primary.withOpacity(0.06), // Light background fill
+      color: AppColors.primary.withValues(alpha: 0.06), // Light background fill
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         child: Column(
@@ -247,7 +248,7 @@ class Screen01 extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.15),
+                    color: AppColors.primary.withValues(alpha: 0.15),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(icon, color: AppColors.primary, size: 18),
@@ -341,7 +342,7 @@ class _TrackerWidgetState extends State<TrackerWidget> {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: AppColors.primary.withOpacity(0.2)),
+        side: BorderSide(color: AppColors.primary.withValues(alpha: 0.2)),
       ),
       elevation: 0,
       color: AppColors.primary.withValues(alpha: 0.06), // Soft background
@@ -434,7 +435,7 @@ class _TrackerWidgetState extends State<TrackerWidget> {
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           color: selected
-              ? AppColors.primary.withOpacity(0.15)
+              ? AppColors.primary.withValues(alpha: 0.15)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
         ),
@@ -450,7 +451,7 @@ class _TrackerWidgetState extends State<TrackerWidget> {
 
 class DiscountChip extends StatelessWidget {
   final String text;
-  const DiscountChip({required this.text});
+  const DiscountChip({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -471,7 +472,7 @@ class DiscountChip extends StatelessWidget {
 class TabItem extends StatelessWidget {
   final String text;
   final bool selected;
-  const TabItem({required this.text, this.selected = false});
+  const TabItem({super.key, required this.text, this.selected = false});
 
   @override
   Widget build(BuildContext context) {
@@ -497,7 +498,7 @@ class ItemCard extends StatelessWidget {
   final String subtitle;
   final String price;
 
-  const ItemCard({this.title = 'Item', this.subtitle = '', this.price = ''});
+  const ItemCard({super.key, this.title = 'Item', this.subtitle = '', this.price = ''});
 
   @override
   Widget build(BuildContext context) {

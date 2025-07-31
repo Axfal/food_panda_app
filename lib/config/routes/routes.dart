@@ -1,6 +1,8 @@
 import 'package:excellent_trade_app/config/routes/route_export.dart';
-import 'package:excellent_trade_app/pages/product_detail/checkout_screen.dart';
-
+import 'package:excellent_trade_app/pages/apply_voucher.dart';
+import 'package:excellent_trade_app/pages/profile/subPages/settings.dart';
+import 'package:excellent_trade_app/pages/restuarant_item_screen.dart';
+import 'package:excellent_trade_app/pages/order_now.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -21,25 +23,45 @@ class Routes {
         return MaterialPageRoute(
           builder: (BuildContext context) => const ForgotScreen(),
         );
-       case RoutesName.verifyOtp:
+      case RoutesName.verifyOtp:
         return MaterialPageRoute(
-            builder: (BuildContext context) => const VerifyOtpScreen()
+          builder: (BuildContext context) => const VerifyOtpScreen(),
         );
       case RoutesName.home:
         return MaterialPageRoute(
-            builder: (BuildContext context) => const HomePage()
+          builder: (BuildContext context) => const HomePage(),
         );
       case RoutesName.productDetails:
         return MaterialPageRoute(
-            builder: (BuildContext context) => const ProductDetailsScreen()
+          builder: (BuildContext context) => const ProductDetailsScreen(),
         );
-   case RoutesName.cartSection:
+      case RoutesName.cartSection:
         return MaterialPageRoute(
-            builder: (BuildContext context) => const CartSection()
+          builder: (BuildContext context) => const CartSection(),
         );
-   case RoutesName.checkout:
+      case RoutesName.checkout:
         return MaterialPageRoute(
-            builder: (BuildContext context) => const CheckoutScreen()
+          builder: (BuildContext context) => const CheckoutScreen(),
+        );
+      case RoutesName.menu:
+        return MaterialPageRoute(
+          builder: (BuildContext context) => const MenuScreen(),
+        );
+      case RoutesName.restaurantItems:
+        return MaterialPageRoute(
+          builder: (BuildContext context) => const RestaurantItemScreen(),
+        );
+      case RoutesName.orderNow:
+        return MaterialPageRoute(
+          builder: (BuildContext context) => const OrderNow(),
+        );
+      case RoutesName.applyForVoucher:
+        return MaterialPageRoute(
+          builder: (BuildContext context) => const ApplyVoucher(),
+        );
+      case RoutesName.setting:
+        return MaterialPageRoute(
+          builder: (BuildContext context) => const SettingsPage(),
         );
 
       default:

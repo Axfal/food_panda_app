@@ -161,7 +161,7 @@ abstract class AppLocalizations {
   /// No description provided for @splashScreen.
   ///
   /// In en, this message translates to:
-  /// **'FoodPanda'**
+  /// **'FoodMate'**
   String get splashScreen;
 
   /// No description provided for @popularShows.

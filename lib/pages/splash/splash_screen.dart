@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:animate_do/animate_do.dart';
 
 import '../../Utils/constants/app_colors.dart';
 import '../../l10n/app_localizations.dart';
@@ -13,38 +14,13 @@ class SplashView extends StatefulWidget {
   State<SplashView> createState() => _SplashViewState();
 }
 
-class _SplashViewState extends State<SplashView>
-    with SingleTickerProviderStateMixin {
+class _SplashViewState extends State<SplashView> {
   final SplashServices splashServices = SplashServices();
-
-  late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
-
     splashServices.checkAuthentication(context);
-
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    );
-
-    _scaleAnimation = Tween<double>(begin: 0.85, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeOutBack,
-      ),
-    );
-
-    _animationController.forward();
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
   }
 
   @override
@@ -54,29 +30,43 @@ class _SplashViewState extends State<SplashView>
     return Scaffold(
       backgroundColor: AppColors.primary,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ScaleTransition(
-              scale: _scaleAnimation,
-              child: Image.asset(
-                'assets/logo/app_logo.png',
-                height: 220.h,
-              ),
-            ),
-            ScaleTransition(
-              scale: _scaleAnimation,
-              child: Text(
-                splashText,
-                style: GoogleFonts.poppins(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.w800,
-                  color: Colors.black,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 30.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Animated Bike Image (slide-in + bounce)
+              SlideInLeft(
+                duration: const Duration(milliseconds: 1600),
+                child: Bounce(
+                  infinite: true,
+                  from: 10,
+                  duration: const Duration(seconds: 2),
+                  child: Image.asset(
+                    'assets/logo/bike.png',
+                    height: 200.h,
+                  ),
                 ),
-                textAlign: TextAlign.center,
               ),
-            ),
-          ],
+
+              SizedBox(height: 40.h),
+
+              // Animated Text (pulsing)
+              Pulse(
+                infinite: true,
+                duration: const Duration(seconds: 2),
+                child: Text(
+                  splashText,
+                  style: GoogleFonts.poppins(
+                    fontSize: 26.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

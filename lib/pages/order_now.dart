@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../Utils/constants/app_colors.dart';
 
-class Screen03 extends StatefulWidget {
-  const Screen03({super.key});
+class OrderNow extends StatefulWidget {
+  const OrderNow({super.key});
 
   @override
-  State<Screen03> createState() => _Screen03State();
+  State<OrderNow> createState() => _OrderNowState();
 }
 
-class _Screen03State extends State<Screen03> with TickerProviderStateMixin {
+class _OrderNowState extends State<OrderNow> with TickerProviderStateMixin {
   late TabController tabController;
 
   final List<String> tabs = [

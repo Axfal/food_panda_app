@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:excellent_trade_app/config/routes/route_export.dart';
 import 'package:flutter/material.dart';
 import '../../model/login/login_model.dart';
 import '../storage/local_storage.dart';
@@ -37,6 +38,21 @@ class SessionController {
       SessionController.isLogin = isLogin == 'true' ? true : false;
     } catch (e) {
       debugPrint(e.toString());
+    }
+  }
+
+  /// Clears user session and navigates to login screen.
+  Future<void> logoutUser(BuildContext context) async {
+    try {
+      await sharedPreferenceClass.clearValue('token');
+      await sharedPreferenceClass.clearValue('isLogin');
+      SessionController.isLogin = false;
+      SessionController.user = UserModel(); // Reset user model
+
+      // Navigate to login or onboarding screen
+      Navigator.pushNamedAndRemoveUntil(context, RoutesName.login, (route) => false);
+    } catch (e) {
+      debugPrint("Logout error: ${e.toString()}");
     }
   }
 }
