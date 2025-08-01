@@ -101,7 +101,7 @@ class _AccountPageState extends State<AccountPage> {
                         MaterialPageRoute(builder: (_) => FavouritesPage()),
                       ),
                     ),
-                  ),
+                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: buildIconCard(
@@ -117,7 +117,7 @@ class _AccountPageState extends State<AccountPage> {
               ),
               const SizedBox(height: 20),
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: AppColors.white,
                   borderRadius: BorderRadius.circular(8),
@@ -127,15 +127,21 @@ class _AccountPageState extends State<AccountPage> {
                   ),
                 ),
                 child: Row(
-                  children: const [
-                    Image(
+                  children: [
+                    const Image(
                       image: AssetImage("assets/images/icons/pandaPay.png"),
                       height: 20,
                     ),
-                    SizedBox(width: 8),
-                    Text("Pandapay Credit"),
-                    Spacer(),
-                    Text("Rs 0.00"),
+                    const SizedBox(width: 8),
+                    Text(
+                      "Pandapay Credit",
+                      style: GoogleFonts.poppins(color: Colors.black87),
+                    ),
+                    const Spacer(),
+                    Text(
+                      "Rs 0.00",
+                      style: GoogleFonts.poppins(color: Colors.black87),
+                    ),
                   ],
                 ),
               ),
@@ -170,9 +176,12 @@ class _AccountPageState extends State<AccountPage> {
                 onTap: () {},
               ),
               const SizedBox(height: 20),
-              RoundButton(title: 'Logout', onPress: () async {
-                await SessionController().logoutUser(context);
-              },),
+              RoundButton(
+                title: 'Logout',
+                onPress: () async {
+                  await SessionController().logoutUser(context);
+                },
+              ),
             ],
           ),
         ),
@@ -294,7 +303,7 @@ Widget buildIconCard({
           const SizedBox(height: 10),
           Text(
             label,
-            style: const TextStyle(fontSize: 10),
+            style: GoogleFonts.poppins(color: Colors.black87),
             textAlign: TextAlign.center,
           ),
         ],

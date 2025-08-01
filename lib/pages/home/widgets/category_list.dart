@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../../Utils/constants/app_colors.dart';
 import '../../../../Utils/constants/appWeight.dart';
 
@@ -6,69 +7,59 @@ class HorizontalCategoryList extends StatelessWidget {
   const HorizontalCategoryList({super.key});
 
   final List<Map<String, dynamic>> categories = const [
-    // {
-    //   'image': 'assets/images/food/Latte_and_dark_coffee1',
-    //   'label': 'Pakistani',
-    // },
-    {
-      'image': 'assets/images/food/Cheese-Paratha-Piping-Pot-Curry1.png',
-      'label': 'Burgers',
-    },
-    {
-      'image':
-          'assets/images/food/historical_odyssey_fish_biryani-1701905854473_1000x1.png',
-      'label': 'Pulao',
-    },
-
-    {'image': 'assets/images/food/sddefault1.png', 'label': 'Pizza'},
-    {
-      'image': 'assets/images/food/Cheese-Paratha-Piping-Pot-Curry1.png',
-      'label': 'Biryani',
-    },
-    {
-      'image': 'assets/images/food/Cheese-Paratha-Piping-Pot-Curry1.png',
-      'label': 'Burgers',
-    },
-    {
-      'image':
-          'assets/images/food/historical_odyssey_fish_biryani-1701905854473_1000x1.png',
-      'label': 'Pulao',
-    },
-
-    {'image': 'assets/images/food/sddefault1.png', 'label': 'Pizza'},
-    {
-      'image': 'assets/images/food/Cheese-Paratha-Piping-Pot-Curry1.png',
-      'label': 'Biryani',
-    },
+    {'label': 'Pakistani'},
+    {'label': 'Burgers'},
+    {'label': 'Pulao'},
+    {'label': 'Pizza'},
+    {'label': 'Biryani'},
+    {'label': 'Fries'},
+    {'label': 'Rolls'},
+    {'label': 'BBQ'},
   ];
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 90,
-      child: ListView.builder(
+      height: 100,
+      child: ListView.separated(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         scrollDirection: Axis.horizontal,
         itemCount: categories.length,
+        separatorBuilder: (_, _) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
+          final label = categories[index]['label'] as String;
+
+          return GestureDetector(
+            onTap: () {
+              // TODO: handle category tap
+            },
             child: Column(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.asset(
-                    categories[index]['image'],
-                    width: 55,
-                    height: 55,
-                    fit: BoxFit.cover,
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withValues(alpha: 0.1),
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.fastfood_rounded,
+                    color: Colors.black38,
+                    size: 30,
                   ),
                 ),
-                const SizedBox(height: 7),
+                const SizedBox(height: 6),
                 Text(
-                  categories[index]['label'],
-                  style: const TextStyle(
-                    fontWeight: AppWeights.medium,
+                  label,
+                  style: GoogleFonts.poppins(
                     fontSize: 12,
+                    fontWeight: AppWeights.medium,
                     color: AppColors.textPrimary,
                   ),
                 ),

@@ -71,22 +71,22 @@ class _HomePageState extends State<HomePage> {
                     DiscountCardList(
                       cards: discountCards,
                       onTapCard: (card) {
-                        final data = card['DiscountData'];
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (_) => CampaignPage(
-                              campaignImage: data['campaignImage'],
-                              sheetTitle: data['sheetTitle'],
-                              sheetSubtitle: data['sheetSubtitle'],
+                              campaignImage: card['campaignImage'] ?? '',
+                              sheetTitle: card['sheetTitle'] ?? 'Special Offer',
+                              sheetSubtitle: card['sheetSubtitle'] ?? 'Enjoy exciting deals!',
                               cardsData: List<Map<String, dynamic>>.from(
-                                data['cardsData'],
+                                card['cardsData'] ?? [],
                               ),
                             ),
                           ),
                         );
                       },
                     ),
+
 
                     SizedBox(height: 12.h),
                     CardList(title: 'Home Chef', cardsData: foodCards),

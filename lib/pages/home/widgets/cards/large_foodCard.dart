@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:excellent_trade_app/Utils/constants/appWeight.dart';
 import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
-import 'package:flutter/material.dart';
 
 class LargeFoodCard extends StatelessWidget {
   final String imagePath;
@@ -27,7 +28,7 @@ class LargeFoodCard extends StatelessWidget {
     required this.deliveryFee,
     required this.discountLabel,
     this.isAd = false,
-     this.onTap
+    this.onTap,
   });
 
   @override
@@ -35,30 +36,40 @@ class LargeFoodCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
+        elevation: 2,
         color: AppColors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
+            // 🔷 Image with Favorite & Ad Label
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                  child: Image.asset(
-                    imagePath,
-                    height: 130,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(14),
+                  ),
+                  child: Container(
+                    height: 140,
                     width: double.infinity,
-                    fit: BoxFit.cover,
+                    color: Colors.grey.shade100,
+                    child: Center(
+                      child: Icon(
+                        Icons.fastfood_rounded,
+                        size: 80,
+                        color: Colors.black.withOpacity(0.08),
+                      ),
+                    ),
                   ),
                 ),
                 Positioned(
-                  right: 8,
-                  bottom: 8,
+                  right: 10,
+                  top: 10,
                   child: CircleAvatar(
                     backgroundColor: Colors.white,
                     radius: 16,
-                    child: Icon(
+                    child: const Icon(
                       Icons.favorite_border,
                       size: 18,
                       color: Colors.grey,
@@ -67,15 +78,18 @@ class LargeFoodCard extends StatelessWidget {
                 ),
                 if (isAd)
                   Positioned(
-                    right: 8,
-                    top: 8,
+                    left: 10,
+                    top: 10,
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.6),
                         borderRadius: BorderRadius.circular(4),
                       ),
-                      child: Text(
+                      child: const Text(
                         'Ad',
                         style: TextStyle(
                           color: Colors.white,
@@ -87,75 +101,92 @@ class LargeFoodCard extends StatelessWidget {
                   ),
               ],
             ),
+
+            // 🔶 Title & Rating Row
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 4),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: AppWeights.extraBold,
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
                   Row(
                     children: [
-                      Icon(
-                        Icons.star,
-                        color: Colors.orange,
-                        size: 12,
-                        // fontWeight: AppWeights.bold,
-                      ),
-                      SizedBox(width: 4),
+                      const Icon(Icons.star, color: Colors.orange, size: 14),
+                      const SizedBox(width: 4),
                       Text(
                         '$rating',
-                        style: TextStyle(
+                        style: GoogleFonts.poppins(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text(' ($reviewsCount+)', style: TextStyle(fontSize: 12)),
+                      Text(
+                        ' ($reviewsCount+)',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                        ),
+                      ),
                     ],
                   ),
                 ],
               ),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 8),
-            //   child:
-            // ),
+
+            // 🔸 Duration, Cuisine, Price
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
               child: Text(
                 '$duration • $priceLevel • $cuisine',
-                style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                ),
               ),
             ),
+
+            // 🚴 Delivery Fee
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
               child: Text(
-                '🚴‍♂️ from Rs.$deliveryFee with Saver',
-                style: TextStyle(color: Colors.grey[700], fontSize: 12),
+                '🚴‍♂️ From Rs.$deliveryFee with Saver',
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Colors.grey[700],
+                ),
               ),
             ),
+
+            // 💰 Discount Label
             if (discountLabel.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(12),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.pink.shade100,
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     discountLabel,
-                    style: TextStyle(
-                      color: Colors.pink.shade900,
-                      fontWeight: FontWeight.bold,
+                    style: GoogleFonts.poppins(
                       fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.pink.shade900,
                     ),
                   ),
                 ),
