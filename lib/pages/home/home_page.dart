@@ -77,7 +77,9 @@ class _HomePageState extends State<HomePage> {
                             builder: (_) => CampaignPage(
                               campaignImage: card['campaignImage'] ?? '',
                               sheetTitle: card['sheetTitle'] ?? 'Special Offer',
-                              sheetSubtitle: card['sheetSubtitle'] ?? 'Enjoy exciting deals!',
+                              sheetSubtitle:
+                                  card['sheetSubtitle'] ??
+                                  'Enjoy exciting deals!',
                               cardsData: List<Map<String, dynamic>>.from(
                                 card['cardsData'] ?? [],
                               ),
@@ -86,7 +88,6 @@ class _HomePageState extends State<HomePage> {
                         );
                       },
                     ),
-
 
                     SizedBox(height: 12.h),
                     CardList(title: 'Home Chef', cardsData: foodCards),

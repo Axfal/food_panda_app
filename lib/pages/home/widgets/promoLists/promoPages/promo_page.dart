@@ -8,7 +8,7 @@ import '../../../../data/food_card_model.dart';
 import 'widgets/dish_card.dart';
 
 class DishesOnDiscountPage extends StatelessWidget {
-  const DishesOnDiscountPage({Key? key}) : super(key: key);
+  const DishesOnDiscountPage({super.key});
 
   @override
   Widget build(BuildContext context) {

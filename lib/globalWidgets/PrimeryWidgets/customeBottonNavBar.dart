@@ -1,3 +1,4 @@
+import 'package:excellent_trade_app/pages/grocery/grocery_page.dart';
 import 'package:excellent_trade_app/pages/profile/account_page.dart';
 import 'package:flutter/material.dart';
 import '../../../../Utils/constants/app_colors.dart';
@@ -39,7 +40,7 @@ class CustomBottomNavBar extends StatelessWidget {
             _navigate(context, const HomePage());
             break;
           case 1:
-            _navigate(context, const HomePage());
+            _navigate(context, const GroceryPage());
             break;
           case 2:
             _navigate(context, const SearchPage());
