@@ -42,25 +42,45 @@ class _AccountPageState extends State<AccountPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 8),
-              Text(
-                "Muhammad Anfal",
-                style: GoogleFonts.montserrat(
-                  fontWeight: AppWeights.extraBold,
-                  fontSize: 20,
-                  color: Colors.black,
-                ),
-              ),
               GestureDetector(
-                child: const Text(
-                  "anfalshah72@gmail.com",
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: AppWeights.extraBold,
-                    color: Colors.black54,
-                  ),
+                onTap: () => Navigator.pushNamed(context, RoutesName.profile),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 24,
+                      backgroundColor: AppColors.primary.withValues(
+                        alpha: .099,
+                      ),
+                      child: Icon(Icons.person, size: 35, color: AppColors.primary),
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Muhammad Anfal",
+                          style: GoogleFonts.montserrat(
+                            fontWeight: AppWeights.extraBold,
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          "anfalshah72@gmail.com",
+                          style: GoogleFonts.montserrat(
+                            fontSize: 12,
+                            fontWeight: AppWeights.medium,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                onTap: () {},
               ),
+
               const SizedBox(height: 20),
               Container(
                 height: 100,
@@ -101,7 +121,7 @@ class _AccountPageState extends State<AccountPage> {
                         MaterialPageRoute(builder: (_) => FavouritesPage()),
                       ),
                     ),
-                   ),
+                  ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: buildIconCard(
@@ -134,7 +154,7 @@ class _AccountPageState extends State<AccountPage> {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      "Pandapay Credit",
+                      "Food mate Credit",
                       style: GoogleFonts.poppins(color: Colors.black87),
                     ),
                     const Spacer(),
@@ -148,8 +168,8 @@ class _AccountPageState extends State<AccountPage> {
               buildItemList(
                 heading: 'Perks for you',
                 titles: [
-                  'Try pandapro for free',
-                  'Panda rewards',
+                  'Try Food mate  for free',
+                  'Food mate  rewards',
                   'Vouchers',
                   'Invite friends',
                 ],
@@ -165,7 +185,7 @@ class _AccountPageState extends State<AccountPage> {
                 heading: 'General',
                 titles: [
                   'Help Center',
-                  'Foodpanda for business',
+                  'Food mate  for business',
                   'Terms & Policies',
                 ],
                 icons: [

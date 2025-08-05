@@ -4,80 +4,96 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../Utils/constants/app_colors.dart';
 import '../../../../Utils/constants/appWeight.dart';
 
-class BrandList extends StatelessWidget {
-  const BrandList({super.key});
+class BrandList extends StatefulWidget {
+  final String title;
+  const BrandList({super.key, this.title = "Top Brands"});
 
-  final List<Map<String, dynamic>> Brands = const [
-    {'image': 'assets/images/res_logos/burgerLab.png', 'label': 'Burger Lab'},
-    {
-      'image': 'assets/images/res_logos/subway.png',
-      'label': 'California Pizza',
-    },
-    {'image': 'assets/images/res_logos/KFC_logo-image.png', 'label': 'KFC'},
-    {
-      'image': 'assets/images/res_logos/Starbucks_Corporation.png',
-      'label': 'Broadway Pizza',
-    },
-    {'image': 'assets/images/res_logos/burgerLab.png', 'label': 'Burger Lab'},
-    {
-      'image': 'assets/images/res_logos/subway.png',
-      'label': 'California Pizza',
-    },
-    {'image': 'assets/images/res_logos/KFC_logo-image.png', 'label': 'KFC'},
-    {
-      'image': 'assets/images/res_logos/Starbucks_Corporation.png',
-      'label': 'Broadway Pizza',
-    },
+  @override
+  State<BrandList> createState() => _BrandListState();
+}
+
+class _BrandListState extends State<BrandList> {
+  final List<Map<String, dynamic>> brands = const [
+    {'label': 'Burger Lab'},
+    {'label': 'California Pizza'},
+    {'label': 'KFC'},
+    {'label': 'Broadway Pizza'},
+    {'label': 'OPTP'},
+    {'label': 'Pizza Max'},
+    {'label': 'McDonald\'s'},
+    {'label': 'Hardee\'s'},
   ];
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Top Brands',
-            style: GoogleFonts.montserrat(
-              fontSize: 18,
-              fontWeight: AppWeights.bold, // still w900
-              color: AppColors.textPrimary,
+          if (widget.title != "") ...[
+            Text(
+              widget.title,
+              style: GoogleFonts.montserrat(
+                fontSize: 20,
+                fontWeight: AppWeights.bold,
+                color: AppColors.textPrimary,
+              ),
             ),
-          ),
-          SizedBox(height: 10),
+            const SizedBox(height: 16),
+          ],
           SizedBox(
-            height: 120,
-            child: ListView.builder(
+            height: 130,
+            child: ListView.separated(
               scrollDirection: Axis.horizontal,
-              itemCount: Brands.length,
+              itemCount: brands.length,
+              separatorBuilder: (context, index) => const SizedBox(width: 12),
               itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: GestureDetector(
-                    onTap: () => Navigator.pushNamed(context, RoutesName.restaurantItems),
-                    child: Column(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
-                            Brands[index]['image'],
-                            width: 80,
-                            height: 70,
-                            fit: BoxFit.cover,
+                final brand = brands[index];
+                return GestureDetector(
+                  onTap: () =>
+                      Navigator.pushNamed(context, RoutesName.restaurantItems),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 70,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(50),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.15),
+                              spreadRadius: 1,
+                              blurRadius: 6,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Icon(
+                            Icons.fastfood,
+                            size: 34,
+                            color: AppColors.primary,
                           ),
                         ),
-                        const SizedBox(height: 7),
-                        Text(
-                          Brands[index]['label'],
-                          style: const TextStyle(
+                      ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        width: 80,
+                        child: Text(
+                          brand['label'],
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.poppins(
                             fontWeight: AppWeights.medium,
                             fontSize: 12,
                             color: AppColors.textPrimary,
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 );
               },

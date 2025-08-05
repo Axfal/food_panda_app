@@ -7,4 +7,7 @@ export 'package:excellent_trade_app/pages/menu_screen.dart';
 export 'package:excellent_trade_app/pages/product_detail/checkout_screen.dart';
 export 'package:excellent_trade_app/pages/product_detail/cart_section.dart';
 export 'package:excellent_trade_app/pages/product_detail/product_details_screen.dart';
+export 'package:excellent_trade_app/pages/apply_voucher.dart';
+export 'package:excellent_trade_app/pages/profile/subPages/profile/profile_screen.dart';
+export 'package:excellent_trade_app/pages/profile/subPages/settings.dart';
 export 'package:excellent_trade_app/pages/auth/forgot_password/verify_otp/verify_otp_screen.dart';

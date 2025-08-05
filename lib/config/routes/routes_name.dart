@@ -29,4 +29,6 @@ class RoutesName {
 
   static const String setting = 'setting';
 
+  static const String profile = 'profile';
+
 }

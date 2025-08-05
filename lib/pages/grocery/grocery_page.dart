@@ -32,6 +32,8 @@ class _GroceryPageState extends State<GroceryPage> {
     'Snacks',
   ];
 
+  final x = 1;
+
   void _onNavItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -58,7 +60,7 @@ class _GroceryPageState extends State<GroceryPage> {
           SizedBox(width: 20),
         ],
       ),
-      body: Padding(
+      body: x == 1? Center(child: Text("Coming Soon", style: GoogleFonts.poppins(fontSize: 22),),):Padding(
         padding: const EdgeInsets.all(12),
         child: SingleChildScrollView(
           child: Column(

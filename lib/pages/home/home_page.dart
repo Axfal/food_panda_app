@@ -66,8 +66,8 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     HorizontalIconList(),
                     Divider(thickness: 1, color: AppColors.border),
-                    HorizontalCategoryList(),
-
+                    BrandList(title: "",),
+                    // HorizontalCategoryList(),
                     DiscountCardList(
                       cards: discountCards,
                       onTapCard: (card) {
@@ -89,15 +89,14 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
 
-                    SizedBox(height: 12.h),
-                    CardList(title: 'Home Chef', cardsData: foodCards),
                     SizedBox(height: 16.h),
-                    DiscountDealList(),
-                    SizedBox(height: 16.h),
-                    MealDealList(),
-                    SizedBox(height: 16.h),
+                    // CardList(title: 'Home Chef', cardsData: foodCards),
+                    // SizedBox(height: 16.h),
+                    // DiscountDealList(),
+                    // SizedBox(height: 16.h),
+                    // MealDealList(),
+                    // SizedBox(height: 16.h),
                     BrandList(),
-                    SizedBox(height: 16.h),
                     CardList(title: 'Try Something New', cardsData: foodCards),
                     SizedBox(height: 16.h),
                     ExploreWidget(cardsData: foodCards),
