@@ -12,28 +12,28 @@ class HorizontalIconList extends StatelessWidget {
 
   final List<Map<String, dynamic>> icons = [
     {
-      'image': "assets/images/icons/percentage.png",
-      'label': 'Offers\n',
+      'image': "assets/logo/offer.png",
+      'label': 'Offers',
       'page': OffersPage(),
     },
     {
       'image': "assets/images/icons/badge.png",
-      'label': 'Top\n Restaurants',
+      'label': 'Top Restaurants',
       'page': TopRestaurantsPage(cardsData: foodCards),
     },
     {
       'image': "assets/images/icons/dish_cover.jpg",
-      'label': 'New\n restaurants',
+      'label': 'New Restaurants',
       'page': NewRestaurantsPage(cardsData: foodCards),
     },
     {
       'image': "assets/images/icons/pick_up.png",
-      'label': 'Pick-up\n',
+      'label': 'Pick-up',
       'page': NewRestaurantsPage(cardsData: foodCards),
     },
     {
       'image': "assets/images/icons/homechef.png",
-      'label': 'Home Chef\n',
+      'label': 'Home Chef',
       'page': CampaignPage(
         campaignImage: 'assets/images/homechef_bg.jpg',
         sheetTitle: 'Homechef Deals and Discounts',
@@ -46,10 +46,12 @@ class HorizontalIconList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 90,
-      child: ListView.builder(
+      height: 120,
+      child: ListView.separated(
         scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         itemCount: icons.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 14),
         itemBuilder: (context, index) {
           final item = icons[index];
           return GestureDetector(
@@ -59,39 +61,51 @@ class HorizontalIconList extends StatelessWidget {
                 MaterialPageRoute(builder: (_) => item['page']),
               );
             },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 24,
-                    backgroundColor: AppColors.primary.withOpacity(0.1),
-                    child: item.containsKey('icon')
-                        ? Icon(item['icon'], color: AppColors.primary)
-                        : item.containsKey('image')
-                        ? ClipOval(
-                            child: Image.asset(
-                              item['image'],
-                              height: 44,
-                              width: 44,
-                              fit: BoxFit.contain,
-                            ),
-                          )
-                        : const SizedBox.shrink(),
+            child: Column(
+              children: [
+                Container(
+                  height: 70,
+                  width: 70,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withOpacity(0.099),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 6,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    textAlign: TextAlign.center,
+                  child: Center(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Image.asset(
+                          item['image'],
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: 80,
+                  child: Text(
                     item['label'],
+                    textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontWeight: AppWeights.medium,
                       fontSize: 12,
                       color: AppColors.textPrimary,
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
         },

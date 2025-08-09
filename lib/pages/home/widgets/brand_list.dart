@@ -6,28 +6,33 @@ import '../../../../Utils/constants/appWeight.dart';
 
 class BrandList extends StatefulWidget {
   final String title;
-  const BrandList({super.key, this.title = "Top Brands"});
+  final List<Map<String, dynamic>> labels;
+  final List<VoidCallback> onTaps;
+
+  const BrandList({
+    super.key,
+    this.title = "Top Brands",
+    required this.labels,
+    required this.onTaps,
+  });
 
   @override
   State<BrandList> createState() => _BrandListState();
 }
 
 class _BrandListState extends State<BrandList> {
-  final List<Map<String, dynamic>> brands = const [
-    {'label': 'Burger Lab'},
-    {'label': 'California Pizza'},
-    {'label': 'KFC'},
-    {'label': 'Broadway Pizza'},
-    {'label': 'OPTP'},
-    {'label': 'Pizza Max'},
-    {'label': 'McDonald\'s'},
-    {'label': 'Hardee\'s'},
-  ];
+  late List<Map<String, dynamic>> brands;
+
+  @override
+  void initState() {
+    super.initState();
+    brands = widget.labels;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+      padding: EdgeInsets.symmetric(horizontal: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -51,19 +56,18 @@ class _BrandListState extends State<BrandList> {
               itemBuilder: (context, index) {
                 final brand = brands[index];
                 return GestureDetector(
-                  onTap: () =>
-                      Navigator.pushNamed(context, RoutesName.restaurantItems),
+                  onTap: widget.onTaps[index],
                   child: Column(
                     children: [
                       Container(
                         width: 70,
                         height: 70,
                         decoration: BoxDecoration(
-                          color: AppColors.primary.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(50),
+                          color: AppColors.primary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey.withOpacity(0.15),
+                              color: Colors.grey.withValues(alpha: 0.15),
                               spreadRadius: 1,
                               blurRadius: 6,
                               offset: const Offset(0, 3),

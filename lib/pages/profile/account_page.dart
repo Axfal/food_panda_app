@@ -52,7 +52,11 @@ class _AccountPageState extends State<AccountPage> {
                       backgroundColor: AppColors.primary.withValues(
                         alpha: .099,
                       ),
-                      child: Icon(Icons.person, size: 35, color: AppColors.primary),
+                      child: Icon(
+                        Icons.person,
+                        size: 35,
+                        color: AppColors.primary,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Column(
@@ -179,7 +183,13 @@ class _AccountPageState extends State<AccountPage> {
                   Icons.local_offer_outlined,
                   Icons.group_add_outlined,
                 ],
-                onTap: () {},
+                onTaps: [
+                  () => {},
+                  () => {},
+                  () =>
+                      Navigator.pushNamed(context, RoutesName.applyForVoucher),
+                  () =>  Navigator.pushNamed(context, RoutesName.inviteFriends),
+                ],
               ),
               buildItemList(
                 heading: 'General',
@@ -193,7 +203,11 @@ class _AccountPageState extends State<AccountPage> {
                   Icons.business_center_outlined,
                   Icons.policy_outlined,
                 ],
-                onTap: () {},
+                onTaps: [
+                  (){},
+                  (){},
+                  (){},
+                ],
               ),
               const SizedBox(height: 20),
               RoundButton(
@@ -254,7 +268,7 @@ class _AccountPageState extends State<AccountPage> {
     required String heading,
     required List<String> titles,
     required List<IconData> icons,
-    required VoidCallback onTap,
+    required List<VoidCallback> onTaps,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -286,48 +300,52 @@ class _AccountPageState extends State<AccountPage> {
               color: Colors.black54,
               size: 16,
             ),
-            onTap: onTap,
+            onTap: onTaps[index],
           );
         }),
       ],
     );
   }
-}
 
-Widget buildIconCard({
-  String? imagePath,
-  IconData? icon,
-  required String label,
-  required VoidCallback onTap,
-}) {
-  return InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(8),
-    child: Container(
-      padding: const EdgeInsets.fromLTRB(12, 20, 12, 8),
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.textSecondary.withAlpha(64)),
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 2, offset: Offset(0, 1)),
-        ],
+  Widget buildIconCard({
+    String? imagePath,
+    IconData? icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(12, 20, 12, 8),
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.textSecondary.withAlpha(64)),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 2,
+              offset: Offset(0, 1),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (imagePath != null)
+              Image.asset(imagePath, height: 24, width: 24)
+            else if (icon != null)
+              Icon(icon, size: 24, color: Colors.black),
+            const SizedBox(height: 10),
+            Text(
+              label,
+              style: GoogleFonts.poppins(color: Colors.black87),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (imagePath != null)
-            Image.asset(imagePath, height: 24, width: 24)
-          else if (icon != null)
-            Icon(icon, size: 24, color: Colors.black),
-          const SizedBox(height: 10),
-          Text(
-            label,
-            style: GoogleFonts.poppins(color: Colors.black87),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    ),
-  );
+    );
+  }
 }

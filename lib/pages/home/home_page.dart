@@ -1,5 +1,8 @@
+import 'package:excellent_trade_app/pages/Top_restaurants/top_res_page.dart';
 import 'package:excellent_trade_app/pages/home/widgets/discountCardList/discount_data.dart';
 import 'package:excellent_trade_app/pages/menu_screen.dart';
+import 'package:excellent_trade_app/pages/new_restaurants/new_restaurants_page.dart';
+import 'package:excellent_trade_app/pages/offers/offers_page.dart';
 import 'package:excellent_trade_app/pages/order_now.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -64,9 +67,74 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    HorizontalIconList(),
-                    Divider(thickness: 1, color: AppColors.border),
-                    BrandList(title: "",),
+                    // HorizontalIconList(),
+                    BrandList(
+                      title: "",
+                      labels: [
+                        {'label': 'offers'},
+                        {'label': 'Top Restaurants'},
+                        {'label': 'New Restaurants'},
+                        {'label': 'Pick-up'},
+                        {'label': 'Home Chef'},
+                      ],
+                      onTaps: [
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => OffersPage()),
+                        ),
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                TopRestaurantsPage(cardsData: foodCards),
+                          ),
+                        ),
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                NewRestaurantsPage(cardsData: foodCards),
+                          ),
+                        ),
+                        () {},
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CampaignPage(
+                              campaignImage: 'assets/images/homechef_bg.jpg',
+                              sheetTitle: 'Homechef Deals and Discounts',
+                              sheetSubtitle: 'Ghar jesa khana!',
+                              cardsData: foodCards,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Divider(thickness: 1.5, color: AppColors.border),
+                    SizedBox(height: 18.h),
+                    BrandList(
+                      title: "",
+                      labels: [
+                        {'label': 'Burger Lab'},
+                        {'label': 'California Pizza'},
+                        {'label': 'KFC'},
+                        {'label': 'Broadway Pizza'},
+                        {'label': 'OPTP'},
+                        {'label': 'Pizza Max'},
+                        {'label': 'McDonald\'s'},
+                        {'label': 'Hardee\'s'},
+                      ],
+                      onTaps: [
+                        () {},
+                        () {},
+                        () {},
+                        () {},
+                        () {},
+                        () {},
+                        () {},
+                        () {},
+                      ],
+                    ),
                     // HorizontalCategoryList(),
                     DiscountCardList(
                       cards: discountCards,
@@ -96,7 +164,28 @@ class _HomePageState extends State<HomePage> {
                     // SizedBox(height: 16.h),
                     // MealDealList(),
                     // SizedBox(height: 16.h),
-                    BrandList(),
+                    BrandList(
+                      labels: [
+                        {'label': 'Burger Lab'},
+                        {'label': 'California Pizza'},
+                        {'label': 'KFC'},
+                        {'label': 'Broadway Pizza'},
+                        {'label': 'OPTP'},
+                        {'label': 'Pizza Max'},
+                        {'label': 'McDonald\'s'},
+                        {'label': 'Hardee\'s'},
+                      ],
+                      onTaps: [
+                        () {},
+                        () {},
+                        () {},
+                        () {},
+                        () {},
+                        () {},
+                        () {},
+                        () {},
+                      ],
+                    ),
                     CardList(title: 'Try Something New', cardsData: foodCards),
                     SizedBox(height: 16.h),
                     ExploreWidget(cardsData: foodCards),

@@ -30,15 +30,22 @@ Future<void> initializeMapRenderer() async {
 
   if (mapsImplementation is GoogleMapsFlutterAndroid) {
     try {
-      await mapsImplementation.initializeWithRenderer(AndroidMapRenderer.latest);
+      await mapsImplementation.initializeWithRenderer(
+        AndroidMapRenderer.latest,
+      );
       debugPrint('Initialized latest Android Map renderer');
     } on PlatformException catch (e) {
-      if (e.message != null && e.message!.contains('Renderer already initialized')) {
+      if (e.message != null &&
+          e.message!.contains('Renderer already initialized')) {
         debugPrint('Renderer already initialized error caught, continuing...');
       } else {
-        debugPrint('Failed to initialize latest renderer, falling back legacy: $e');
+        debugPrint(
+          'Failed to initialize latest renderer, falling back legacy: $e',
+        );
         try {
-          await mapsImplementation.initializeWithRenderer(AndroidMapRenderer.legacy);
+          await mapsImplementation.initializeWithRenderer(
+            AndroidMapRenderer.legacy,
+          );
           debugPrint('Initialized legacy Android Map renderer');
         } catch (legacyError) {
           debugPrint('Legacy renderer initialization failed: $legacyError');
@@ -88,10 +95,7 @@ class MyApp extends StatelessWidget {
                     GlobalWidgetsLocalizations.delegate,
                     GlobalCupertinoLocalizations.delegate,
                   ],
-                  supportedLocales: const [
-                    Locale('en'),
-                    Locale('es'),
-                  ],
+                  supportedLocales: const [Locale('en'), Locale('es')],
                   initialRoute: RoutesName.splash,
                   onGenerateRoute: Routes.generateRoute,
                 );

@@ -41,6 +41,7 @@ class SignupStates extends Equatable {
 
   @override
   // TODO: implement props
+  @override
   List<Object?> get props => [
     userName,
     email,
@@ -48,5 +49,7 @@ class SignupStates extends Equatable {
     countryCode,
     password,
     confirmPassword,
+    signupApi
   ];
+
 }

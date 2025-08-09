@@ -47,6 +47,7 @@ dependencies:
   bloc: ^9.0.0
   flutter_bloc: ^9.1.1
   http: ^1.4.0
+  typewritertext: ^3.0.9
   get_it: ^8.0.3
   freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0

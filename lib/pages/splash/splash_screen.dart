@@ -6,9 +6,10 @@ import 'package:animate_do/animate_do.dart';
 import '../../Utils/constants/app_colors.dart';
 import '../../l10n/app_localizations.dart';
 import '../../service/splash/splash_service.dart';
+import 'package:typewritertext/typewritertext.dart';
 
 class SplashView extends StatefulWidget {
-  const SplashView({Key? key}) : super(key: key);
+  const SplashView({super.key});
 
   @override
   State<SplashView> createState() => _SplashViewState();
@@ -49,20 +50,36 @@ class _SplashViewState extends State<SplashView> {
                 ),
               ),
 
-              SizedBox(height: 40.h),
 
-              // Animated Text (pulsing)
-              Pulse(
-                infinite: true,
-                duration: const Duration(seconds: 2),
-                child: Text(
-                  splashText,
-                  style: GoogleFonts.poppins(
-                    fontSize: 26.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+              ShaderMask(
+                shaderCallback: (bounds) => LinearGradient(
+                  colors: [Colors.white, Colors.white],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ).createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
+                blendMode: BlendMode.srcIn,
+                child: TypeWriter(
+                  controller: TypeWriterController(
+                    text: splashText,
+                    duration: const Duration(milliseconds: 200),
                   ),
-                  textAlign: TextAlign.center,
+                  builder: (context, value) => Text(
+                    value.text,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(
+                      fontSize: 28.sp,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 0.8,
+                      color: Colors.white,
+                      shadows: const [
+                        Shadow(
+                          color: Colors.black45,
+                          offset: Offset(2, 2),
+                          blurRadius: 4,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],

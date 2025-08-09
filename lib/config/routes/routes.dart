@@ -1,5 +1,6 @@
 import 'package:excellent_trade_app/config/routes/route_export.dart';
 import 'package:excellent_trade_app/pages/order_now.dart';
+import 'package:excellent_trade_app/pages/profile/subPages/invite_friends_screen.dart';
 import 'package:excellent_trade_app/pages/restuarant_item_screen.dart';
 
 class Routes {
@@ -64,6 +65,10 @@ class Routes {
       case RoutesName.profile:
         return MaterialPageRoute(
           builder: (BuildContext context) => const ProfileScreen(),
+        );
+      case RoutesName.inviteFriends:
+        return MaterialPageRoute(
+          builder: (BuildContext context) => const InviteFriendsScreen(),
         );
 
       default:

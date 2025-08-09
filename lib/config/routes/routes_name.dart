@@ -31,4 +31,6 @@ class RoutesName {
 
   static const String profile = 'profile';
 
+  static const String inviteFriends = 'invite_friend';
+
 }
