@@ -14,7 +14,7 @@ class ForgotPasswordBloc
     : super(ForgotPasswordState()) {
     on<EmailChange>(_onEmailChange);
     on<PinCodeChange>(_onPinCodeChange);
-    on<SigninOtp>(_onSigninOtp);
+    on<SigninOtp>(_onSignInOtp);
     on<VerifyOtp>(_onVerifyOtp);
   }
   void _onEmailChange(EmailChange event, Emitter<ForgotPasswordState> emit) {
@@ -28,16 +28,26 @@ class ForgotPasswordBloc
     emit(state.copyWith(pinCode: event.pinCode));
   }
 
-  void _onSigninOtp(SigninOtp event, Emitter<ForgotPasswordState> emit) async {
+  void _onSignInOtp(SigninOtp event, Emitter<ForgotPasswordState> emit) async {
     emit(state.copyWith(signinOtp: ApiResponse.loading()));
+
     Map<String, dynamic> data = {'email': state.email};
     dynamic response = await authApiRepository.sigInOTP(data);
-    if (response != null && response['success'] == true) {
-      emit(
-        state.copyWith(signinOtp: ApiResponse.completed("SignUp Successfully")),
-      );
+
+    if (response != null) {
+      if (response['success'] != null && response['success'] == "OTP sent to email") {
+        print("okkkkkaksdkasd");
+        emit(
+          state.copyWith(
+            signinOtp: ApiResponse.completed(response['success'].toString()),
+          ),
+        );
+      } else {
+        final errorMessage = response['error']?.toString() ?? 'Unknown error occurred';
+        emit(state.copyWith(signinOtp: ApiResponse.error(errorMessage)));
+      }
     } else {
-      emit(state.copyWith(signinOtp: ApiResponse.error(response['error'])));
+      emit(state.copyWith(signinOtp: ApiResponse.error("No response from server")));
     }
   }
 

@@ -16,12 +16,19 @@ class ForgotButton extends StatelessWidget {
           );
         }
         if (state.signinOtp.status == Status.completed) {
-          Navigator.pushNamed(context, RoutesName.verifyOtp);
+          context.flushBarSuccessMessage(
+            message: state.signinOtp.data.toString(),
+          );
+
+          Future.delayed(const Duration(seconds: 2), () {
+            Navigator.pushNamed(context, RoutesName.verifyOtp);
+          });
         }
       },
       builder: (context, state) {
         return RoundButton(
           title: "Send Code",
+          loading: state.signinOtp.status == Status.loading,
           onPress: () {
             if (formKey.currentState!.validate()) {
               context.read<ForgotPasswordBloc>().add(SigninOtp());

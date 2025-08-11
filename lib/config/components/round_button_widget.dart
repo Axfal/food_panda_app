@@ -20,9 +20,9 @@ class RoundButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: loading ? null : onPress,
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primary, // Foodpanda primary color
+        backgroundColor: AppColors.primary,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30), // pill shape
+          borderRadius: BorderRadius.circular(30),
         ),
         padding: const EdgeInsets.symmetric(vertical: 16),
         elevation: 3,
