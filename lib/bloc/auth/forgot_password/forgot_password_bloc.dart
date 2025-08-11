@@ -35,19 +35,22 @@ class ForgotPasswordBloc
     dynamic response = await authApiRepository.sigInOTP(data);
 
     if (response != null) {
-      if (response['success'] != null && response['success'] == "OTP sent to email") {
-        print("okkkkkaksdkasd");
+      if (response['success'] != null &&
+          response['success'] == "OTP sent to email") {
         emit(
           state.copyWith(
             signinOtp: ApiResponse.completed(response['success'].toString()),
           ),
         );
       } else {
-        final errorMessage = response['error']?.toString() ?? 'Unknown error occurred';
+        final errorMessage =
+            response['error']?.toString() ?? 'Unknown error occurred';
         emit(state.copyWith(signinOtp: ApiResponse.error(errorMessage)));
       }
     } else {
-      emit(state.copyWith(signinOtp: ApiResponse.error("No response from server")));
+      emit(
+        state.copyWith(signinOtp: ApiResponse.error("No response from server")),
+      );
     }
   }
 

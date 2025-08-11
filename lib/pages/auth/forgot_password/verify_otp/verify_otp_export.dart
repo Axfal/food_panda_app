@@ -4,3 +4,4 @@ export 'package:excellent_trade_app/config/components/round_button_widget.dart';
 export 'package:excellent_trade_app/pages/auth/forgot_password/verify_otp/widget/pin_code_input.dart';
 export 'package:excellent_trade_app/pages/auth/forgot_password/verify_otp/widget/verify_button.dart';
 export 'package:excellent_trade_app/Utils/constants/app_colors.dart';
+import 'package:excellent_trade_app/bloc/auth/forgot_password/forgot_password_bloc.dart';
