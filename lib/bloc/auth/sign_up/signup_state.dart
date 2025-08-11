@@ -7,6 +7,7 @@ class SignupStates extends Equatable {
   final String countryCode;
   final String password;
   final String confirmPassword;
+  final String role;
   final ApiResponse<String> signupApi;
 
   const SignupStates({
@@ -16,6 +17,7 @@ class SignupStates extends Equatable {
     this.password = '',
     this.phone = '',
     this.countryCode = '',
+    this.role = '',
     this.signupApi = const ApiResponse.completed(''),
   });
 
@@ -26,6 +28,7 @@ class SignupStates extends Equatable {
     String? password,
     String? phone,
     String? countryCode,
+    String? role,
     ApiResponse<String>? signupApi,
   }) {
     return SignupStates(
@@ -35,6 +38,7 @@ class SignupStates extends Equatable {
       password: password ?? this.password,
       phone: phone ?? this.phone,
       countryCode: countryCode ?? this.countryCode,
+      role: role ?? this.role,
       signupApi: signupApi ?? this.signupApi,
     );
   }
@@ -49,6 +53,7 @@ class SignupStates extends Equatable {
     countryCode,
     password,
     confirmPassword,
+    role,
     signupApi
   ];
 

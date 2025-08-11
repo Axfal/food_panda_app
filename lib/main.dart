@@ -59,7 +59,7 @@ Future<void> initializeMapRenderer() async {
 }
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // call only once here
+  WidgetsFlutterBinding.ensureInitialized();
 
   dependencyInjector.servicesLocator();
 

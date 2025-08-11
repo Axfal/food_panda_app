@@ -21,11 +21,11 @@ class _PhoneInputState extends State<PhoneInput> {
           hintText: 'Enter phone number',
           controller: phoneController,
           focusNode: focusNode,
+          initialCountryCode: 'PK',
           textInputAction: TextInputAction.next,
-          onChanged: (phone) {
-            if (phone.isEmpty) {
-              return 'Please Enter Phone Number';
-            }
+          onChanged: (countryCode, number) {
+            context.read<SignupBloc>().add(CountryCodeChange(countryCode: countryCode));
+            context.read<SignupBloc>().add(PhoneChange(phone: number));
           },
           validator: (value) {
             if (value == null || value.isEmpty) {

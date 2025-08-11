@@ -1,5 +1,6 @@
 import 'package:excellent_trade_app/dependency_injection/locator.dart';
 import 'package:excellent_trade_app/pages/auth/signup/signup_exports.dart';
+import 'package:excellent_trade_app/pages/auth/signup/widget/drop_down_button_input.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -65,6 +66,9 @@ class _SignupScreenState extends State<SignupScreen> {
                       const SizedBox(height: 15),
 
                       const ConfirmPasswordInput(),
+                      const SizedBox(height: 15),
+
+                     const DropDownButtonInput(),
                       const SizedBox(height: 15),
 
                       SignupButton(formKey: _formKey),

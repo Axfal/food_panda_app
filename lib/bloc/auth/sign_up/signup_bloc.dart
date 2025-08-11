@@ -12,7 +12,12 @@ class SignupBloc extends Bloc<SignupEvent, SignupStates> {
     on<ConfirmPasswordChange>(_onConfirmPasswordChanged);
     on<PhoneChange>(_phoneChange);
     on<CountryCodeChange>(_onCountryCodeChange);
+    on<RoleChange>(_onRoleChange);
     on<SignupApi>(_onFormSubmitted);
+  }
+
+  void _onRoleChange(RoleChange event, Emitter<SignupStates> emit) {
+    emit(state.copyWith(role: event.role));
   }
 
   void _onEmailChanged(EmailChange event, Emitter<SignupStates> emit) {
@@ -53,25 +58,38 @@ class SignupBloc extends Bloc<SignupEvent, SignupStates> {
       'country_code': state.countryCode,
       'password': state.password,
       'confirm_password': state.confirmPassword,
+      'role': state.role,
       'device_id': '1234-5678',
       'referral_code': 'REF123',
     };
+
     emit(state.copyWith(signupApi: const ApiResponse.loading()));
-    await authApiRepository
-        .signupApi(data)
-        .then((value) async {
-          if (value.error.isNotEmpty) {
-            emit(state.copyWith(signupApi: ApiResponse.error(value.error)));
-          } else {
-            emit(
-              state.copyWith(
-                signupApi: const ApiResponse.completed('SignUp Successfully'),
-              ),
-            );
-          }
-        })
-        .onError((error, stackTrace) {
-          emit(state.copyWith(signupApi: ApiResponse.error(error.toString())));
-        });
+
+    await authApiRepository.signupApi(data).then((value) async {
+      // Make sure value is a Map<String, dynamic>
+      if (value is Map<String, dynamic>) {
+        if (value.containsKey('error') && value['error'].toString().isNotEmpty) {
+          emit(state.copyWith(
+            signupApi: ApiResponse.error(value['error'].toString()),
+          ));
+        } else if (value.containsKey('success') &&
+            value['success'].toString().isNotEmpty) {
+          emit(state.copyWith(
+            signupApi: ApiResponse.completed(value['success'].toString()),
+          ));
+        } else {
+          emit(state.copyWith(
+            signupApi: const ApiResponse.error("Unknown response from server"),
+          ));
+        }
+      } else {
+        emit(state.copyWith(
+          signupApi: const ApiResponse.error("Invalid API response format"),
+        ));
+      }
+    }).onError((error, stackTrace) {
+      emit(state.copyWith(signupApi: ApiResponse.error(error.toString())));
+    });
   }
+
 }

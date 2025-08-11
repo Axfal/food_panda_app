@@ -36,18 +36,13 @@ class _ConfirmPasswordInputState extends State<ConfirmPasswordInput> {
                 return 'Enter confirm password';
               } else if (value.length < 8) {
                 return 'Confirm Password must be at least 8 characters';
-              } else if (!RegExp(r'[A-Z]').hasMatch(value)) {
-                return 'Confirm Password must contain at least one uppercase letter';
-              } else if (!RegExp(r'[a-z]').hasMatch(value)) {
-                return 'Confirm Password must contain at least one lowercase letter';
-              } else if (!RegExp(r'[0-9]').hasMatch(value)) {
-                return 'Confirm Password must contain at least one number';
-              } else if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
-                return 'Confirm Password must contain at least one special character';
               } else {
                 return null;
               }
-            }
+            },
+          onChanged: (value){
+            context.read<SignupBloc>().add(ConfirmPasswordChange(confirmPasswordChange: value));
+          },
 
         );
       },

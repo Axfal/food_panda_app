@@ -9,7 +9,7 @@ class CustomPhoneField extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
   final String initialCountryCode;
-  final Function(String)? onChanged;
+  final void Function(String countryCode, String number)? onChanged;
   final TextInputAction textInputAction;
   final String? Function(String?)? validator;
 
@@ -96,7 +96,7 @@ class CustomPhoneField extends StatelessWidget {
         ),
       ),
 
-      onChanged: (phone) => onChanged?.call(phone.completeNumber),
+      onChanged: (phone) => onChanged?.call(phone.countryCode, phone.number),
     );
   }
 }

@@ -55,6 +55,15 @@ class CountryCodeChange extends SignupEvent {
   List<Object> get props => [countryCode];
 }
 
+class RoleChange extends SignupEvent {
+  final String role;
+  const RoleChange({required this.role});
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [role];
+}
+
 class SignupApi extends SignupEvent {
   const SignupApi();
 

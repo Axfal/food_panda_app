@@ -8,34 +8,33 @@ class SignupButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<SignupBloc, SignupStates>(
       listenWhen: (previous, current) =>
-      previous.signupApi != current.signupApi &&
-          current.signupApi.status != Status.completed, // avoids triggering from initial
+          previous.signupApi != current.signupApi,
       listener: (context, state) {
-        if (formKey.currentState!.validate()) {
-          if (state.signupApi.status == Status.error) {
-            context.flushBarErrorMessage(
-              message: state.signupApi.message.toString(),
-            );
-          }
+        if (state.signupApi.status == Status.error) {
+          context.flushBarErrorMessage(
+            message: state.signupApi.message ?? "Something went wrong",
+          );
         }
         if (state.signupApi.status == Status.completed &&
-            state.signupApi.message!.isNotEmpty) {
+            (state.signupApi.message?.isNotEmpty ?? false)) {
           Navigator.pushNamedAndRemoveUntil(
             context,
             RoutesName.login,
-                (route) => false,
+            (route) => false,
           );
         }
       },
       builder: (context, state) {
         return RoundButton(
           title: "Create Account",
+          loading: state.signupApi.status == Status.loading,
           onPress: () {
-            context.read<SignupBloc>().add(SignupApi());
+            if (formKey.currentState!.validate()) {
+              context.read<SignupBloc>().add(SignupApi());
+            }
           },
         );
       },
     );
-    ;
   }
 }

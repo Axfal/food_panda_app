@@ -27,13 +27,12 @@ class _UserNameInputState extends State<UserNameInput> {
           validator: (value) {
             if (value == null || value.isEmpty) {
               return 'Enter username';
-            } else if (value.length < 3) {
-              return 'Username must be at least 3 characters';
-            } else if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(value)) {
-              return 'Username can only contain letters, numbers, and underscores';
             } else {
               return null;
             }
+          },
+          onChanged: (value){
+            context.read<SignupBloc>().add(UserNameChange(userName: value));
           },
         );
       },
