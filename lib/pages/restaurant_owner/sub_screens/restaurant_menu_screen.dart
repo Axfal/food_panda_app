@@ -17,12 +17,12 @@ class _RestaurantMenuScreenState extends State<RestaurantMenuScreen> {
         MenuItem(
           name: 'Spring Rolls',
           price: 5.99,
-          imageUrl: 'https',
+          imageUrl: '',
         ),
         MenuItem(
           name: 'Garlic Bread',
           price: 3.49,
-          imageUrl: 'https://i',
+          imageUrl: '',
         ),
       ],
     ),
@@ -32,12 +32,12 @@ class _RestaurantMenuScreenState extends State<RestaurantMenuScreen> {
         MenuItem(
           name: 'Grilled Chicken',
           price: 12.99,
-          imageUrl: 'https://i.imgur.cg',
+          imageUrl: '',
         ),
         MenuItem(
           name: 'Pasta Alfredo',
           price: 10.99,
-          imageUrl: 'https://i.imgur.nMMn0T.jpg',
+          imageUrl: '',
         ),
       ],
     ),

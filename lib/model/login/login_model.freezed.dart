@@ -223,8 +223,8 @@ return $default(_that.success,_that.message,_that.user,_that.error);case _:
 /// @nodoc
 @JsonSerializable()
 
-class _LoginModel implements LoginModel {
-  const _LoginModel({@JsonKey(name: "success") this.success = false, @JsonKey(name: "message") this.message = '', @JsonKey(name: "user") this.user, this.error = ''});
+class _LoginModel extends LoginModel {
+  const _LoginModel({@JsonKey(name: "success") this.success = false, @JsonKey(name: "message") this.message = '', @JsonKey(name: "user") this.user, this.error = ''}): super._();
   factory _LoginModel.fromJson(Map<String, dynamic> json) => _$LoginModelFromJson(json);
 
 @override@JsonKey(name: "success") final  bool success;
@@ -508,8 +508,8 @@ return $default(_that.id,_that.name,_that.email,_that.role,_that.token);case _:
 /// @nodoc
 @JsonSerializable()
 
-class _UserModel implements UserModel {
-  const _UserModel({@JsonKey(name: "id") this.id = 0, @JsonKey(name: "name") this.name = '', @JsonKey(name: "email") this.email = '', @JsonKey(name: "role") this.role = '', @JsonKey(name: "token") this.token = ''});
+class _UserModel extends UserModel {
+  const _UserModel({@JsonKey(name: "id") this.id = 0, @JsonKey(name: "name") this.name = '', @JsonKey(name: "email") this.email = '', @JsonKey(name: "role") this.role = '', @JsonKey(name: "token") this.token = ''}): super._();
   factory _UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
 
 @override@JsonKey(name: "id") final  int id;

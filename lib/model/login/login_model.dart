@@ -5,6 +5,8 @@ part 'login_model.g.dart';
 
 @freezed
 class LoginModel with _$LoginModel {
+  const LoginModel._();
+
   const factory LoginModel({
     @Default(false) @JsonKey(name: "success") bool success,
     @Default('') @JsonKey(name: "message") String message,
@@ -40,6 +42,8 @@ class LoginModel with _$LoginModel {
 
 @freezed
 class UserModel with _$UserModel {
+  const UserModel._();  // Add this private constructor
+
   const factory UserModel({
     @Default(0) @JsonKey(name: "id") int id,
     @Default('') @JsonKey(name: "name") String name,
