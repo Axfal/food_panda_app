@@ -33,4 +33,6 @@ class RoutesName {
 
   static const String inviteFriends = 'invite_friend';
 
+  static const String restaurantOwner = 'restaurant_owner';
+
 }

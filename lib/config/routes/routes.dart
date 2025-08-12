@@ -3,6 +3,9 @@ import 'package:excellent_trade_app/pages/order_now.dart';
 import 'package:excellent_trade_app/pages/profile/subPages/invite_friends_screen.dart';
 import 'package:excellent_trade_app/pages/restuarant_item_screen.dart';
 
+import '../../bloc/auth/forgot_password/forgot_password_bloc.dart';
+import '../../pages/auth/forgot_password/forget_password_export.dart';
+
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -23,9 +26,24 @@ class Routes {
           builder: (BuildContext context) => const ForgotScreen(),
         );
       case RoutesName.verifyOtp:
-        return MaterialPageRoute(
-          builder: (BuildContext context) => const VerifyOtpScreen(),
-        );
+        final args = settings.arguments as ForgotPasswordBloc?;
+          if(args == null){
+            return MaterialPageRoute(
+              builder: (_) {
+                return const Scaffold(
+                  body: Center(child: Text('No route defined')),
+                );
+              },
+            );
+          }
+          else {
+            return MaterialPageRoute(
+              builder: (BuildContext context) => BlocProvider.value(
+                value: args,
+                child: const VerifyOtpScreen(),
+              ),
+            );
+          }
       case RoutesName.home:
         return MaterialPageRoute(
           builder: (BuildContext context) => const HomePage(),
@@ -69,6 +87,10 @@ class Routes {
       case RoutesName.inviteFriends:
         return MaterialPageRoute(
           builder: (BuildContext context) => const InviteFriendsScreen(),
+        );
+      case RoutesName.restaurantOwner:
+        return MaterialPageRoute(
+          builder: (BuildContext context) => const RestaurantOwnerScreen(),
         );
 
       default:

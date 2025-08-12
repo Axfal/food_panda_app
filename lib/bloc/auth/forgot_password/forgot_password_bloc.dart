@@ -4,6 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:excellent_trade_app/data/response/api_response.dart';
 import 'package:excellent_trade_app/repository/auth/auth_api_repository.dart';
+
+import '../../../service/session_manager/session_controller.dart';
 part 'forgot_password_event.dart';
 part 'forgot_password_state.dart';
 
@@ -54,26 +56,41 @@ class ForgotPasswordBloc
     }
   }
 
-  void _onVerifyOtp(VerifyOtp event, Emitter<ForgotPasswordState> emit) async {
+  void _onVerifyOtp(
+      VerifyOtp event,
+      Emitter<ForgotPasswordState> emit,
+      ) async {
     emit(state.copyWith(verifyOtp: ApiResponse.loading()));
-    Map<String, dynamic> data = {'email': state.email, 'otp': state.pinCode};
-    await authApiRepository
-        .verifyOTP(data)
-        .then((value) async {
-          if (value.error.isNotEmpty) {
-            emit(
-              state.copyWith(verifyOtp: ApiResponse.error(value.toString())),
-            );
-          } else {
-            emit(
-              state.copyWith(
-                verifyOtp: ApiResponse.completed("SignIn Successfully"),
-              ),
-            );
-          }
-        })
-        .onError((error, stackTrace) {
-          emit(state.copyWith(verifyOtp: ApiResponse.error(error.toString())));
-        });
+
+    final Map<String, dynamic> data = {
+      'email': state.email,
+      'otp': state.pinCode,
+    };
+
+    try {
+      final response = await authApiRepository.verifyOTP(data);
+
+      if (response != null) {
+        if (response['success'] == true) {
+          await SessionController().saveUserInPreference(response['user']);
+          await SessionController().getUserFromPreference();
+          emit(state.copyWith(
+            verifyOtp: ApiResponse.completed(response['message'] ?? 'OTP verified successfully'),
+          ));
+        } else {
+          final errorMessage =
+              response['error']?.toString() ?? 'Unknown error occurred';
+          emit(state.copyWith(verifyOtp: ApiResponse.error(errorMessage)));
+        }
+      } else {
+        emit(state.copyWith(
+          verifyOtp: ApiResponse.error("No response from server"),
+        ));
+      }
+    } catch (e) {
+      emit(state.copyWith(
+        verifyOtp: ApiResponse.error("An exception occurred: ${e.toString()}"),
+      ));
+    }
   }
 }

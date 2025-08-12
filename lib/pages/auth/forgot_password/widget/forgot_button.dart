@@ -21,7 +21,11 @@ class ForgotButton extends StatelessWidget {
           );
 
           Future.delayed(const Duration(seconds: 2), () {
-            Navigator.pushNamed(context, RoutesName.verifyOtp);
+            Navigator.pushNamed(
+              context,
+              RoutesName.verifyOtp,
+              arguments: context.read<ForgotPasswordBloc>(),
+            );
           });
         }
       },
