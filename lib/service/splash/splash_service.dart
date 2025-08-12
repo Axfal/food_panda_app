@@ -9,12 +9,22 @@ class SplashServices {
     SessionController()
         .getUserFromPreference()
         .then((value) async {
-          if (SessionController.isLogin ?? false) {
+          if (SessionController.isLogin &&
+              SessionController.userRole == 'restaurant_owner') {
             Timer(
               const Duration(seconds: 2),
               () => Navigator.pushNamedAndRemoveUntil(
                 context,
-                RoutesName.home,
+                RoutesName.restaurantOwner,
+                (route) => false,
+              ),
+            );
+          } else if (SessionController.isLogin) {
+            Timer(
+              const Duration(seconds: 2),
+              () => Navigator.pushNamedAndRemoveUntil(
+                context,
+                RoutesName.restaurantOwner,
                 (route) => false,
               ),
             );

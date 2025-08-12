@@ -5,9 +5,9 @@ class AuthHttpApiRepository implements AuthApiRepository {
   final BaseApiServices _apiServices = NetworkApiService();
 
   @override
-  Future<LoginModel> loginApi(dynamic data) async {
-    dynamic response = await _apiServices.postApi(AppUrl.signIn, data);
-    return LoginModel.fromJson(response);
+  Future<dynamic> loginApi(dynamic data) async {
+    final response = await _apiServices.postApi(AppUrl.signIn, data);
+    return response;
   }
 
   @override

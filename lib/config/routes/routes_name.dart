@@ -35,4 +35,8 @@ class RoutesName {
 
   static const String restaurantOwner = 'restaurant_owner';
 
+  static const String myRestaurant = 'my_restaurant';
+
+  static const String menuManagement = 'menu_management';
+
 }

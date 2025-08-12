@@ -1,3 +1,5 @@
+import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
+
 import '../../forget_password_export.dart';
 
 class VerifyButton extends StatelessWidget {
@@ -9,7 +11,7 @@ class VerifyButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<ForgotPasswordBloc, ForgotPasswordState>(
       listenWhen: (previous, current) =>
-      previous.verifyOtp.status != current.verifyOtp.status,
+          previous.verifyOtp.status != current.verifyOtp.status,
       listener: (context, state) {
         if (state.verifyOtp.status == Status.error) {
           context.flushBarErrorMessage(
@@ -20,11 +22,19 @@ class VerifyButton extends StatelessWidget {
             message: state.verifyOtp.data.toString(),
           );
           Future.delayed(const Duration(seconds: 2), () {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              RoutesName.home,
-                  (route) => false,
-            );
+            if (SessionController.userRole == 'restaurant_owner') {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RoutesName.restaurantOwner,
+                (route) => false,
+              );
+            } else {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RoutesName.home,
+                (route) => false,
+              );
+            }
           });
         }
       },

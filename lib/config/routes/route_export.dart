@@ -12,3 +12,5 @@ export 'package:excellent_trade_app/pages/profile/subPages/profile/profile_scree
 export 'package:excellent_trade_app/pages/profile/subPages/settings.dart';
 export 'package:excellent_trade_app/pages/auth/forgot_password/verify_otp/verify_otp_screen.dart';
 export 'package:excellent_trade_app/pages/restaurant_owner/restaurant_owner_screen.dart';
+export 'package:excellent_trade_app/pages/profile/subPages/invite_friends_screen.dart';
+export 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/my_restaurants.dart';

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'login_model.freezed.dart';
@@ -7,7 +5,7 @@ part 'login_model.g.dart';
 
 @freezed
 class LoginModel with _$LoginModel {
-  factory LoginModel({
+  const factory LoginModel({
     @Default(false) @JsonKey(name: "success") bool success,
     @Default('') @JsonKey(name: "message") String message,
     @JsonKey(name: "user") UserModel? user,
@@ -42,10 +40,11 @@ class LoginModel with _$LoginModel {
 
 @freezed
 class UserModel with _$UserModel {
-  factory UserModel({
+  const factory UserModel({
     @Default(0) @JsonKey(name: "id") int id,
     @Default('') @JsonKey(name: "name") String name,
     @Default('') @JsonKey(name: "email") String email,
+    @Default('') @JsonKey(name: "role") String role,
     @Default('') @JsonKey(name: "token") String token,
   }) = _UserModel;
 
@@ -63,6 +62,10 @@ class UserModel with _$UserModel {
   @override
   // TODO: implement name
   String get name => throw UnimplementedError();
+
+  @override
+  // TODO: implement role
+  String get role => throw UnimplementedError();
 
   @override
   Map<String, dynamic> toJson() {

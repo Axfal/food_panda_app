@@ -1,9 +1,7 @@
-import 'package:excellent_trade_app/config/routes/route_export.dart';
 import 'package:excellent_trade_app/pages/order_now.dart';
-import 'package:excellent_trade_app/pages/profile/subPages/invite_friends_screen.dart';
+import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/restaurant_menu_screen.dart';
 import 'package:excellent_trade_app/pages/restuarant_item_screen.dart';
-
-import '../../bloc/auth/forgot_password/forgot_password_bloc.dart';
+import 'route_export.dart';
 import '../../pages/auth/forgot_password/forget_password_export.dart';
 
 class Routes {
@@ -93,6 +91,11 @@ class Routes {
           builder: (BuildContext context) => const RestaurantOwnerScreen(),
         );
 
+      case RoutesName.myRestaurant:
+        return MaterialPageRoute(builder: (context) => MyRestaurantScreen());
+
+      case RoutesName.menuManagement:
+        return MaterialPageRoute(builder: (context)=> RestaurantMenuScreen());
       default:
         return MaterialPageRoute(
           builder: (_) {

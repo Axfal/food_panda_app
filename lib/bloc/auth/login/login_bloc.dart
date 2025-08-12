@@ -1,4 +1,6 @@
 import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
+
+import '../../../model/login/login_model.dart';
 part 'login_event.dart';
 part 'login_state.dart';
 
@@ -19,33 +21,57 @@ class LoginBloc extends Bloc<LoginEvents, LoginStates> {
     emit(state.copyWith(password: event.password));
   }
 
-  Future<void> _onFormSubmitted(
-    LoginApi event,
-    Emitter<LoginStates> emit,
-  ) async {
+  Future<void> _onFormSubmitted(LoginApi event, Emitter<LoginStates> emit) async {
     Map<String, String> data = {
       'email': state.email,
       'password': state.password,
     };
+
     emit(state.copyWith(loginApi: const ApiResponse.loading()));
 
-    await authApiRepository
-        .loginApi(data)
-        .then((value) async {
-          if (value.error.isNotEmpty) {
-            emit(state.copyWith(loginApi: ApiResponse.error(value.error)));
-          } else {
-            await SessionController().saveUserInPreference(value);
+    try {
+      final response = await authApiRepository.loginApi(data);
+
+      if (response is Map<String, dynamic>) {
+        // Parse response JSON into LoginModel
+        final loginModel = LoginModel.fromJson(response);
+
+        if (loginModel.success) {
+          if (loginModel.user != null) {
+            await SessionController().saveUserInPreference(loginModel.user!);
             await SessionController().getUserFromPreference();
-            emit(
-              state.copyWith(
-                loginApi: const ApiResponse.completed('login Successfully'),
-              ),
-            );
           }
-        })
-        .onError((error, stackTrace) {
-          emit(state.copyWith(loginApi: ApiResponse.error(error.toString())));
-        });
+
+          emit(state.copyWith(
+            loginApi: ApiResponse.completed(loginModel.message),
+          ));
+        } else {
+          String errorMessage = 'Login failed';
+
+          if (loginModel.message.isNotEmpty) {
+            errorMessage = loginModel.message;
+          } else if (response.containsKey('error') &&
+              response['error'] is String &&
+              (response['error'] as String).isNotEmpty) {
+            errorMessage = response['error'];
+          } else if (response.containsKey('message') &&
+              response['message'] is String &&
+              (response['message'] as String).isNotEmpty) {
+            errorMessage = response['message'];
+          }
+
+          emit(state.copyWith(
+            loginApi: ApiResponse.error(errorMessage),
+          ));
+        }
+      } else {
+        emit(state.copyWith(
+          loginApi: ApiResponse.error('No response from server'),
+        ));
+      }
+    } catch (error) {
+      emit(state.copyWith(loginApi: ApiResponse.error(error.toString())));
+    }
   }
+
 }

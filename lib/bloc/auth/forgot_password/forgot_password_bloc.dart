@@ -56,10 +56,7 @@ class ForgotPasswordBloc
     }
   }
 
-  void _onVerifyOtp(
-      VerifyOtp event,
-      Emitter<ForgotPasswordState> emit,
-      ) async {
+  void _onVerifyOtp(VerifyOtp event, Emitter<ForgotPasswordState> emit) async {
     emit(state.copyWith(verifyOtp: ApiResponse.loading()));
 
     final Map<String, dynamic> data = {
@@ -74,23 +71,33 @@ class ForgotPasswordBloc
         if (response['success'] == true) {
           await SessionController().saveUserInPreference(response['user']);
           await SessionController().getUserFromPreference();
-          emit(state.copyWith(
-            verifyOtp: ApiResponse.completed(response['message'] ?? 'OTP verified successfully'),
-          ));
+          emit(
+            state.copyWith(
+              verifyOtp: ApiResponse.completed(
+                response['message'] ?? 'OTP verified successfully',
+              ),
+            ),
+          );
         } else {
           final errorMessage =
               response['error']?.toString() ?? 'Unknown error occurred';
           emit(state.copyWith(verifyOtp: ApiResponse.error(errorMessage)));
         }
       } else {
-        emit(state.copyWith(
-          verifyOtp: ApiResponse.error("No response from server"),
-        ));
+        emit(
+          state.copyWith(
+            verifyOtp: ApiResponse.error("No response from server"),
+          ),
+        );
       }
     } catch (e) {
-      emit(state.copyWith(
-        verifyOtp: ApiResponse.error("An exception occurred: ${e.toString()}"),
-      ));
+      emit(
+        state.copyWith(
+          verifyOtp: ApiResponse.error(
+            "An exception occurred: ${e.toString()}",
+          ),
+        ),
+      );
     }
   }
 }

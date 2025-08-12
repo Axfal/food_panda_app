@@ -2,9 +2,7 @@ import 'package:excellent_trade_app/Utils/constants/appWeight.dart';
 import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
 import 'package:excellent_trade_app/config/components/round_button_widget.dart';
 import 'package:excellent_trade_app/config/routes/route_export.dart';
-import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/customeButtons.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:excellent_trade_app/pages/restaurant_owner/widgets/logout_dialog_box.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../globalWidgets/PrimeryWidgets/customeBottonNavBar.dart';
@@ -12,7 +10,6 @@ import '../../service/session_manager/session_controller.dart';
 import 'subPages/addresses_page.dart';
 import 'subPages/fav_page.dart';
 import 'subPages/order_page.dart';
-import 'subPages/settings.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -212,9 +209,7 @@ class _AccountPageState extends State<AccountPage> {
               const SizedBox(height: 20),
               RoundButton(
                 title: 'Logout',
-                onPress: () async {
-                  await SessionController().logoutUser(context);
-                },
+                onPress: () => showLogoutDialog(context)
               ),
             ],
           ),

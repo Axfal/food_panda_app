@@ -8,7 +8,7 @@ class LoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<LoginBloc, LoginStates>(
       listenWhen: (current, previous) =>
-      current.loginApi.status != previous.loginApi.status,
+          current.loginApi.status != previous.loginApi.status,
       listener: (context, state) {
         if (state.loginApi.status == Status.error) {
           context.flushBarErrorMessage(
@@ -17,11 +17,19 @@ class LoginButton extends StatelessWidget {
         }
 
         if (state.loginApi.status == Status.completed) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            RoutesName.home,
-                (route) => false,
-          );
+          if (SessionController.userRole == 'restaurant_owner') {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              RoutesName.restaurantOwner,
+              (route) => false,
+            );
+          } else {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              RoutesName.home,
+              (route) => false,
+            );
+          }
         }
       },
       builder: (context, state) {
