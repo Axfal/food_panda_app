@@ -1,6 +1,5 @@
 import 'auth_repository.dart';
 
-/// Implementation of [AuthApiRepository] for making HTTP requests to the authentication API.
 class AuthHttpApiRepository implements AuthApiRepository {
   final BaseApiServices _apiServices = NetworkApiService();
 

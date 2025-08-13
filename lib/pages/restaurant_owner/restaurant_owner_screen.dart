@@ -14,16 +14,33 @@ class RestaurantOwnerScreen extends StatefulWidget {
 class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
   final List<Map<String, dynamic>> features = [
     {"title": "Profile", "icon": Icons.person, "route": "/vendorProfile"},
-    {"title": "My Restaurants", "icon": Icons.store, "route": RoutesName.myRestaurant},
-    {"title": "Restaurant Details", "icon": Icons.edit_location_alt, "route": "/restaurantDetails"},
-    {"title": "Menu Items", "icon": Icons.fastfood, "route": RoutesName.menuManagement},
+    {
+      "title": "My Restaurants",
+      "icon": Icons.store,
+      "route": RoutesName.myRestaurant,
+    },
+    {
+      "title": "Restaurant Details",
+      "icon": Icons.edit_location_alt,
+      "route": "/restaurantDetails",
+    },
+    {
+      "title": "Menu Items",
+      "icon": Icons.fastfood,
+      "route": RoutesName.menuManagement,
+      'arg': {'restaurant_id': "6"},
+    },
     {"title": "Orders", "icon": Icons.shopping_bag, "route": "/orders"},
     {"title": "Order History", "icon": Icons.history, "route": "/orderHistory"},
-    {"title": "Sales Summary", "icon": Icons.bar_chart, "route": "/salesSummary"},
+    {
+      "title": "Sales Summary",
+      "icon": Icons.bar_chart,
+      "route": "/salesSummary",
+    },
     {
       "title": "Logout",
       "icon": Icons.logout,
-      "action": (context) => showLogoutDialog(context)
+      "action": (context) => showLogoutDialog(context),
     },
   ];
 
@@ -58,7 +75,11 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
                   elevation: 0,
                   borderSide: const BorderSide(color: Colors.white, width: 1),
                 ),
-                child: const Icon(Icons.notifications_rounded, size: 30, color: Colors.white),
+                child: const Icon(
+                  Icons.notifications_rounded,
+                  size: 30,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
@@ -115,7 +136,15 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
                     icon: feature["icon"],
                     onTap: () {
                       if (feature.containsKey("route")) {
-                        Navigator.pushNamed(context, feature["route"]);
+                        if (feature.containsKey('arg')) {
+                          Navigator.pushNamed(
+                            context,
+                            feature["route"],
+                            arguments: feature['arg'],
+                          );
+                        } else {
+                          Navigator.pushNamed(context, feature["route"]);
+                        }
                       } else if (feature.containsKey("action")) {
                         feature["action"](context);
                       }
@@ -130,5 +159,3 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
     );
   }
 }
-
-

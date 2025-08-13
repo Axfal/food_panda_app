@@ -33,7 +33,6 @@ class LoginBloc extends Bloc<LoginEvents, LoginStates> {
       final response = await authApiRepository.loginApi(data);
 
       if (response is Map<String, dynamic>) {
-        // Parse response JSON into LoginModel
         final loginModel = LoginModel.fromJson(response);
 
         if (loginModel.success) {
