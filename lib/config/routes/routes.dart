@@ -1,8 +1,7 @@
 import 'package:excellent_trade_app/pages/order_now.dart';
-import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/menu_management.dart';
 import 'package:excellent_trade_app/pages/restuarant_item_screen.dart';
-import 'route_export.dart';
 import '../../pages/auth/forgot_password/forget_password_export.dart';
+import 'route_export.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -25,23 +24,20 @@ class Routes {
         );
       case RoutesName.verifyOtp:
         final args = settings.arguments as ForgotPasswordBloc?;
-          if(args == null){
-            return MaterialPageRoute(
-              builder: (_) {
-                return const Scaffold(
-                  body: Center(child: Text('No route defined')),
-                );
-              },
-            );
-          }
-          else {
-            return MaterialPageRoute(
-              builder: (BuildContext context) => BlocProvider.value(
-                value: args,
-                child: const VerifyOtpScreen(),
-              ),
-            );
-          }
+        if (args == null) {
+          return MaterialPageRoute(
+            builder: (_) {
+              return const Scaffold(
+                body: Center(child: Text('No route defined')),
+              );
+            },
+          );
+        } else {
+          return MaterialPageRoute(
+            builder: (BuildContext context) =>
+                BlocProvider.value(value: args, child: const VerifyOtpScreen()),
+          );
+        }
       case RoutesName.home:
         return MaterialPageRoute(
           builder: (BuildContext context) => const HomePage(),
@@ -96,10 +92,16 @@ class Routes {
 
       case RoutesName.menuManagement:
         final args = settings.arguments;
-        final restaurantId = (args is Map<String, dynamic>) ? args['restaurant_id'] : null;
+        final restaurantId = (args is Map<String, dynamic>)
+            ? args['restaurant_id']
+            : null;
         return MaterialPageRoute(
           builder: (context) => MenuManagement(restaurantId: restaurantId),
         );
+
+      case RoutesName.registerRestaurant:
+        return MaterialPageRoute(builder: (context) => RegisterRestaurant());
+
       default:
         return MaterialPageRoute(
           builder: (_) {

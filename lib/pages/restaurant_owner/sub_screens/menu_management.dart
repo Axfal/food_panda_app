@@ -1,6 +1,5 @@
 import 'package:excellent_trade_app/bloc/vendor/menu_management/menu_management_bloc.dart';
 import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/my_app_bar.dart';
-import 'package:excellent_trade_app/model/vender/menu_management/menu_category/menu_category_model.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -40,7 +39,6 @@ class _MenuManagementState extends State<MenuManagement> {
     ),
   ];
 
-  // Track expanded categories
   final Set<int> expandedIndices = {};
 
   void toggleExpand(int index, int categoryId) {
@@ -380,13 +378,16 @@ class _MenuManagementState extends State<MenuManagement> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
                       gradient: LinearGradient(
-                        colors: [AppColors.primary.withOpacity(0.95), AppColors.primary],
+                        colors: [
+                          AppColors.primary.withValues(alpha: 0.95),
+                          AppColors.primary,
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.primary.withOpacity(0.3),
+                          color: AppColors.primary.withValues(alpha: 0.3),
                           blurRadius: 6,
                           offset: const Offset(0, 4),
                         ),
@@ -404,7 +405,7 @@ class _MenuManagementState extends State<MenuManagement> {
                             borderRadius: BorderRadius.circular(10),
                             child: SizedBox(
                               height: 55,
-                              width: 55,
+                              width: 60,
                               child: Image.network(
                                 category.photo,
                                 fit: BoxFit.cover,
@@ -438,11 +439,14 @@ class _MenuManagementState extends State<MenuManagement> {
                             ),
                             child: IconButton(
                               icon: Icon(
-                                isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                                isExpanded
+                                    ? Icons.keyboard_arrow_up
+                                    : Icons.keyboard_arrow_down,
                                 color: Colors.white,
                                 size: 26,
                               ),
-                              onPressed: () => toggleExpand(catIndex, category.id),
+                              onPressed: () =>
+                                  toggleExpand(catIndex, category.id),
                             ),
                           ),
                           onTap: () => toggleExpand(catIndex, category.id),
@@ -454,143 +458,190 @@ class _MenuManagementState extends State<MenuManagement> {
                           curve: Curves.easeInOut,
                           child: isExpanded
                               ? Column(
-                            children: [
-                              if (items.isEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 24,
-                                    vertical: 12,
-                                  ),
-                                  child: Text(
-                                    'No items yet.',
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.white70,
-                                      fontStyle: FontStyle.italic,
-                                    ),
-                                  ),
-                                )
-                              else
-                                ListView.separated(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: (items[category.id.toString()] ?? []).length,
-                                  separatorBuilder: (_, __) =>  Divider(
-                                    color: AppColors.primary,
-                                    height: 1,
-                                    indent: 20,
-                                    endIndent: 20,
-                                  ),
-                                  itemBuilder: (context, itemIndex) {
-                                    final item = items[category.id.toString()]![itemIndex];
-                                    return Container(
-                                      margin: const EdgeInsets.symmetric(
-                                        horizontal: 16,
-                                        vertical: 8,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.primary,
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(color: Colors.white),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withValues(alpha: 0.1),
-                                            blurRadius: 6,
-                                            offset: const Offset(0, 3),
-                                          ),
-                                        ],
-                                      ),
-                                      child: ListTile(
-                                        contentPadding: const EdgeInsets.symmetric(
-                                          horizontal: 16,
-                                          vertical: 10,
+                                  children: [
+                                    if (state.itemsApiResponse.status ==
+                                        Status.loading) ...[
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 24,
+                                          vertical: 12,
                                         ),
-                                        leading: ClipRRect(
-                                          borderRadius: BorderRadius.circular(8),
-                                          child: item.photo.isNotEmpty
-                                              ? Image.network(
-                                            item.photo,
-                                            width: 60,
-                                            height: 60,
-                                            fit: BoxFit.cover,
-                                            errorBuilder: (_, __, ___) => Container(
-                                              width: 60,
-                                              height: 60,
-                                              color: Colors.grey[300],
-                                              child: const Icon(
-                                                Icons.broken_image,
+                                        child: Center(
+                                          child: CupertinoActivityIndicator(
+                                            color: Colors.white70,
+                                          ),
+                                        ),
+                                      ),
+                                    ] else if (items.isEmpty)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 24,
+                                          vertical: 12,
+                                        ),
+                                        child: Text(
+                                          'No items yet.',
+                                          style: GoogleFonts.poppins(
+                                            color: Colors.white70,
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                        ),
+                                      )
+                                    else
+                                      ListView.separated(
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemCount:
+                                            (items[category.id.toString()] ??
+                                                    [])
+                                                .length,
+                                        separatorBuilder: (_, _) => Divider(
+                                          color: AppColors.primary,
+                                          height: 1,
+                                          indent: 20,
+                                          endIndent: 20,
+                                        ),
+                                        itemBuilder: (context, itemIndex) {
+                                          final item =
+                                              items[category.id
+                                                  .toString()]![itemIndex];
+                                          return Container(
+                                            margin: const EdgeInsets.symmetric(
+                                              horizontal: 16,
+                                              vertical: 8,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.primary,
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              border: Border.all(
                                                 color: Colors.white,
                                               ),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black
+                                                      .withValues(alpha: 0.1),
+                                                  blurRadius: 6,
+                                                  offset: const Offset(0, 3),
+                                                ),
+                                              ],
                                             ),
-                                          )
-                                              : Container(
-                                            width: 60,
-                                            height: 60,
-                                            color: Colors.white24,
-                                            child: const Icon(
-                                              Icons.fastfood,
-                                              color: Colors.grey,
+                                            child: ListTile(
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 16,
+                                                    vertical: 10,
+                                                  ),
+                                              leading: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                child: item.photo.isNotEmpty
+                                                    ? Image.network(
+                                                        item.photo,
+                                                        width: 60,
+                                                        height: 60,
+                                                        fit: BoxFit.cover,
+                                                        errorBuilder:
+                                                            (
+                                                              _,
+                                                              _,
+                                                              _,
+                                                            ) => Container(
+                                                              width: 60,
+                                                              height: 60,
+                                                              color: Colors
+                                                                  .grey[300],
+                                                              child: const Icon(
+                                                                Icons
+                                                                    .broken_image,
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                            ),
+                                                      )
+                                                    : Container(
+                                                        width: 60,
+                                                        height: 60,
+                                                        color: Colors.white24,
+                                                        child: const Icon(
+                                                          Icons.fastfood,
+                                                          color: Colors.grey,
+                                                        ),
+                                                      ),
+                                              ),
+                                              title: Text(
+                                                item.name,
+                                                style: GoogleFonts.poppins(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 16,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              subtitle: Text(
+                                                '\$${item.price}',
+                                                style: GoogleFonts.poppins(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              trailing: IconButton(
+                                                icon: const Icon(
+                                                  Icons.delete_outline,
+                                                  color: Colors.white,
+                                                ),
+                                                onPressed: () => deleteMenuItem(
+                                                  catIndex,
+                                                  itemIndex,
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                        title: Text(
-                                          item.name,
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 16,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        subtitle: Text(
-                                          '\$${item.price}',
-                                          style: GoogleFonts.poppins(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        trailing: IconButton(
-                                          icon: const Icon(
-                                            Icons.delete_outline,
-                                            color: Colors.white,
-                                          ),
-                                          onPressed: () => deleteMenuItem(catIndex, itemIndex),
-                                        ),
+                                          );
+                                        },
                                       ),
-                                    );
-                                  },
-                                ),
 
-                              // Add Item Button
-                              GestureDetector(
-                                onTap: () => addMenuItem(catIndex),
-                                child: Container(
-                                  margin: const EdgeInsets.all(14),
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 12,
-                                    horizontal: 20,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.15),
-                                    borderRadius: BorderRadius.circular(30),
-                                    border: Border.all(color: Colors.white54),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Icon(Icons.add, color: Colors.white, size: 20),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        'Add Item',
-                                        style: GoogleFonts.poppins(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 15,
+                                    // Add Item Button
+                                    GestureDetector(
+                                      onTap: () => addMenuItem(catIndex),
+                                      child: Container(
+                                        margin: const EdgeInsets.all(14),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 12,
+                                          horizontal: 20,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withValues(
+                                            alpha: 0.15,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                          border: Border.all(
+                                            color: Colors.white70,
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Icon(
+                                              Icons.add,
+                                              color: Colors.white,
+                                              size: 20,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              'Add Item',
+                                              style: GoogleFonts.poppins(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
+                                    ),
+                                  ],
+                                )
                               : const SizedBox.shrink(),
                         ),
                       ],
@@ -599,11 +650,9 @@ class _MenuManagementState extends State<MenuManagement> {
                 },
               ),
             );
-
           },
         ),
       ),
-
       floatingActionButton: FloatingActionButton.extended(
         onPressed: addCategory,
         backgroundColor: AppColors.primary,

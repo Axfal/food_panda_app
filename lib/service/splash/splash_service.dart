@@ -15,7 +15,7 @@ class SplashServices {
               const Duration(seconds: 2),
               () => Navigator.pushNamedAndRemoveUntil(
                 context,
-                RoutesName.restaurantOwner,
+                RoutesName.registerRestaurant,
                 (route) => false,
               ),
             );
@@ -24,7 +24,7 @@ class SplashServices {
               const Duration(seconds: 2),
               () => Navigator.pushNamedAndRemoveUntil(
                 context,
-                RoutesName.restaurantOwner,
+                RoutesName.home,
                 (route) => false,
               ),
             );
