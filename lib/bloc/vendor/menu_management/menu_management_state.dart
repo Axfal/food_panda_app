@@ -23,7 +23,7 @@ class MenuManagementStates extends Equatable {
       categories: categories ?? this.categories,
       itemsByCategory: itemsByCategory ?? this.itemsByCategory,
       categoriesApiResponse:
-      categoriesApiResponse ?? this.categoriesApiResponse,
+          categoriesApiResponse ?? this.categoriesApiResponse,
       itemsApiResponse: itemsApiResponse ?? this.itemsApiResponse,
     );
   }

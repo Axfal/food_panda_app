@@ -374,26 +374,37 @@ class _MenuManagementState extends State<MenuManagement> {
                 itemBuilder: (context, catIndex) {
                   final category = categories[catIndex];
                   final isExpanded = expandedIndices.contains(catIndex);
-                  return Card(
-                    color: AppColors.primary,
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      gradient: LinearGradient(
+                        colors: [AppColors.primary.withOpacity(0.95), AppColors.primary],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withOpacity(0.3),
+                          blurRadius: 6,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
-                    margin: const EdgeInsets.only(bottom: 16),
                     child: Column(
                       children: [
                         // Category Header
                         ListTile(
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 20,
-                            vertical: 12,
+                            vertical: 14,
                           ),
                           leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(10),
                             child: SizedBox(
-                              height: 50,
-                              width: 50,
+                              height: 55,
+                              width: 55,
                               child: Image.network(
                                 category.photo,
                                 fit: BoxFit.cover,
@@ -413,48 +424,47 @@ class _MenuManagementState extends State<MenuManagement> {
                           title: Text(
                             category.name,
                             style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
                               color: Colors.white,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                           trailing: Container(
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Colors.white24,
                               shape: BoxShape.circle,
                             ),
                             child: IconButton(
                               icon: Icon(
-                                isExpanded
-                                    ? Icons.expand_less
-                                    : Icons.expand_more,
+                                isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
                                 color: Colors.white,
-                                size: 24,
+                                size: 26,
                               ),
-                              onPressed: () =>
-                                  toggleExpand(catIndex, category.id),
+                              onPressed: () => toggleExpand(catIndex, category.id),
                             ),
                           ),
                           onTap: () => toggleExpand(catIndex, category.id),
                         ),
 
-                        // Items List
-                        AnimatedCrossFade(
-                          firstChild: const SizedBox.shrink(),
-                          secondChild: Column(
+                        // Items List with smooth expand/collapse
+                        AnimatedSize(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          child: isExpanded
+                              ? Column(
                             children: [
                               if (items.isEmpty)
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 24,
-                                    vertical: 8,
+                                    vertical: 12,
                                   ),
                                   child: Text(
                                     'No items yet.',
                                     style: GoogleFonts.poppins(
-                                      color: Colors.grey[300],
+                                      color: Colors.white70,
                                       fontStyle: FontStyle.italic,
                                     ),
                                   ),
@@ -463,75 +473,86 @@ class _MenuManagementState extends State<MenuManagement> {
                                 ListView.separated(
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
-                                  itemCount:
-                                      (items[category.id.toString()] ?? [])
-                                          .length,
-                                  separatorBuilder: (_, __) => const Divider(
-                                    color: Colors.white30,
+                                  itemCount: (items[category.id.toString()] ?? []).length,
+                                  separatorBuilder: (_, __) =>  Divider(
+                                    color: AppColors.primary,
                                     height: 1,
-                                    indent: 16,
-                                    endIndent: 16,
+                                    indent: 20,
+                                    endIndent: 20,
                                   ),
                                   itemBuilder: (context, itemIndex) {
-                                    final item =
-                                        items[category.id
-                                            .toString()]![itemIndex];
-                                    return ListTile(
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                            horizontal: 16,
-                                            vertical: 8,
+                                    final item = items[category.id.toString()]![itemIndex];
+                                    return Container(
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 8,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.primary,
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(color: Colors.white),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withValues(alpha: 0.1),
+                                            blurRadius: 6,
+                                            offset: const Offset(0, 3),
                                           ),
-                                      leading: ClipRRect(
-                                        borderRadius: BorderRadius.circular(8),
-                                        child: item.photo.isNotEmpty
-                                            ? Image.network(
-                                                item.photo,
-                                                width: 60,
-                                                height: 60,
-                                                fit: BoxFit.cover,
-                                                errorBuilder: (_, __, ___) =>
-                                                    Container(
-                                                      width: 60,
-                                                      height: 60,
-                                                      color: Colors.grey[300],
-                                                      child: const Icon(
-                                                        Icons.broken_image,
-                                                        color: Colors.grey,
-                                                      ),
-                                                    ),
-                                              )
-                                            : Container(
-                                                width: 60,
-                                                height: 60,
-                                                color: Colors.grey[300],
-                                                child: const Icon(
-                                                  Icons.fastfood,
-                                                  color: Colors.grey,
-                                                ),
+                                        ],
+                                      ),
+                                      child: ListTile(
+                                        contentPadding: const EdgeInsets.symmetric(
+                                          horizontal: 16,
+                                          vertical: 10,
+                                        ),
+                                        leading: ClipRRect(
+                                          borderRadius: BorderRadius.circular(8),
+                                          child: item.photo.isNotEmpty
+                                              ? Image.network(
+                                            item.photo,
+                                            width: 60,
+                                            height: 60,
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (_, __, ___) => Container(
+                                              width: 60,
+                                              height: 60,
+                                              color: Colors.grey[300],
+                                              child: const Icon(
+                                                Icons.broken_image,
+                                                color: Colors.white,
                                               ),
-                                      ),
-                                      title: Text(
-                                        item.name,
-                                        style: GoogleFonts.poppins(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 16,
-                                          color: Colors.white,
+                                            ),
+                                          )
+                                              : Container(
+                                            width: 60,
+                                            height: 60,
+                                            color: Colors.white24,
+                                            child: const Icon(
+                                              Icons.fastfood,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                      subtitle: Text(
-                                        '\$${item.price}',
-                                        style: GoogleFonts.poppins(
-                                          color: Colors.white70,
+                                        title: Text(
+                                          item.name,
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                          ),
                                         ),
-                                      ),
-                                      trailing: IconButton(
-                                        icon: const Icon(
-                                          Icons.delete_outline,
-                                          color: Colors.white,
+                                        subtitle: Text(
+                                          '\$${item.price}',
+                                          style: GoogleFonts.poppins(
+                                            color: Colors.white,
+                                          ),
                                         ),
-                                        onPressed: () =>
-                                            deleteMenuItem(catIndex, itemIndex),
+                                        trailing: IconButton(
+                                          icon: const Icon(
+                                            Icons.delete_outline,
+                                            color: Colors.white,
+                                          ),
+                                          onPressed: () => deleteMenuItem(catIndex, itemIndex),
+                                        ),
                                       ),
                                     );
                                   },
@@ -541,28 +562,27 @@ class _MenuManagementState extends State<MenuManagement> {
                               GestureDetector(
                                 onTap: () => addMenuItem(catIndex),
                                 child: Container(
-                                  margin: const EdgeInsets.all(12),
+                                  margin: const EdgeInsets.all(14),
                                   padding: const EdgeInsets.symmetric(
                                     vertical: 12,
+                                    horizontal: 20,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white.withOpacity(0.15),
+                                    borderRadius: BorderRadius.circular(30),
                                     border: Border.all(color: Colors.white54),
                                   ),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const Icon(
-                                        Icons.add,
-                                        color: Colors.white,
-                                      ),
+                                      const Icon(Icons.add, color: Colors.white, size: 20),
                                       const SizedBox(width: 8),
                                       Text(
                                         'Add Item',
                                         style: GoogleFonts.poppins(
                                           color: Colors.white,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 15,
                                         ),
                                       ),
                                     ],
@@ -570,11 +590,8 @@ class _MenuManagementState extends State<MenuManagement> {
                                 ),
                               ),
                             ],
-                          ),
-                          crossFadeState: isExpanded
-                              ? CrossFadeState.showSecond
-                              : CrossFadeState.showFirst,
-                          duration: const Duration(milliseconds: 300),
+                          )
+                              : const SizedBox.shrink(),
                         ),
                       ],
                     ),
@@ -582,6 +599,7 @@ class _MenuManagementState extends State<MenuManagement> {
                 },
               ),
             );
+
           },
         ),
       ),
