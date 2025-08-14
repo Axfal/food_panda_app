@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:excellent_trade_app/data/response/api_response.dart';
 import 'package:excellent_trade_app/repository/auth/auth_api_repository.dart';
 
+import '../../../model/login/login_model.dart';
 import '../../../service/session_manager/session_controller.dart';
 part 'forgot_password_event.dart';
 part 'forgot_password_state.dart';
@@ -69,7 +70,8 @@ class ForgotPasswordBloc
 
       if (response != null) {
         if (response['success'] == true) {
-          await SessionController().saveUserInPreference(response['user']);
+          final user = UserModel.fromJson(response['user']);
+          await SessionController().saveUserInPreference(user);
           await SessionController().getUserFromPreference();
           emit(
             state.copyWith(

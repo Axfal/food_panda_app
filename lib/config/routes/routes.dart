@@ -88,6 +88,7 @@ class Routes {
         );
 
       case RoutesName.myRestaurant:
+
         return MaterialPageRoute(builder: (context) => MyRestaurantScreen());
 
       case RoutesName.menuManagement:
@@ -100,7 +101,9 @@ class Routes {
         );
 
       case RoutesName.registerRestaurant:
-        return MaterialPageRoute(builder: (context) => RegisterRestaurant());
+        final args = settings.arguments;
+        final userId = (args is Map<String, dynamic>)? args['user_id'] : '';
+        return MaterialPageRoute(builder: (context) => RegisterRestaurant(userId: userId));
 
       default:
         return MaterialPageRoute(

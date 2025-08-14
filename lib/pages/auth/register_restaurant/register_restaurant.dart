@@ -11,7 +11,8 @@ import 'package:excellent_trade_app/pages/auth/register_restaurant/widgets/phone
 import 'package:excellent_trade_app/pages/auth/register_restaurant/widgets/submit_button.dart';
 
 class RegisterRestaurant extends StatefulWidget {
-  const RegisterRestaurant({super.key});
+  final String userId;
+  const RegisterRestaurant({super.key, required this.userId});
 
   @override
   State<RegisterRestaurant> createState() => _RegisterRestaurantState();
@@ -34,7 +35,13 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: MyAppBar(title: 'Register Restaurant', leading: IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.arrow_back_ios, color: Colors.white,)),),
+      appBar: MyAppBar(
+        title: 'Register Restaurant',
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: GestureDetector(

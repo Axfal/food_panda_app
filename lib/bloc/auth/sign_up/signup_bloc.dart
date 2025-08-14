@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
 
 part 'signup_event.dart';
@@ -66,16 +68,22 @@ class SignupBloc extends Bloc<SignupEvent, SignupStates> {
     emit(state.copyWith(signupApi: const ApiResponse.loading()));
 
     await authApiRepository.signupApi(data).then((value) async {
-      // Make sure value is a Map<String, dynamic>
       if (value is Map<String, dynamic>) {
         if (value.containsKey('error') && value['error'].toString().isNotEmpty) {
           emit(state.copyWith(
             signupApi: ApiResponse.error(value['error'].toString()),
           ));
-        } else if (value.containsKey('success') &&
-            value['success'].toString().isNotEmpty) {
+        } else if (value.containsKey('success')) {
+          final String userRole = value['role'] ?? '';
+          final String successUserId = value['user_id'] ?? '';
+          final String successMsg = value['success'].toString();
+          print('success => ${value['success']}');
+          print('successUserId => $successUserId');
+          print('successMsg => $successMsg');
           emit(state.copyWith(
-            signupApi: ApiResponse.completed(value['success'].toString()),
+            signupApi: ApiResponse.completed(successMsg),
+            role: userRole,
+            userId: successUserId
           ));
         } else {
           emit(state.copyWith(
