@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'dart:io';
 import '../../../data/response/api_response.dart';
 import '../../../repository/auth/auth_api_repository.dart';
-part '..//register_restaurant/register_restaurant_event.dart';
+part 'register_restaurant_event.dart';
 part 'register_restaurant_state.dart';
 
 class RegisterRestaurantBloc

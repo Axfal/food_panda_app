@@ -67,37 +67,52 @@ class SignupBloc extends Bloc<SignupEvent, SignupStates> {
 
     emit(state.copyWith(signupApi: const ApiResponse.loading()));
 
-    await authApiRepository.signupApi(data).then((value) async {
-      if (value is Map<String, dynamic>) {
-        if (value.containsKey('error') && value['error'].toString().isNotEmpty) {
-          emit(state.copyWith(
-            signupApi: ApiResponse.error(value['error'].toString()),
-          ));
-        } else if (value.containsKey('success')) {
-          final String userRole = value['role'] ?? '';
-          final String successUserId = value['user_id'] ?? '';
-          final String successMsg = value['success'].toString();
-          print('success => ${value['success']}');
-          print('successUserId => $successUserId');
-          print('successMsg => $successMsg');
-          emit(state.copyWith(
-            signupApi: ApiResponse.completed(successMsg),
-            role: userRole,
-            userId: successUserId
-          ));
-        } else {
-          emit(state.copyWith(
-            signupApi: const ApiResponse.error("Unknown response from server"),
-          ));
-        }
-      } else {
-        emit(state.copyWith(
-          signupApi: const ApiResponse.error("Invalid API response format"),
-        ));
-      }
-    }).onError((error, stackTrace) {
-      emit(state.copyWith(signupApi: ApiResponse.error(error.toString())));
-    });
+    await authApiRepository
+        .signupApi(data)
+        .then((value) async {
+          if (value is Map<String, dynamic>) {
+            if (value.containsKey('error') &&
+                value['error'].toString().isNotEmpty) {
+              emit(
+                state.copyWith(
+                  signupApi: ApiResponse.error(value['error'].toString()),
+                ),
+              );
+            } else if (value.containsKey('success')) {
+              final String userRole = value['role'] ?? '';
+              final String successUserId = value['user_id'] ?? '';
+              final String successMsg = value['success'].toString();
+              print('success => ${value['success']}');
+              print('successUserId => $successUserId');
+              print('successMsg => $successMsg');
+              emit(
+                state.copyWith(
+                  signupApi: ApiResponse.completed(successMsg),
+                  role: userRole,
+                  userId: successUserId,
+                ),
+              );
+            } else {
+              emit(
+                state.copyWith(
+                  signupApi: const ApiResponse.error(
+                    "Unknown response from server",
+                  ),
+                ),
+              );
+            }
+          } else {
+            emit(
+              state.copyWith(
+                signupApi: const ApiResponse.error(
+                  "Invalid API response format",
+                ),
+              ),
+            );
+          }
+        })
+        .onError((error, stackTrace) {
+          emit(state.copyWith(signupApi: ApiResponse.error(error.toString())));
+        });
   }
-
 }

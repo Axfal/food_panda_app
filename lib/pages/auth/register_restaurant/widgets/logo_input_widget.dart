@@ -11,7 +11,7 @@ class _LogoInputWidgetState extends State<LogoInputWidget> {
   Future<void> _pickLogo() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
+    if (!mounted) return;
     if (pickedFile != null) {
       final file = File(pickedFile.path);
       context.read<RegisterRestaurantBloc>().add(LogoChangeEvent(logo: file));
