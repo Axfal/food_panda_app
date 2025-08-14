@@ -71,6 +71,50 @@ class NetworkApiService implements BaseApiServices {
   }
 
   @override
+  Future<dynamic> postMultipartApi(
+    String url,
+    Map<String, dynamic> data, {
+    Map<String, String>? headers,
+  }) async {
+    if (kDebugMode) {
+      print('POST Multipart $url');
+      print('Data: $data');
+    }
+
+    try {
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+
+      request.headers.addAll(
+        getHeaders(
+          customHeaders:
+              headers ??
+              {
+                "Content-Type": "multipart/form-data",
+                "Accept": "application/json",
+              },
+        ),
+      );
+
+      data.forEach((key, value) async {
+        if (value is File) {
+          request.files.add(await http.MultipartFile.fromPath(key, value.path));
+        } else {
+          request.fields[key] = value.toString();
+        }
+      });
+
+      var streamedResponse = await request.send().timeout(timeoutDuration);
+      var response = await http.Response.fromStream(streamedResponse);
+
+      return _returnResponse(response);
+    } on SocketException {
+      throw NoInternetException('No Internet Connection');
+    } on TimeoutException {
+      throw FetchDataException('Request timeout');
+    }
+  }
+
+  @override
   Future<dynamic> putApi(
     String url,
     dynamic data, {

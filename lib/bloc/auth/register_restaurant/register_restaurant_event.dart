@@ -47,9 +47,12 @@ class DescriptionChangeEvent extends RegisterRestaurantEvent {
   List<Object?> get props => [description];
 }
 
-class _SubmitFormEvent extends RegisterRestaurantEvent {
-  const _SubmitFormEvent();
+class SubmitFormEvent extends RegisterRestaurantEvent {
+  final String ownerId;
+  const SubmitFormEvent({
+    required this.ownerId
+});
   @override
   // TODO: implement props
-  List<Object?> get props => [];
+  List<Object?> get props => [ownerId];
 }

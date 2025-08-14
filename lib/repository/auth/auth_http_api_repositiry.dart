@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'auth_repository.dart';
 
 class AuthHttpApiRepository implements AuthApiRepository {
@@ -10,26 +12,35 @@ class AuthHttpApiRepository implements AuthApiRepository {
   }
 
   @override
-  Future<dynamic> signupApi(data) async {
+  Future<dynamic> signupApi(dynamic data) async {
     dynamic response = await _apiServices.postApi(AppUrl.signUp, data);
     return response;
   }
 
   @override
-  Future logoutApi(data) async {
+  Future logoutApi(dynamic data) async {
     dynamic response = await _apiServices.postApi(AppUrl.logout, data);
     return response;
   }
 
   @override
-  Future sigInOTP(data) async {
+  Future sigInOTP(dynamic data) async {
     dynamic response = await _apiServices.postApi(AppUrl.sigInOTP, data);
     return response;
   }
 
   @override
-  Future verifyOTP(data) async {
+  Future verifyOTP(dynamic data) async {
     dynamic response = await _apiServices.postApi(AppUrl.verifyOTP, data);
+    return response;
+  }
+
+  @override
+  Future registerRestaurant(dynamic data) async {
+    final response = await _apiServices.postMultipartApi(
+      AppUrl.registerRestaurant,
+      data,
+    );
     return response;
   }
 }

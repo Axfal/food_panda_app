@@ -1,4 +1,4 @@
-import '../restaurant_exprots.dart';
+import '../restaurant_exports.dart';
 
 class AddressInputWidget extends StatefulWidget {
   const AddressInputWidget({super.key});
@@ -13,14 +13,32 @@ class _AddressInputWidgetState extends State<AddressInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomTextField(
-      label: 'Address',
-      hintText: "Enter your address",
-      controller: addressController,
-      focusNode: focusNode,
-      maxLines: 2,
-      keyboardType: TextInputType.text,
-      textInputAction: TextInputAction.next,
+    return BlocBuilder<RegisterRestaurantBloc, RegisterRestaurantStates>(
+      buildWhen: (current, previous) => current.address != previous.address,
+      builder: (context, state) {
+        return CustomTextField(
+          label: 'Address',
+          hintText: "Enter your address",
+          controller: addressController,
+          focusNode: focusNode,
+          maxLines: 2,
+          keyboardType: TextInputType.text,
+          textInputAction: TextInputAction.next,
+
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return "Address is required";
+            }
+            return null;
+          },
+
+          onChanged: (value) {
+            context.read<RegisterRestaurantBloc>().add(
+              AddressChangeEvent(address: value),
+            );
+          },
+        );
+      },
     );
   }
 }
