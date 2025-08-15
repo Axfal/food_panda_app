@@ -1,3 +1,4 @@
+import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
 import 'package:excellent_trade_app/config/components/round_button_widget.dart';
 import '../restaurant_exports.dart';
 
@@ -5,11 +6,7 @@ class SubmitButton extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final String userId;
 
-  const SubmitButton({
-    super.key,
-    required this.formKey,
-    required this.userId,
-  });
+  const SubmitButton({super.key, required this.formKey, required this.userId});
 
   @override
   State<SubmitButton> createState() => _SubmitButtonState();
@@ -18,9 +15,9 @@ class SubmitButton extends StatefulWidget {
 class _SubmitButtonState extends State<SubmitButton> {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<RegisterRestaurantBloc, RegisterRestaurantStates>(
+    return BlocConsumer<RestaurantBloc, RestaurantStates>(
       listenWhen: (previous, current) =>
-      previous.registerRestaurantApi.status !=
+          previous.registerRestaurantApi.status !=
           current.registerRestaurantApi.status,
       listener: (context, state) {
         final api = state.registerRestaurantApi;
@@ -33,13 +30,23 @@ class _SubmitButtonState extends State<SubmitButton> {
 
           context.flushBarSuccessMessage(message: successMessage);
 
-          Future.delayed(const Duration(seconds: 2), () {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              RoutesName.login,
-                  (route) => false,
-            );
-          });
+          if (SessionController.isLogin) {
+            Future.delayed(const Duration(seconds: 2), () {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RoutesName.myRestaurant,
+                    (route) => false,
+              );
+            });
+          } else {
+            Future.delayed(const Duration(seconds: 2), () {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RoutesName.login,
+                (route) => false,
+              );
+            });
+          }
         }
       },
       builder: (context, state) {
@@ -49,7 +56,7 @@ class _SubmitButtonState extends State<SubmitButton> {
           onPress: () async {
             final isValid = widget.formKey.currentState?.validate() ?? false;
             if (isValid) {
-              context.read<RegisterRestaurantBloc>().add(
+              context.read<RestaurantBloc>().add(
                 SubmitFormEvent(ownerId: widget.userId),
               );
             }

@@ -14,13 +14,13 @@ class _LogoInputWidgetState extends State<LogoInputWidget> {
     if (!mounted) return;
     if (pickedFile != null) {
       final file = File(pickedFile.path);
-      context.read<RegisterRestaurantBloc>().add(LogoChangeEvent(logo: file));
+      context.read<RestaurantBloc>().add(LogoChangeEvent(logo: file));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RegisterRestaurantBloc, RegisterRestaurantStates>(
+    return BlocBuilder<RestaurantBloc, RestaurantStates>(
       buildWhen: (previous, current) => previous.logo != current.logo,
       builder: (context, state) {
         return Padding(

@@ -13,7 +13,7 @@ class _AddressInputWidgetState extends State<AddressInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RegisterRestaurantBloc, RegisterRestaurantStates>(
+    return BlocBuilder<RestaurantBloc, RestaurantStates>(
       buildWhen: (current, previous) => current.address != previous.address,
       builder: (context, state) {
         return CustomTextField(
@@ -33,7 +33,7 @@ class _AddressInputWidgetState extends State<AddressInputWidget> {
           },
 
           onChanged: (value) {
-            context.read<RegisterRestaurantBloc>().add(
+            context.read<RestaurantBloc>().add(
               AddressChangeEvent(address: value),
             );
           },

@@ -13,7 +13,7 @@ class _NameInputWidgetState extends State<NameInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RegisterRestaurantBloc, RegisterRestaurantStates>(
+    return BlocBuilder<RestaurantBloc, RestaurantStates>(
       buildWhen: (current, previous) =>
           current.restaurantName != previous.restaurantName,
       builder: (context, state) {
@@ -35,7 +35,7 @@ class _NameInputWidgetState extends State<NameInputWidget> {
           },
 
           onChanged: (value) {
-            context.read<RegisterRestaurantBloc>().add(
+            context.read<RestaurantBloc>().add(
               RestaurantNameChangeEvent(restaurantName: value),
             );
           },

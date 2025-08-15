@@ -13,7 +13,7 @@ class _DescriptionInputWidgetState extends State<DescriptionInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RegisterRestaurantBloc, RegisterRestaurantStates>(
+    return BlocBuilder<RestaurantBloc, RestaurantStates>(
       buildWhen: (current, previous) =>
           current.description != previous.description,
       builder: (context, state) {
@@ -33,7 +33,7 @@ class _DescriptionInputWidgetState extends State<DescriptionInputWidget> {
           },
 
           onChanged: (value) {
-            context.read<RegisterRestaurantBloc>().add(
+            context.read<RestaurantBloc>().add(
               DescriptionChangeEvent(description: value),
             );
           },

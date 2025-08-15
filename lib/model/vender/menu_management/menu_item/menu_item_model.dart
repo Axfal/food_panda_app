@@ -12,6 +12,8 @@ class MenuItemModel with _$MenuItemModel {
     @Default([]) @JsonKey(name: 'items') List<Item> items,
   }) = _MenuItemModel;
 
+  const MenuItemModel._(); // ✅ Needed if you want custom getters in the future
+
   factory MenuItemModel.fromJson(Map<String, dynamic> json) =>
       _$MenuItemModelFromJson(json);
 
@@ -50,6 +52,8 @@ class Item with _$Item {
     @Default('') @JsonKey(name: 'photo') String photo,
     @Default('') @JsonKey(name: 'status') String status,
   }) = _Item;
+
+  const Item._(); // ✅ Needed if you want custom getters in the future
 
   factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
 

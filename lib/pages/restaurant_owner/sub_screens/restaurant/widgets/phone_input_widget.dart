@@ -14,7 +14,7 @@ class _PhoneInputWidgetState extends State<PhoneInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RegisterRestaurantBloc, RegisterRestaurantStates>(
+    return BlocBuilder<RestaurantBloc, RestaurantStates>(
       buildWhen: (current, previous) => current.phone != previous.phone,
       builder: (context, state) {
         return CustomPhoneField(
@@ -35,7 +35,7 @@ class _PhoneInputWidgetState extends State<PhoneInputWidget> {
             return null;
           },
           onChanged: (code, number) {
-            context.read<RegisterRestaurantBloc>().add(
+            context.read<RestaurantBloc>().add(
               PhoneChangeEvent(phone: code + number),
             );
           },

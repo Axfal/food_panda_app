@@ -12,6 +12,8 @@ class MenuCategoryModel with _$MenuCategoryModel {
     @Default([]) @JsonKey(name: 'categories') List<Category> categories,
   }) = _MenuCategoryModel;
 
+  const MenuCategoryModel._(); // ✅ Needed if you want custom getters
+
   factory MenuCategoryModel.fromJson(Map<String, dynamic> json) =>
       _$MenuCategoryModelFromJson(json);
 
@@ -46,6 +48,8 @@ class Category with _$Category {
     @Default('') String name,
     @Default('') String photo,
   }) = _Category;
+
+  const Category._(); // ✅ Needed if you want custom getters
 
   factory Category.fromJson(Map<String, dynamic> json) =>
       _$CategoryFromJson(json);

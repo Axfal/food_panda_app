@@ -1,3 +1,4 @@
+import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
 import 'package:excellent_trade_app/pages/order_now.dart';
 import 'package:excellent_trade_app/pages/restuarant_item_screen.dart';
 import '../../pages/auth/forgot_password/forget_password_export.dart';
@@ -102,7 +103,8 @@ class Routes {
 
       case RoutesName.registerRestaurant:
         final args = settings.arguments;
-        final userId = (args is Map<String, dynamic>)? args['user_id'] : '';
+        final userIdSession = SessionController.user.id ?? '';
+        final userId = (args is Map<String, dynamic>)? args['user_id'] : userIdSession;
         return MaterialPageRoute(builder: (context) => RegisterRestaurant(userId: userId));
 
       default:

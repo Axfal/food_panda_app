@@ -211,8 +211,8 @@ return $default(_that.success,_that.count,_that.error,_that.items);case _:
 /// @nodoc
 @JsonSerializable()
 
-class _MenuItemModel implements MenuItemModel {
-  const _MenuItemModel({@JsonKey(name: 'success') this.success = false, @JsonKey(name: 'count') this.count = 0, @JsonKey(name: 'error') this.error = '', @JsonKey(name: 'items') final  List<Item> items = const []}): _items = items;
+class _MenuItemModel extends MenuItemModel {
+  const _MenuItemModel({@JsonKey(name: 'success') this.success = false, @JsonKey(name: 'count') this.count = 0, @JsonKey(name: 'error') this.error = '', @JsonKey(name: 'items') final  List<Item> items = const []}): _items = items,super._();
   factory _MenuItemModel.fromJson(Map<String, dynamic> json) => _$MenuItemModelFromJson(json);
 
 @override@JsonKey(name: 'success') final  bool success;
@@ -493,8 +493,8 @@ return $default(_that.id,_that.restaurantId,_that.categoryId,_that.name,_that.de
 /// @nodoc
 @JsonSerializable()
 
-class _Item implements Item {
-  const _Item({@JsonKey(name: 'id') this.id = 0, @JsonKey(name: 'restaurant_id') this.restaurantId = 0, @JsonKey(name: 'category_id') this.categoryId = 0, @JsonKey(name: 'name') this.name = '', @JsonKey(name: 'description') this.description = '', @JsonKey(name: 'price') this.price = '0.00', @JsonKey(name: 'photo') this.photo = '', @JsonKey(name: 'status') this.status = ''});
+class _Item extends Item {
+  const _Item({@JsonKey(name: 'id') this.id = 0, @JsonKey(name: 'restaurant_id') this.restaurantId = 0, @JsonKey(name: 'category_id') this.categoryId = 0, @JsonKey(name: 'name') this.name = '', @JsonKey(name: 'description') this.description = '', @JsonKey(name: 'price') this.price = '0.00', @JsonKey(name: 'photo') this.photo = '', @JsonKey(name: 'status') this.status = ''}): super._();
   factory _Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
 
 @override@JsonKey(name: 'id') final  int id;

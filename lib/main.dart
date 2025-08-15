@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:excellent_trade_app/bloc/vendor/restaurant/restaurant_bloc.dart';
+import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -83,7 +85,9 @@ class MyApp extends StatelessWidget {
               minTextAdapt: true,
               splitScreenMode: true,
               builder: (context, child) {
-                return MaterialApp(
+                return MultiBlocProvider(providers: [
+                  BlocProvider<RestaurantBloc>(create: (context) => RestaurantBloc(restaurantApiRepository: getIt())),
+                ], child: MaterialApp(
                   debugShowCheckedModeBanner: false,
                   title: 'Flutter Demo',
                   themeMode: ThemeMode.dark,
@@ -98,7 +102,7 @@ class MyApp extends StatelessWidget {
                   supportedLocales: const [Locale('en'), Locale('es')],
                   initialRoute: RoutesName.splash,
                   onGenerateRoute: Routes.generateRoute,
-                );
+                ));
               },
             );
           },

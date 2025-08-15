@@ -1,3 +1,8 @@
+import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
+import 'package:excellent_trade_app/bloc/vendor/restaurant/restaurant_bloc.dart';
+import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
+import 'package:flutter/cupertino.dart';
+
 import '../restaurant_owner_exports.dart';
 
 class MyRestaurantScreen extends StatefulWidget {
@@ -8,59 +13,91 @@ class MyRestaurantScreen extends StatefulWidget {
 }
 
 class _MyRestaurantScreenState extends State<MyRestaurantScreen> {
-  List<Map<String, dynamic>> restaurants = [
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    context.read<RestaurantBloc>().add(FetchRestaurantEvent());
+  }
+  final List<Map<String, dynamic>> restaurants = [
     {
-      "name": "Sunrise Diner",
-      "address": "123 Main Street, City",
-      "hours": "8 AM - 10 PM",
-      "isOpen": true,
+      "id": 10,
+      "name": "anfal",
+      "description": "asdasdasdasdasdasdasd",
+      "phone": "03418410597",
+      "address": "lahore",
+      "logo":
+          "https://adfirst.pk/Panda_API/API/uploads/logos/logo_689dc2e21a9d36.04895386.png",
+      "status": "closed",
+      "hours": "3",
+      "rating": "0.0",
+      "created_at": "2025-08-14 11:05:06",
     },
     {
-      "name": "Tasty Bites",
-      "address": "456 Elm Avenue, City",
-      "hours": "11 AM - 11 PM",
-      "isOpen": false,
+      "id": 11,
+      "name": "anfal",
+      "description": "asdasdasdasdasdasdasd",
+      "phone": "03418410597",
+      "address": "lahore",
+      "logo": null,
+      "status": "closed",
+      "hours": "3",
+      "rating": "0.0",
+      "created_at": "2025-08-14 12:01:25",
     },
     {
-      "name": "Green Garden",
-      "address": "789 Oak Road, City",
-      "hours": "7 AM - 9 PM",
-      "isOpen": true,
+      "id": 12,
+      "name": "anfal",
+      "description": "asdasdasdasdasdasdasd",
+      "phone": "03418410597",
+      "address": "lahore",
+      "logo": null,
+      "status": "closed",
+      "hours": "3",
+      "rating": "0.0",
+      "created_at": "2025-08-14 12:01:28",
+    },
+    {
+      "id": 6,
+      "name": "Pizza House",
+      "description": "Best pizza in town",
+      "phone": "03418410597",
+      "address": "lahore",
+      "logo":
+          "https://adfirst.pk/Panda_API/API/uploads/logos/logo_6899b7e5200a16.77744348.jpg",
+      "status": "open",
+      "hours": "Mon-Fri 10:00 AM - 9:00 PM",
+      "rating": "0.0",
+      "created_at": "2025-08-11 09:29:09",
     },
   ];
 
-  void toggleStatus(int index) {
-    setState(() {
-      restaurants[index]["isOpen"] = !restaurants[index]["isOpen"];
-    });
-  }
-
-  void deleteRestaurant(int index) {
+  void deleteRestaurant(int id, String name) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Delete Restaurant', style: GoogleFonts.poppins()),
+
+      builder: (_) => AlertDialog(
+        title: Text("Delete Restaurant", style: GoogleFonts.poppins(color: Colors.black87)),
         content: Text(
-          'Are you sure you want to delete "${restaurants[index]["name"]}"?',
-          style: GoogleFonts.poppins(),
+          "Are you sure you want to delete \"$name\"?",
+          style: GoogleFonts.poppins(color: Colors.black87)
         ),
+        backgroundColor: Colors.white,
         actions: [
           TextButton(
             child: Text(
-              'Cancel',
+              "Cancel",
               style: GoogleFonts.poppins(color: Colors.grey),
             ),
             onPressed: () => Navigator.pop(context),
           ),
           TextButton(
             child: Text(
-              'Delete',
+              "Delete",
               style: GoogleFonts.poppins(color: Colors.redAccent),
             ),
             onPressed: () {
-              setState(() {
-                restaurants.removeAt(index);
-              });
+              context.read<RestaurantBloc>().add(DeleteRestaurantEvent(id: id.toString()));
               Navigator.pop(context);
             },
           ),
@@ -70,202 +107,250 @@ class _MyRestaurantScreenState extends State<MyRestaurantScreen> {
   }
 
   void editRestaurant(int index) {
-    // Navigate to edit screen or show modal bottom sheet
-    // For demo, just showing a snackbar
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Edit ${restaurants[index]["name"]}')),
+      SnackBar(content: Text("Edit ${restaurants[index]['name']}")),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[50],
       appBar: MyAppBar(
-        title: 'My Restaurant',
+        title: 'My Restaurants',
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: restaurants.isEmpty
-            ? Center(
-                child: Text(
-                  'No restaurants added yet.',
-                  style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey),
-                ),
-              )
-            : ListView.builder(
-                itemCount: restaurants.length,
+        child: BlocBuilder<RestaurantBloc, RestaurantStates>(
+            builder: (context, state) {
+              if (state.registerRestaurantApi.status == Status.loading) {
+                return const Center(
+                  child: CupertinoActivityIndicator(color: Colors.black54),
+                );
+              }
+
+              if (state.restaurants.isEmpty) {
+                return Center(
+                  child: Text(
+                    "No Restaurant Found",
+                    style: GoogleFonts.poppins(fontSize: 18, color: Colors.black54),
+                  ),
+                );
+              }
+
+              return ListView.builder(
+                itemCount: state.restaurants.length,
                 itemBuilder: (context, index) {
-                  final restaurant = restaurants[index];
+                  final r =  state.restaurants[index];
+                  final isOpen = r?.status == 'open';
                   return Card(
-                    color: AppColors.white.withValues(alpha: .289),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
+                    elevation: 3,
+                    color: Colors.white,
                     margin: const EdgeInsets.symmetric(vertical: 8),
-                    elevation: 4,
-                    shadowColor: AppColors.primary.withOpacity(0.2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
+                      padding: const EdgeInsets.all(12),
+                      child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Restaurant Name & Status
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                restaurant['name'],
-                                style: GoogleFonts.poppins(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: restaurant['isOpen']
-                                      ? Colors.green.withOpacity(0.2)
-                                      : Colors.red.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 6,
-                                ),
-                                child: Text(
-                                  restaurant['isOpen'] ? 'Open' : 'Closed',
-                                  style: GoogleFonts.poppins(
-                                    color: restaurant['isOpen']
-                                        ? Colors.green
-                                        : Colors.red,
-                                    fontWeight: FontWeight.w600,
+                          // Logo
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: r!.logo != null
+                                ? Image.network(
+                              r.logo!,
+                              height: 70,
+                              width: 70,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  height: 70,
+                                  width: 70,
+                                  color: Colors.grey[300],
+                                  child: const Icon(
+                                    Icons.store,
+                                    size: 36,
+                                    color: Colors.grey,
                                   ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-
-                          // Address
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.location_on_outlined,
-                                size: 18,
+                                );
+                              },
+                            )
+                                : Container(
+                              height: 70,
+                              width: 70,
+                              color: Colors.grey[300],
+                              child: const Icon(
+                                Icons.store,
+                                size: 36,
                                 color: Colors.grey,
                               ),
-                              const SizedBox(width: 6),
-                              Expanded(
-                                child: Text(
-                                  restaurant['address'],
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 14,
-                                    color: Colors.grey[700],
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                          const SizedBox(height: 6),
+                          const SizedBox(width: 12),
 
-                          // Hours
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.access_time_outlined,
-                                size: 18,
-                                color: Colors.grey,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                restaurant['hours'],
-                                style: GoogleFonts.poppins(
-                                  fontSize: 14,
-                                  color: Colors.grey[700],
+                          // Info
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Name + Status
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        r.name,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: isOpen
+                                            ? Colors.green[100]
+                                            : Colors.red[100],
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 4,
+                                      ),
+                                      child: Text(
+                                        isOpen ? 'Open' : 'Closed',
+                                        style: GoogleFonts.poppins(
+                                          color: isOpen
+                                              ? Colors.green[800]
+                                              : Colors.red[800],
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
 
-                          // Action Buttons
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              TextButton.icon(
-                                icon: Icon(
-                                  restaurant['isOpen']
-                                      ? Icons.pause_circle
-                                      : Icons.play_circle,
-                                  color: restaurant['isOpen']
-                                      ? Colors.orange
-                                      : Colors.green,
+                                const SizedBox(height: 4),
+
+                                // Address
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.location_on_outlined,
+                                      size: 16,
+                                      color: Colors.grey,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Expanded(
+                                      child: Text(
+                                        r.address,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 13,
+                                          color: Colors.grey[700],
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                label: Text(
-                                  restaurant['isOpen'] ? 'Close' : 'Open',
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w600,
-                                    color: restaurant['isOpen']
-                                        ? Colors.orange
-                                        : Colors.green,
-                                  ),
+
+                                const SizedBox(height: 4),
+
+                                // Hours
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.access_time,
+                                      size: 16,
+                                      color: Colors.grey,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      r.hours,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                onPressed: () => toggleStatus(index),
-                              ),
-                              const SizedBox(width: 8),
-                              TextButton.icon(
-                                icon: const Icon(
-                                  Icons.edit,
-                                  color: Colors.deepPurple,
+
+                                const SizedBox(height: 8),
+
+                                // Action Buttons
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(
+                                        isOpen
+                                            ? Icons.pause_circle
+                                            : Icons.play_circle,
+                                        color: isOpen
+                                            ? Colors.orange
+                                            : Colors.green,
+                                      ),
+                                      onPressed: () {
+                                        // setState(() {
+                                        //   r.status = isOpen
+                                        //       ? 'closed'
+                                        //       : 'open';
+                                        // });
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.deepPurple,
+                                      ),
+                                      onPressed: () => editRestaurant(index),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.delete,
+                                        color: Colors.redAccent,
+                                      ),
+                                      onPressed: () => deleteRestaurant(r.id, r.name),
+                                    ),
+                                  ],
                                 ),
-                                label: Text(
-                                  'Edit',
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.deepPurple,
-                                  ),
-                                ),
-                                onPressed: () => editRestaurant(index),
-                              ),
-                              const SizedBox(width: 8),
-                              TextButton.icon(
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.redAccent,
-                                ),
-                                label: Text(
-                                  'Delete',
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.redAccent,
-                                  ),
-                                ),
-                                onPressed: () => deleteRestaurant(index),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
                   );
                 },
-              ),
+              );
+        }),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: Colors.deepPurple,
-        icon: const Icon(Icons.add),
+        backgroundColor: AppColors.primary,
+        icon: const Icon(Icons.add, color: Colors.white, size: 25),
         label: Text(
           'Add Restaurant',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+            fontSize: 15,
+          ),
         ),
         onPressed: () {
-          // Navigate to add restaurant screen
-          Navigator.pushNamed(context, '/addRestaurant');
+          final userId = SessionController.user.id.toString();
+          Navigator.pushNamed(
+            context,
+            RoutesName.registerRestaurant,
+            arguments: {'user_id': userId},
+          );
         },
       ),
     );

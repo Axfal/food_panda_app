@@ -6,7 +6,6 @@ import 'package:excellent_trade_app/pages/restaurant_owner/widgets/logout_dialog
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../globalWidgets/PrimeryWidgets/customeBottonNavBar.dart';
-import '../../service/session_manager/session_controller.dart';
 import 'subPages/addresses_page.dart';
 import 'subPages/fav_page.dart';
 import 'subPages/order_page.dart';

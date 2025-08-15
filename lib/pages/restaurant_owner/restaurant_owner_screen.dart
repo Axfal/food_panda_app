@@ -1,4 +1,5 @@
 import 'package:badges/badges.dart' as badges;
+import 'package:excellent_trade_app/config/routes/routes.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/featured_card.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/logout_dialog_box.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/summary_itme.dart';
@@ -13,16 +14,17 @@ class RestaurantOwnerScreen extends StatefulWidget {
 
 class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
   final List<Map<String, dynamic>> features = [
-    {"title": "Profile", "icon": Icons.person, "route": "/vendorProfile"},
+    {"title": "Profile", "icon": Icons.person, "route":RoutesName.profile},
     {
       "title": "My Restaurants",
       "icon": Icons.store,
       "route": RoutesName.myRestaurant,
     },
     {
-      "title": "Restaurant Details",
-      "icon": Icons.edit_location_alt,
-      "route": "/restaurantDetails",
+      "title": "New Restaurant",
+      "icon": Icons.store_mall_directory,
+      "route": RoutesName.registerRestaurant,
+      'arg': {'user_id': "10"},
     },
     {
       "title": "Menu Items",

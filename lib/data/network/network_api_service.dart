@@ -139,12 +139,12 @@ class NetworkApiService implements BaseApiServices {
   }
 
   @override
-  Future<dynamic> deleteApi(String url, {Map<String, String>? headers}) async {
+  Future<dynamic> deleteApi(String url, dynamic data) async {
     if (kDebugMode) print('DELETE $url');
 
     try {
       final response = await http
-          .delete(Uri.parse(url), headers: getHeaders(customHeaders: headers))
+          .delete(Uri.parse(url), body: jsonEncode(data),)
           .timeout(timeoutDuration);
       return _returnResponse(response);
     } on SocketException {

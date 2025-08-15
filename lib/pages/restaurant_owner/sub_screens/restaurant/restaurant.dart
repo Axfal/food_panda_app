@@ -1,4 +1,3 @@
-import 'package:excellent_trade_app/pages/auth/register_restaurant/widgets/logo_input_widget.dart';
 
 import 'restaurant_exports.dart';
 
@@ -11,15 +10,15 @@ class RegisterRestaurant extends StatefulWidget {
 }
 
 class _RegisterRestaurantState extends State<RegisterRestaurant> {
-  late RegisterRestaurantBloc _registerRestaurantBloc;
+  // late RestaurantBloc _registerRestaurantBloc;
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    _registerRestaurantBloc = RegisterRestaurantBloc(
-      authApiRepository: getIt(),
-    );
+    // _registerRestaurantBloc = RestaurantBloc(
+    //   restaurantApiRepository: getIt(),
+    // );
   }
 
   @override
@@ -34,8 +33,8 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
         ),
       ),
       body: SafeArea(
-        child: BlocProvider(
-          create: (_) => _registerRestaurantBloc,
+        // child: BlocProvider(
+        //   create: (_) => _registerRestaurantBloc,
           child: SingleChildScrollView(
             child: GestureDetector(
               onTap: () => FocusScope.of(context).unfocus(),
@@ -78,7 +77,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
             ),
           ),
         ),
-      ),
+      // ),
     );
   }
 }

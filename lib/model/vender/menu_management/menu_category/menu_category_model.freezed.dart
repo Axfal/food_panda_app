@@ -211,8 +211,8 @@ return $default(_that.success,_that.count,_that.error,_that.categories);case _:
 /// @nodoc
 @JsonSerializable()
 
-class _MenuCategoryModel implements MenuCategoryModel {
-  const _MenuCategoryModel({@JsonKey(name: 'success') this.success = false, @JsonKey(name: 'count') this.count = 0, @JsonKey(name: 'error') this.error = '', @JsonKey(name: 'categories') final  List<Category> categories = const []}): _categories = categories;
+class _MenuCategoryModel extends MenuCategoryModel {
+  const _MenuCategoryModel({@JsonKey(name: 'success') this.success = false, @JsonKey(name: 'count') this.count = 0, @JsonKey(name: 'error') this.error = '', @JsonKey(name: 'categories') final  List<Category> categories = const []}): _categories = categories,super._();
   factory _MenuCategoryModel.fromJson(Map<String, dynamic> json) => _$MenuCategoryModelFromJson(json);
 
 @override@JsonKey(name: 'success') final  bool success;
@@ -489,8 +489,8 @@ return $default(_that.id,_that.restaurantId,_that.name,_that.photo);case _:
 /// @nodoc
 @JsonSerializable()
 
-class _Category implements Category {
-  const _Category({this.id = 0, @JsonKey(name: 'restaurant_id') this.restaurantId = 0, this.name = '', this.photo = ''});
+class _Category extends Category {
+  const _Category({this.id = 0, @JsonKey(name: 'restaurant_id') this.restaurantId = 0, this.name = '', this.photo = ''}): super._();
   factory _Category.fromJson(Map<String, dynamic> json) => _$CategoryFromJson(json);
 
 @override@JsonKey() final  int id;
