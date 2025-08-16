@@ -13,40 +13,48 @@ class RestaurantOwnerScreen extends StatefulWidget {
 }
 
 class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
-  final List<Map<String, dynamic>> features = [
-    {"title": "Profile", "icon": Icons.person, "route":RoutesName.profile},
-    {
-      "title": "My Restaurants",
-      "icon": Icons.store,
-      "route": RoutesName.myRestaurant,
-    },
-    {
-      "title": "New Restaurant",
-      "icon": Icons.store_mall_directory,
-      "route": RoutesName.registerRestaurant,
-      'arg': {'user_id': "10"},
-    },
-    {
-      "title": "Menu Items",
-      "icon": Icons.fastfood,
-      "route": RoutesName.menuManagement,
-      'arg': {'restaurant_id': "6"},
-    },
-    {"title": "Orders", "icon": Icons.shopping_bag, "route": "/orders"},
-    {"title": "Order History", "icon": Icons.history, "route": "/orderHistory"},
-    {
-      "title": "Sales Summary",
-      "icon": Icons.bar_chart,
-      "route": "/salesSummary",
-    },
-    {
-      "title": "Logout",
-      "icon": Icons.logout,
-      "action": (context) => showLogoutDialog(context),
-    },
-  ];
+  late String userId;
+  late List<Map<String, dynamic>> features;
 
   int unreadNotifications = 3;
+
+  @override
+  void initState() {
+    super.initState();
+    userId = SessionController.user.id.toString();
+    features = [
+      {"title": "Profile", "icon": Icons.person, "route": RoutesName.profile},
+      {
+        "title": "My Restaurants",
+        "icon": Icons.store,
+        "route": RoutesName.myRestaurant,
+      },
+      {
+        "title": "New Restaurant",
+        "icon": Icons.store_mall_directory,
+        "route": RoutesName.registerRestaurant,
+        'arg': {'user_id': userId},
+      },
+      {
+        "title": "Menu Items",
+        "icon": Icons.fastfood,
+        "route": RoutesName.menuManagement,
+        'arg': {'restaurant_id': "6"},
+      },
+      {"title": "Orders", "icon": Icons.shopping_bag, "route": "/orders"},
+      {"title": "Order History", "icon": Icons.history, "route": "/orderHistory"},
+      {
+        "title": "Sales Summary",
+        "icon": Icons.bar_chart,
+        "route": "/salesSummary",
+      },
+      {
+        "title": "Logout",
+        "icon": Icons.logout,
+        "action": (context) => showLogoutDialog(context),
+      },
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,8 @@
 import '../restaurant_exports.dart';
 
 class NameInputWidget extends StatefulWidget {
-  const NameInputWidget({super.key});
+  final String? name;
+  const NameInputWidget({super.key, this.name});
 
   @override
   State<NameInputWidget> createState() => _NameInputWidgetState();
@@ -12,10 +13,18 @@ class _NameInputWidgetState extends State<NameInputWidget> {
   final focusNode = FocusNode();
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.name != null && widget.name!.isNotEmpty) {
+      nameController.text = widget.name!;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<RestaurantBloc, RestaurantStates>(
-      buildWhen: (current, previous) =>
-          current.restaurantName != previous.restaurantName,
+      buildWhen: (previous, current) =>
+      previous.restaurantName != current.restaurantName,
       builder: (context, state) {
         return CustomTextField(
           label: "Restaurant Name",
@@ -33,7 +42,6 @@ class _NameInputWidgetState extends State<NameInputWidget> {
             }
             return null;
           },
-
           onChanged: (value) {
             context.read<RestaurantBloc>().add(
               RestaurantNameChangeEvent(restaurantName: value),

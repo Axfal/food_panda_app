@@ -1,9 +1,12 @@
+import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/restaurant/widgets/timing_input_widget.dart';
 
+import '../../../../model/vender/restaurant/restaurant_model.dart';
 import 'restaurant_exports.dart';
 
 class RegisterRestaurant extends StatefulWidget {
   final String userId;
-  const RegisterRestaurant({super.key, required this.userId});
+  final Restaurant? restaurant;
+  const RegisterRestaurant({super.key, required this.userId, this.restaurant});
 
   @override
   State<RegisterRestaurant> createState() => _RegisterRestaurantState();
@@ -26,7 +29,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: MyAppBar(
-        title: 'Register Restaurant',
+        title: widget.restaurant == null? 'Register Restaurant' : 'Update Restaurant',
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
@@ -35,48 +38,48 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
       body: SafeArea(
         // child: BlocProvider(
         //   create: (_) => _registerRestaurantBloc,
-          child: SingleChildScrollView(
-            child: GestureDetector(
-              onTap: () => FocusScope.of(context).unfocus(),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      /// Restaurant Logo
-                     LogoInputWidget(),
+        child: SingleChildScrollView(
+          child: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    /// Restaurant Logo
+                    LogoInputWidget(logo: widget.restaurant?.logo),
 
-                      const SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
-                      /// Name
-                      NameInputWidget(),
-                      const SizedBox(height: 16),
+                    /// Name
+                    NameInputWidget(name: widget.restaurant?.name),
+                    const SizedBox(height: 16),
 
-                      /// Phone
-                      PhoneInputWidget(),
+                    TimingInputWidget(id: widget.restaurant?.id.toString(), timing: widget.restaurant?.hours),
+                    const SizedBox(height: 16),
 
-                      /// Address
-                      AddressInputWidget(),
-                      const SizedBox(height: 16),
+                    /// Phone
+                    PhoneInputWidget(phone: widget.restaurant?.phone),
 
-                      /// Description
-                      DescriptionInputWidget(),
-                      const SizedBox(height: 24),
+                    /// Address
+                    AddressInputWidget(address: widget.restaurant?.address),
+                    const SizedBox(height: 16),
 
-                      /// Submit Button (triggers validation + event)
-                      SubmitButton(formKey: _formKey, userId: widget.userId),
-                    ],
-                  ),
+                    /// Description
+                    DescriptionInputWidget(description: widget.restaurant?.description),
+                    const SizedBox(height: 24),
+
+                    /// Submit Button
+                    SubmitButton(formKey: _formKey, userId: widget.userId, restaurant: widget.restaurant,),
+                  ],
                 ),
               ),
             ),
           ),
         ),
+      ),
       // ),
     );
   }

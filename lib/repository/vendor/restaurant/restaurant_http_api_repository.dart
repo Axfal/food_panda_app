@@ -11,10 +11,12 @@ class RestaurantHttpApiRepository implements RestaurantApiRepository {
     );
     return response;
   }
+
   @override
   Future<dynamic> deleteRestaurant(dynamic data) async {
     final response = await _networkServices.deleteApi(
-      AppUrl.deleteRestaurant, data,
+      AppUrl.deleteRestaurant,
+      data,
     );
     return response;
   }
@@ -28,8 +30,11 @@ class RestaurantHttpApiRepository implements RestaurantApiRepository {
   }
 
   @override
-  Future updateRestaurant() {
-    // TODO: implement updateRestaurant
-    throw UnimplementedError();
+  Future updateRestaurant(dynamic data) async {
+    final response = await _networkServices.postMultipartApi(
+      AppUrl.updateRestaurant,
+      data,
+    );
+    return response;
   }
 }

@@ -1,7 +1,8 @@
 import '../restaurant_exports.dart';
 
 class LogoInputWidget extends StatefulWidget {
-  const LogoInputWidget({super.key});
+  final String? logo;
+  const LogoInputWidget({super.key, this.logo});
 
   @override
   State<LogoInputWidget> createState() => _LogoInputWidgetState();
@@ -34,15 +35,17 @@ class _LogoInputWidgetState extends State<LogoInputWidget> {
                 child: CircleAvatar(
                   radius: 65,
                   backgroundColor: Colors.grey.shade100,
-                  backgroundImage: state.logo != null
+                  backgroundImage: widget.logo != null
+                      ? NetworkImage(widget.logo!)               // FIXED
+                      : state.logo != null
                       ? FileImage(state.logo!)
                       : null,
-                  child: state.logo == null
+                  child: (widget.logo == null && state.logo == null)
                       ? Icon(
-                          Icons.camera_alt_rounded,
-                          size: 42,
-                          color: Colors.grey.shade500,
-                        )
+                    Icons.camera_alt_rounded,
+                    size: 42,
+                    color: Colors.grey.shade500,
+                  )
                       : null,
                 ),
               ),

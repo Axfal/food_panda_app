@@ -1,12 +1,16 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
 import 'package:excellent_trade_app/config/components/round_button_widget.dart';
+import 'package:excellent_trade_app/model/vender/restaurant/restaurant_model.dart';
 import '../restaurant_exports.dart';
 
 class SubmitButton extends StatefulWidget {
+  final Restaurant? restaurant;
   final GlobalKey<FormState> formKey;
   final String userId;
 
-  const SubmitButton({super.key, required this.formKey, required this.userId});
+
+  const SubmitButton({super.key, required this.formKey, required this.userId, this.restaurant});
 
   @override
   State<SubmitButton> createState() => _SubmitButtonState();
@@ -32,10 +36,9 @@ class _SubmitButtonState extends State<SubmitButton> {
 
           if (SessionController.isLogin) {
             Future.delayed(const Duration(seconds: 2), () {
-              Navigator.pushNamedAndRemoveUntil(
+              Navigator.pushReplacementNamed(
                 context,
                 RoutesName.myRestaurant,
-                    (route) => false,
               );
             });
           } else {
@@ -51,14 +54,18 @@ class _SubmitButtonState extends State<SubmitButton> {
       },
       builder: (context, state) {
         return RoundButton(
-          title: 'Submit',
+          title: 'Save',
           loading: state.registerRestaurantApi.status == Status.loading,
           onPress: () async {
             final isValid = widget.formKey.currentState?.validate() ?? false;
             if (isValid) {
-              context.read<RestaurantBloc>().add(
+              if(widget.restaurant != null){
+                context.read<RestaurantBloc>().add(UpdateRestaurantEvent(id: widget.restaurant!.id));
+              }else {
+                context.read<RestaurantBloc>().add(
                 SubmitFormEvent(ownerId: widget.userId),
               );
+              }
             }
           },
         );

@@ -23,8 +23,9 @@ class StatusChangeEvent extends RestaurantEvent {
 }
 
 class HoursChangeEvent extends RestaurantEvent {
+  final String? id;
   final String hours;
-  const HoursChangeEvent({required this.hours});
+  const HoursChangeEvent({required this.hours, this.id});
 
   @override
   // TODO: implement props
@@ -77,6 +78,32 @@ class DeleteRestaurantEvent extends RestaurantEvent {
   // TODO: implement props
   List<Object?> get props => [id];
 }
+
+class UpdateRestaurantEvent extends RestaurantEvent {
+  final int id;
+  final String? name;
+  final String? description;
+  final String? phone;
+  final String? address;
+  final String? status;
+  final String? hours;
+  final String? logo;
+
+  const UpdateRestaurantEvent({
+    required this.id,
+    this.name,
+    this.description,
+    this.phone,
+    this.address,
+    this.status,
+    this.hours,
+    this.logo,
+  });
+
+  @override
+  List<Object?> get props => [id, name, description, phone, address, status, hours, logo];
+}
+
 
 class SubmitFormEvent extends RestaurantEvent {
   final String ownerId;

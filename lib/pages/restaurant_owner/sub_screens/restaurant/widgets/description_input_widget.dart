@@ -1,21 +1,37 @@
 import '../restaurant_exports.dart';
 
 class DescriptionInputWidget extends StatefulWidget {
-  const DescriptionInputWidget({super.key});
+  final String? description;
+  const DescriptionInputWidget({super.key, this.description});
 
   @override
   State<DescriptionInputWidget> createState() => _DescriptionInputWidgetState();
 }
 
 class _DescriptionInputWidgetState extends State<DescriptionInputWidget> {
-  final descriptionController = TextEditingController();
+  late final TextEditingController descriptionController;
   final focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    descriptionController = TextEditingController(
+      text: widget.description ?? '',
+    );
+  }
+
+  @override
+  void dispose() {
+    descriptionController.dispose();
+    focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RestaurantBloc, RestaurantStates>(
-      buildWhen: (current, previous) =>
-          current.description != previous.description,
+      buildWhen: (previous, current) =>
+      previous.description != current.description,
       builder: (context, state) {
         return CustomTextField(
           label: "Description",
@@ -31,7 +47,6 @@ class _DescriptionInputWidgetState extends State<DescriptionInputWidget> {
             }
             return null;
           },
-
           onChanged: (value) {
             context.read<RestaurantBloc>().add(
               DescriptionChangeEvent(description: value),
