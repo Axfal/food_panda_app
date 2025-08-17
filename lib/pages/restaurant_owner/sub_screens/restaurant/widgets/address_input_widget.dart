@@ -9,15 +9,27 @@ class AddressInputWidget extends StatefulWidget {
 }
 
 class _AddressInputWidgetState extends State<AddressInputWidget> {
-  final addressController = TextEditingController();
-  final focusNode = FocusNode();
+  final TextEditingController addressController = TextEditingController();
+  final FocusNode focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
+
+    // Prefill from previous screen
     if (widget.address != null && widget.address!.isNotEmpty) {
       addressController.text = widget.address!;
+      context.read<RestaurantBloc>().add(
+        AddressChangeEvent(address: widget.address!),
+      );
     }
+  }
+
+  @override
+  void dispose() {
+    addressController.dispose();
+    focusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -25,6 +37,15 @@ class _AddressInputWidgetState extends State<AddressInputWidget> {
     return BlocBuilder<RestaurantBloc, RestaurantStates>(
       buildWhen: (previous, current) => previous.address != current.address,
       builder: (context, state) {
+        // Keep controller in sync with bloc state
+        if (state.address.isNotEmpty &&
+            state.address != addressController.text) {
+          addressController.text = state.address;
+          addressController.selection = TextSelection.fromPosition(
+            TextPosition(offset: addressController.text.length),
+          );
+        }
+
         return CustomTextField(
           label: 'Address',
           hintText: "Enter your address",
@@ -37,11 +58,14 @@ class _AddressInputWidgetState extends State<AddressInputWidget> {
             if (value == null || value.trim().isEmpty) {
               return "Address is required";
             }
+            if (value.trim().length < 5) {
+              return "Address must be at least 5 characters";
+            }
             return null;
           },
           onChanged: (value) {
             context.read<RestaurantBloc>().add(
-              AddressChangeEvent(address: value),
+              AddressChangeEvent(address: value.trim()),
             );
           },
         );

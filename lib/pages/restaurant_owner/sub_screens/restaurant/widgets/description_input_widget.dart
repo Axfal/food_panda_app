@@ -9,15 +9,20 @@ class DescriptionInputWidget extends StatefulWidget {
 }
 
 class _DescriptionInputWidgetState extends State<DescriptionInputWidget> {
-  late final TextEditingController descriptionController;
-  final focusNode = FocusNode();
+  final TextEditingController descriptionController = TextEditingController();
+  final FocusNode focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    descriptionController = TextEditingController(
-      text: widget.description ?? '',
-    );
+
+    // Prefill from previous screen
+    if (widget.description != null && widget.description!.isNotEmpty) {
+      descriptionController.text = widget.description!;
+      context.read<RestaurantBloc>().add(
+        DescriptionChangeEvent(description: widget.description!),
+      );
+    }
   }
 
   @override
@@ -33,6 +38,15 @@ class _DescriptionInputWidgetState extends State<DescriptionInputWidget> {
       buildWhen: (previous, current) =>
       previous.description != current.description,
       builder: (context, state) {
+        // Keep controller synced with bloc state
+        if (state.description.isNotEmpty &&
+            state.description != descriptionController.text) {
+          descriptionController.text = state.description;
+          descriptionController.selection = TextSelection.fromPosition(
+            TextPosition(offset: descriptionController.text.length),
+          );
+        }
+
         return CustomTextField(
           label: "Description",
           hintText: "Enter Description",
@@ -45,11 +59,14 @@ class _DescriptionInputWidgetState extends State<DescriptionInputWidget> {
             if (value == null || value.trim().isEmpty) {
               return "Description is required";
             }
+            if (value.trim().length < 10) {
+              return "Description must be at least 10 characters";
+            }
             return null;
           },
           onChanged: (value) {
             context.read<RestaurantBloc>().add(
-              DescriptionChangeEvent(description: value),
+              DescriptionChangeEvent(description: value.trim()),
             );
           },
         );

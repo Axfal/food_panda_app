@@ -221,13 +221,13 @@
       final updatedList = state.restaurants?.map((restaurant) {
         if (restaurant.id == event.id) {
           return restaurant.copyWith(
-            name: event.name ?? restaurant.name,
-            description: event.description ?? restaurant.description,
-            phone: event.phone ?? restaurant.phone,
-            address: event.address ?? restaurant.address,
-            status: event.status ?? restaurant.status,
-            hours: event.hours ?? restaurant.hours,
-            logo: event.logo ?? restaurant.logo,
+            name: state.restaurantName,
+            description: state.description ?? restaurant.description,
+            phone: state.phone ?? restaurant.phone,
+            address: state.address ?? restaurant.address,
+            status: restaurant.status,
+            hours: state.hours ?? restaurant.hours,
+            logo: state.logo.toString() ?? restaurant.logo,
           );
         }
         return restaurant;
@@ -236,17 +236,27 @@
       emit(state.copyWith(restaurants: updatedList));
 
       final userId = SessionController.user.id;
-      Map<String, dynamic> data = {
-        "id": event.id,
-        "owner_id": userId,
-        "name": event.name ?? currentRestaurant.name,
-        "description": event.description ?? currentRestaurant.description,
-        "phone": event.phone ?? currentRestaurant.phone,
-        "address": event.address ?? currentRestaurant.address,
-        "status": event.status ?? currentRestaurant.status,
-        "logo": event.logo ?? currentRestaurant.logo,
-        "hours": event.hours ?? currentRestaurant.hours,
-      };
+      Map<String, dynamic> data;
+      if(event.status != null && event.status != ''){
+        data = {
+          "id": event.id,
+          "owner_id": userId,
+          "status": event.status ?? currentRestaurant.status,
+        };
+
+      }else{
+        data = {
+          "id": event.id,
+          "owner_id": userId,
+          "name": state.restaurantName ?? currentRestaurant.name,
+          "description": state.description ?? currentRestaurant.description,
+          "phone": state.phone ?? currentRestaurant.phone,
+          "status": currentRestaurant.status,
+          "address": state.address ?? currentRestaurant.address,
+          "logo": state.logo ?? currentRestaurant.logo,
+          "hours": state.hours ?? currentRestaurant.hours,
+        };
+      }
 
       try {
         final response = await restaurantApiRepository.updateRestaurant(data);

@@ -9,6 +9,15 @@ class LogoInputWidget extends StatefulWidget {
 }
 
 class _LogoInputWidgetState extends State<LogoInputWidget> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.logo != null && widget.logo!.isNotEmpty) {
+      context.read<RestaurantBloc>().add(
+        LogoChangeEvent(logo: File(widget.logo!)),
+      );
+    }
+  }
   Future<void> _pickLogo() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);

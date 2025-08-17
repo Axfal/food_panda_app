@@ -17,6 +17,11 @@ class _TimingInputWidgetState extends State<TimingInputWidget> {
   void initState() {
     super.initState();
     _parseTiming(widget.timing);
+
+    // Always push initial state (default or parsed)
+    context.read<RestaurantBloc>().add(
+      HoursChangeEvent(hours: _formatFullTiming(), id: widget.id ?? ''),
+    );
   }
 
   void _parseTiming(String? timing) {
@@ -27,7 +32,7 @@ class _TimingInputWidgetState extends State<TimingInputWidget> {
       _fromTime = _parseTime(parts[0]);
       _toTime = _parseTime(parts[1]);
     } catch (_) {
-      // If invalid format, default to 00:00 both
+      // Default → 12:00 am to 12:00 am
       _fromTime = const TimeOfDay(hour: 0, minute: 0);
       _toTime = const TimeOfDay(hour: 0, minute: 0);
     }
@@ -59,7 +64,7 @@ class _TimingInputWidgetState extends State<TimingInputWidget> {
 
   /// Converts TimeOfDay -> "hh:mm am"
   String _formatSingleTime(TimeOfDay? time) {
-    if (time == null) return "00:00 am";
+    if (time == null) return "12:00 am";
     final hour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
     final minute = time.minute.toString().padLeft(2, '0');
     final period = time.period == DayPeriod.am ? "am" : "pm";
@@ -86,15 +91,15 @@ class _TimingInputWidgetState extends State<TimingInputWidget> {
               hourMinuteTextColor: Colors.white,
               dayPeriodColor: MaterialStateColor.resolveWith((states) {
                 if (states.contains(MaterialState.selected)) {
-                  return AppColors.primary; // selected AM/PM background
+                  return AppColors.primary;
                 }
-                return Colors.grey.shade200; // unselected AM/PM background
+                return Colors.grey.shade200;
               }),
               dayPeriodTextColor: MaterialStateColor.resolveWith((states) {
                 if (states.contains(MaterialState.selected)) {
-                  return Colors.white; // selected AM/PM text
+                  return Colors.white;
                 }
-                return Colors.black87; // <-- unselected AM/PM text color
+                return Colors.black87;
               }),
               dialBackgroundColor: Colors.grey.shade200,
               dialHandColor: AppColors.primary,
@@ -124,7 +129,6 @@ class _TimingInputWidgetState extends State<TimingInputWidget> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -137,7 +141,8 @@ class _TimingInputWidgetState extends State<TimingInputWidget> {
               onTap: () => _selectTime(context, true),
               borderRadius: BorderRadius.circular(12),
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                padding:
+                const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
@@ -174,7 +179,8 @@ class _TimingInputWidgetState extends State<TimingInputWidget> {
               onTap: () => _selectTime(context, false),
               borderRadius: BorderRadius.circular(12),
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                padding:
+                const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),

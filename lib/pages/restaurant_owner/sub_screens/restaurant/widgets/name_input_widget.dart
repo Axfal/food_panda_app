@@ -9,15 +9,27 @@ class NameInputWidget extends StatefulWidget {
 }
 
 class _NameInputWidgetState extends State<NameInputWidget> {
-  final nameController = TextEditingController();
-  final focusNode = FocusNode();
+  final TextEditingController nameController = TextEditingController();
+  final FocusNode focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
+
+    // Pre-fill from previous screen OR bloc state if available
     if (widget.name != null && widget.name!.isNotEmpty) {
       nameController.text = widget.name!;
+      context.read<RestaurantBloc>().add(
+        RestaurantNameChangeEvent(restaurantName: widget.name!),
+      );
     }
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    focusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -26,6 +38,15 @@ class _NameInputWidgetState extends State<NameInputWidget> {
       buildWhen: (previous, current) =>
       previous.restaurantName != current.restaurantName,
       builder: (context, state) {
+        // Keep controller synced with bloc state
+        if (state.restaurantName.isNotEmpty &&
+            state.restaurantName != nameController.text) {
+          nameController.text = state.restaurantName;
+          nameController.selection = TextSelection.fromPosition(
+            TextPosition(offset: nameController.text.length),
+          );
+        }
+
         return CustomTextField(
           label: "Restaurant Name",
           hintText: "Enter Your Restaurant Name",
@@ -44,7 +65,7 @@ class _NameInputWidgetState extends State<NameInputWidget> {
           },
           onChanged: (value) {
             context.read<RestaurantBloc>().add(
-              RestaurantNameChangeEvent(restaurantName: value),
+              RestaurantNameChangeEvent(restaurantName: value.trim()),
             );
           },
         );
