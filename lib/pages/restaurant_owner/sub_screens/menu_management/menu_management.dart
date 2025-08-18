@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:excellent_trade_app/bloc/vendor/menu_management/menu_management_bloc.dart';
 import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/my_app_bar.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
@@ -49,6 +51,7 @@ class _MenuManagementState extends State<MenuManagement> {
         expandedIndices.add(index);
         _menuManagementBloc.add(
           FetchItemsEvent(
+            refreshItem: false,
             restaurantId: widget.restaurantId,
             categoryId: categoryId.toString(),
           ),
@@ -102,10 +105,14 @@ class _MenuManagementState extends State<MenuManagement> {
     );
   }
 
-  void addMenuItem(int categoryIndex) {
+  void addMenuItem(int categoryIndex, int categoryId) {
     String itemName = '';
     String priceStr = '';
-    String imageUrl = '';
+    String description = '';
+    String status = 'active';
+    File? imageFile;
+
+    final ImagePicker picker = ImagePicker();
 
     showDialog(
       context: context,
@@ -129,143 +136,279 @@ class _MenuManagementState extends State<MenuManagement> {
                 ),
               ],
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Add Menu Item',
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.black87,
-                  ),
-                ),
-                const SizedBox(height: 20),
-
-                // Item Name Field
-                TextField(
-                  cursorColor: Colors.black87,
-                  style: GoogleFonts.poppins(color: Colors.black87),
-                  autofocus: true,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(
-                      Icons.fastfood_outlined,
-                      color: AppColors.primary,
-                    ),
-                    labelText: 'Item Name',
-                    labelStyle: GoogleFonts.poppins(color: Colors.black87),
-                    filled: true,
-                    fillColor: Colors.grey[100],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                  onChanged: (val) => itemName = val,
-                ),
-                const SizedBox(height: 12),
-
-                // Price Field
-                TextField(
-                  cursorColor: Colors.black87,
-                  style: GoogleFonts.poppins(color: Colors.black87),
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(
-                      Icons.attach_money,
-                      color: AppColors.primary,
-                    ),
-                    labelText: 'Price (USD)',
-                    labelStyle: GoogleFonts.poppins(color: Colors.black87),
-                    filled: true,
-                    fillColor: Colors.grey[100],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
-                  onChanged: (val) => priceStr = val,
-                ),
-                const SizedBox(height: 12),
-
-                TextField(
-                  cursorColor: Colors.black87,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(
-                      Icons.image_outlined,
-                      color: AppColors.primary,
-                    ),
-                    labelText: 'Upload Image',
-                    labelStyle: GoogleFonts.poppins(color: Colors.black87),
-                    filled: true,
-                    fillColor: Colors.grey[100],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                  onChanged: (val) => imageUrl = val,
-                ),
-
-                const SizedBox(height: 20),
-
-                // Action Buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.grey[600],
-                        textStyle: GoogleFonts.poppins(),
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancel'),
-                    ),
-                    const SizedBox(width: 8),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 12,
-                        ),
-                      ),
-                      onPressed: () {
-                        final price = double.tryParse(priceStr);
-                        if (itemName.trim().isEmpty ||
-                            price == null ||
-                            price <= 0) {
-                          return;
-                        }
-                        setState(() {
-                          categories[categoryIndex].items.add(
-                            MenuItem(
-                              name: itemName.trim(),
-                              price: price,
-                              imageUrl: imageUrl.trim(),
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                return SingleChildScrollView(
+                  child: BlocConsumer<MenuManagementBloc, MenuManagementStates>(
+                    listener: (context, state) {
+                      if (state.itemsApiResponse.status == Status.completed) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              state.itemsApiResponse.data.toString(),
                             ),
-                          );
-                          expandedIndices.add(categoryIndex);
-                        });
+                          ),
+                        );
                         Navigator.pop(context);
-                      },
-                      child: Text(
-                        'Add',
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                      } else if (state.itemsApiResponse.status ==
+                          Status.error) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              state.itemsApiResponse.message ??
+                                  'Failed to add item',
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    builder: (context, state) {
+                      bool isLoading =
+                          state.itemsApiResponse.status == Status.loading;
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Add Menu Item',
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+
+                          // Item Name
+                          TextField(
+                            style: GoogleFonts.poppins(color: Colors.black87),
+                            cursorColor: Colors.black,
+                            decoration: InputDecoration(
+                              labelStyle: GoogleFonts.poppins(
+                                color: Colors.black,
+                              ),
+                              hintStyle: GoogleFonts.poppins(
+                                color: Colors.black,
+                              ),
+                              prefixIcon: const Icon(
+                                Icons.fastfood_outlined,
+                                color: AppColors.primary,
+                              ),
+                              labelText: 'Item Name',
+                              filled: true,
+                              fillColor: Colors.grey[100],
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                            onChanged: (val) => itemName = val,
+                          ),
+                          const SizedBox(height: 12),
+
+                          // Description
+                          TextField(
+                            style: GoogleFonts.poppins(color: Colors.black87),
+                            cursorColor: Colors.black,
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(
+                                Icons.description_outlined,
+                                color: AppColors.primary,
+                              ),
+                              labelText: 'Description',
+                              labelStyle: GoogleFonts.poppins(
+                                color: Colors.black,
+                              ),
+                              hintStyle: GoogleFonts.poppins(
+                                color: Colors.black,
+                              ),
+                              filled: true,
+                              fillColor: Colors.grey[100],
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                            onChanged: (val) => description = val,
+                          ),
+                          const SizedBox(height: 12),
+
+                          // Price
+                          TextField(
+                            style: GoogleFonts.poppins(color: Colors.black87),
+                            cursorColor: Colors.black,
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(
+                                Icons.attach_money,
+                                color: AppColors.primary,
+                              ),
+                              labelText: 'Price (USD)',
+                              labelStyle: GoogleFonts.poppins(
+                                color: Colors.black,
+                              ),
+                              hintStyle: GoogleFonts.poppins(
+                                color: Colors.black,
+                              ),
+                              filled: true,
+                              fillColor: Colors.grey[100],
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                            ),
+                            onChanged: (val) => priceStr = val,
+                          ),
+                          const SizedBox(height: 12),
+                          // Image Picker
+                          InkWell(
+                            onTap: () async {
+                              final pickedFile = await picker.pickImage(
+                                source: ImageSource.gallery,
+                              );
+                              if (pickedFile != null) {
+                                setState(() {
+                                  imageFile = File(pickedFile.path);
+                                });
+                              }
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[100],
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: Colors.grey.shade300),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.image_outlined,
+                                    color: AppColors.primary,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      imageFile == null
+                                          ? "Select Image from Gallery"
+                                          : "Image Selected",
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ),
+                                  if (imageFile != null)
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Image.file(
+                                        imageFile!,
+                                        width: 40,
+                                        height: 40,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+
+                          // Buttons
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text(
+                                  'Cancel',
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primary,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                    vertical: 12,
+                                  ),
+                                ),
+                                onPressed: isLoading
+                                    ? null
+                                    : () {
+                                        final price = double.tryParse(priceStr);
+                                        if (itemName.trim().isEmpty ||
+                                            price == null ||
+                                            price <= 0 ||
+                                            imageFile == null) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                "Please fill all fields and select an image",
+                                              ),
+                                            ),
+                                          );
+                                          return;
+                                        }
+
+                                        context.read<MenuManagementBloc>().add(
+                                          AddItemEvent(
+                                            restaurantId: widget.restaurantId,
+                                            categoryId: categoryId.toString(),
+                                            name: itemName.trim(),
+                                            description: description.trim(),
+                                            price: price.toString(),
+                                            status: status,
+                                            photo: imageFile!,
+                                          ),
+                                        );
+                                        _menuManagementBloc.add(
+                                          FetchItemsEvent(
+                                            refreshItem: true,
+                                            restaurantId: widget.restaurantId,
+                                            categoryId: categoryId.toString(),
+                                          ),
+                                        );
+                                        Future.delayed(
+                                          Duration(seconds: 2),
+                                          () {
+                                            Navigator.pop(context);
+                                          },
+                                        );
+                                      },
+                                child: isLoading
+                                    ? const SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CupertinoActivityIndicator(
+                                          color: Colors.black,
+                                        ),
+                                      )
+                                    : Text(
+                                        'Add',
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                );
+              },
             ),
           ),
         );
@@ -273,46 +416,79 @@ class _MenuManagementState extends State<MenuManagement> {
     );
   }
 
-  void deleteMenuItem(int categoryIndex, int itemIndex) {
+  void deleteMenuItem(String categoryId, String itemId) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.white,
-        title: Text(
-          'Delete Item',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
-        ),
-        content: Text(
-          'Are you sure you want to delete "${categories[categoryIndex].items[itemIndex].name}"?',
-          style: GoogleFonts.poppins(color: Colors.black54),
-        ),
-        actions: [
-          TextButton(
-            child: Text(
-              'Cancel',
-              style: GoogleFonts.poppins(color: Colors.grey),
-            ),
-            onPressed: () => Navigator.pop(context),
-          ),
-          TextButton(
-            child: Text(
-              'Delete',
-              style: GoogleFonts.poppins(
-                color: Colors.redAccent,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            onPressed: () {
-              setState(() {
-                categories[categoryIndex].items.removeAt(itemIndex);
-              });
-              Navigator.pop(context);
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) {
+          return BlocConsumer<MenuManagementBloc, MenuManagementStates>(
+            listener: (context, state) {
+              if (state.itemsApiResponse.status == Status.error) {
+                context.flushBarErrorMessage(
+                  message: "${state.itemsApiResponse.message}",
+                );
+              }
+              if(state.itemsApiResponse.status == Status.completed){
+
+              }
             },
-          ),
-        ],
+            builder: (context, state) {
+              return AlertDialog(
+                backgroundColor: Colors.white,
+                title: Text(
+                  'Delete Item',
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                content: Text(
+                  'Are you sure you want to delete?',
+                  style: GoogleFonts.poppins(color: Colors.black54),
+                ),
+                actions: [
+                  TextButton(
+                    child: Text(
+                      'Cancel',
+                      style: GoogleFonts.poppins(color: Colors.black54),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  TextButton(
+                    child: Text(
+                      'Delete',
+                      style: GoogleFonts.poppins(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () {
+                      context.read<MenuManagementBloc>().add(
+                        DeleteItemEvent(
+                          categoryId,
+                          itemId,
+                          widget.restaurantId,
+                        ),
+                      );
+                      Future.delayed(Duration(seconds: 2), () {
+                        print("fetching .....==========");
+                        _menuManagementBloc.add(
+                          FetchItemsEvent(
+                            refreshItem: true,
+                            restaurantId: widget.restaurantId,
+                            categoryId: categoryId.toString(),
+                          ),
+                        );
+                        Navigator.pop(context);
+                      });
+
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        },
       ),
     );
   }
@@ -589,8 +765,8 @@ class _MenuManagementState extends State<MenuManagement> {
                                                   color: Colors.white,
                                                 ),
                                                 onPressed: () => deleteMenuItem(
-                                                  catIndex,
-                                                  itemIndex,
+                                                  category.id.toString(),
+                                                  item.id.toString(),
                                                 ),
                                               ),
                                             ),
@@ -600,7 +776,8 @@ class _MenuManagementState extends State<MenuManagement> {
 
                                     // Add Item Button
                                     GestureDetector(
-                                      onTap: () => addMenuItem(catIndex),
+                                      onTap: () =>
+                                          addMenuItem(catIndex, category.id),
                                       child: Container(
                                         margin: const EdgeInsets.all(14),
                                         padding: const EdgeInsets.symmetric(

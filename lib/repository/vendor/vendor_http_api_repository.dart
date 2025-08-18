@@ -6,7 +6,10 @@ class VendorHttpApiRepository implements VendorApiRepository {
   Future<dynamic> deleteMenuCategory() async {}
 
   @override
-  Future<dynamic> deleteMenuItem() async {}
+  Future<dynamic> deleteMenuItem(dynamic data) async {
+    final response = await _apiServices.deleteApi(AppUrl.deleteMenuItem, data);
+    return response;
+  }
 
   @override
   Future<dynamic> fetchMenuCategory() async {
@@ -27,8 +30,13 @@ class VendorHttpApiRepository implements VendorApiRepository {
   Future<dynamic> updateMenuItem(dynamic data) async {}
 
   @override
-  Future<dynamic> addMenuCategory(dynamic data) async {}
+  Future<dynamic> addMenuCategory(dynamic data) async {
+
+  }
 
   @override
-  Future addMenuItem(dynamic data) async {}
+  Future addMenuItem(dynamic data) async {
+    final response = await _apiServices.postMultipartApi(AppUrl.addMenuItem, data);
+    return response;
+  }
 }

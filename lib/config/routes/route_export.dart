@@ -15,4 +15,4 @@ export 'package:excellent_trade_app/pages/restaurant_owner/restaurant_owner_scre
 export 'package:excellent_trade_app/pages/profile/subPages/invite_friends_screen.dart';
 export 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/my_restaurants.dart';
 export 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/restaurant/restaurant.dart';
-export 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/menu_management.dart';
+export 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/menu_management/menu_management.dart';

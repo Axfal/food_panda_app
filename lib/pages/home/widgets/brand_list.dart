@@ -74,14 +74,8 @@ class _BrandListState extends State<BrandList> {
                             ),
                           ],
                         ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.fastfood,
-                            size: 34,
-                            color: AppColors.primary,
-                          ),
+                        child: Image(image: AssetImage('assets/images/burder.png')),
                         ),
-                      ),
                       const SizedBox(height: 8),
                       SizedBox(
                         width: 80,

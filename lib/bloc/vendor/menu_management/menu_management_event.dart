@@ -10,14 +10,14 @@ sealed class MenuManagementEvent extends Equatable {
 /// ---------- ITEM EVENTS ----------
 
 class FetchItemsEvent extends MenuManagementEvent {
+  final bool refreshItem;
   final String restaurantId;
   final String categoryId;
-  const FetchItemsEvent({required this.restaurantId, required this.categoryId});
+  const FetchItemsEvent({required this.restaurantId, required this.categoryId, required this.refreshItem});
 
   @override
-  List<Object> get props => [restaurantId, categoryId];
+  List<Object> get props => [restaurantId, categoryId, refreshItem];
 }
-
 
 class AddItemEvent extends MenuManagementEvent {
   final String restaurantId;
@@ -86,11 +86,13 @@ class UpdateItemEvent extends MenuManagementEvent {
 
 class DeleteItemEvent extends MenuManagementEvent {
   final String itemId;
+  final String restaurantId;
+  final String categoryId;
 
-  const DeleteItemEvent(this.itemId);
+  const DeleteItemEvent(this.categoryId, this.itemId, this.restaurantId);
 
   @override
-  List<Object?> get props => [itemId];
+  List<Object?> get props => [itemId, restaurantId, categoryId];
 }
 
 /// ---------- CATEGORY EVENTS ----------

@@ -38,8 +38,8 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
       {
         "title": "Menu Items",
         "icon": Icons.fastfood,
-        "route": RoutesName.menuManagement,
-        'arg': {'restaurant_id': "6"},
+        "route": RoutesName.selectRestaurant,
+        // 'arg': {'restaurant_id': "6"},
       },
       {"title": "Orders", "icon": Icons.shopping_bag, "route": "/orders"},
       {"title": "Order History", "icon": Icons.history, "route": "/orderHistory"},

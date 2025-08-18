@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -96,7 +98,8 @@ class MenuManagementBloc
     Emitter<MenuManagementStates> emit,
   ) async {
     /// If items for this category already exist, skip API call
-    if (state.itemsByCategory.containsKey(event.categoryId)) {
+    if (state.itemsByCategory.containsKey(event.categoryId) &&
+        state.refreshItem == false) {
       return;
     }
 
@@ -147,13 +150,106 @@ class MenuManagementBloc
     }
   }
 
-  void _onAddItem(AddItemEvent event, Emitter<MenuManagementStates> emit) {}
+  void _onAddItem(
+    AddItemEvent event,
+    Emitter<MenuManagementStates> emit,
+  ) async {
+    emit(state.copyWith(itemsApiResponse: const ApiResponse.loading()));
+
+    final Map<String, dynamic> data = {
+      "restaurant_id": event.restaurantId,
+      "category_id": event.categoryId,
+      "name": event.name,
+      "description": event.description,
+      "price": event.price,
+      "status": "available",
+      "photo": event.photo,
+    };
+    print("data =============>  $data");
+
+    try {
+      final response = await vendorApiRepository.addMenuItem(data);
+
+      if (response != null) {
+        if (response['success'] == true && response['message'] != null) {
+          emit(
+            state.copyWith(
+              itemsApiResponse: ApiResponse.completed(response['message']),
+            ),
+          );
+        } else {
+          emit(
+            state.copyWith(
+              itemsApiResponse: ApiResponse.error(
+                response['error'] ?? 'Failed to add item',
+              ),
+            ),
+          );
+        }
+      } else {
+        emit(
+          state.copyWith(
+            itemsApiResponse: const ApiResponse.error(
+              'No response from server',
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      emit(state.copyWith(itemsApiResponse: ApiResponse.error(e.toString())));
+    }
+  }
+
   void _onUpdateItem(
     UpdateItemEvent event,
     Emitter<MenuManagementStates> emit,
   ) {}
+
   void _onDeleteItem(
     DeleteItemEvent event,
     Emitter<MenuManagementStates> emit,
-  ) {}
+  ) async {
+    final updatedItemsByCategory = Map<String, List<Item>>.from(
+      state.itemsByCategory,
+    );
+
+    final items = updatedItemsByCategory[event.categoryId];
+
+    if (items != null) {
+      final filteredItems = items
+          .where((item) => item.id.toString() != event.itemId)
+          .toList();
+
+      updatedItemsByCategory[event.categoryId] = filteredItems;
+
+      emit(
+        state.copyWith(
+          itemsByCategory: updatedItemsByCategory,
+          itemsApiResponse: ApiResponse.completed(filteredItems),
+        ),
+      );
+    }
+    Map<String, dynamic> data = {
+      "id": event.itemId,
+      "restaurant_id": event.restaurantId,
+    };
+
+    print("data ====>>>>> $data");
+    try {
+      final response = await vendorApiRepository.deleteMenuItem(data);
+      if (response != null) {
+        if (response['success'] == true && response['message'] != null) {
+          emit(
+            state.copyWith(
+              itemsApiResponse: ApiResponse.completed(response['message']),
+            ),
+          );
+        } else {
+          emit(state.copyWith(itemsApiResponse: response['error']));
+        }
+      } else {
+        print('no response from server');
+      }
+    } catch (e) {}
+  }
 }

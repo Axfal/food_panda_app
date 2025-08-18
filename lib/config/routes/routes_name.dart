@@ -27,6 +27,8 @@ class RoutesName {
 
   static const String applyForVoucher = 'apply_for_voucher';
 
+  static const String selectRestaurant = 'select_restaurant';
+
   static const String setting = 'setting';
 
   static const String profile = 'profile';

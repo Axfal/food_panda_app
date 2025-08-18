@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: AppColors.lightPink,
       body: SingleChildScrollView(
         child: SizedBox(
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery.of(context).size.height *2.15,
           child: Stack(
             clipBehavior: Clip.none,
             children: [

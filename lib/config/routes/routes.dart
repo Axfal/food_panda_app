@@ -1,5 +1,6 @@
 import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
 import 'package:excellent_trade_app/pages/order_now.dart';
+import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/menu_management/my_restaurants.dart';
 import 'package:excellent_trade_app/pages/restuarant_item_screen.dart';
 import '../../model/vender/restaurant/restaurant_model.dart';
 import '../../pages/auth/forgot_password/forget_password_export.dart';
@@ -87,6 +88,10 @@ class Routes {
       case RoutesName.restaurantOwner:
         return MaterialPageRoute(
           builder: (BuildContext context) => const RestaurantOwnerScreen(),
+        );
+      case RoutesName.selectRestaurant:
+        return MaterialPageRoute(
+          builder: (BuildContext context) => const SelectRestaurant(),
         );
 
       case RoutesName.myRestaurant:

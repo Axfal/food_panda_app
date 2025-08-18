@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:excellent_trade_app/bloc/vendor/menu_management/menu_management_bloc.dart';
 import 'package:excellent_trade_app/bloc/vendor/restaurant/restaurant_bloc.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
+import 'package:excellent_trade_app/repository/vendor/vendor_http_api_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -87,9 +89,10 @@ class MyApp extends StatelessWidget {
               builder: (context, child) {
                 return MultiBlocProvider(providers: [
                   BlocProvider<RestaurantBloc>(create: (context) => RestaurantBloc(restaurantApiRepository: getIt())),
+                  BlocProvider<MenuManagementBloc>(create: (context) => MenuManagementBloc(vendorApiRepository: getIt())),
                 ], child: MaterialApp(
                   debugShowCheckedModeBanner: false,
-                  title: 'Flutter Demo',
+                  title: 'Food mate',
                   themeMode: ThemeMode.dark,
                   theme: lightTheme,
                   darkTheme: darkTheme,
