@@ -9,14 +9,20 @@ class SubmitButton extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final String userId;
 
-
-  const SubmitButton({super.key, required this.formKey, required this.userId, this.restaurant});
+  const SubmitButton({
+    super.key,
+    required this.formKey,
+    required this.userId,
+    this.restaurant,
+  });
 
   @override
   State<SubmitButton> createState() => _SubmitButtonState();
 }
 
 class _SubmitButtonState extends State<SubmitButton> {
+  bool isUpdate = false;
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<RestaurantBloc, RestaurantStates>(
@@ -29,42 +35,42 @@ class _SubmitButtonState extends State<SubmitButton> {
         if (api.status == Status.error && (api.message?.isNotEmpty ?? false)) {
           context.flushBarErrorMessage(message: api.message!);
         } else if (api.status == Status.completed) {
-          final successMessage =
-              api.data?.toString() ?? 'Registration successful';
+          final successMessage = isUpdate
+              ? 'Restaurant updated successfully'
+              : 'Restaurant registered successfully';
 
           context.flushBarSuccessMessage(message: successMessage);
 
-          if (SessionController.isLogin) {
-            Future.delayed(const Duration(seconds: 2), () {
-              Navigator.pushReplacementNamed(
-                context,
-                RoutesName.myRestaurant,
-              );
-            });
-          } else {
-            Future.delayed(const Duration(seconds: 2), () {
+          Future.delayed(const Duration(seconds: 2), () {
+            if (SessionController.isLogin) {
+              Navigator.pushReplacementNamed(context, RoutesName.myRestaurant);
+            } else {
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 RoutesName.login,
                 (route) => false,
               );
-            });
-          }
+            }
+          });
         }
       },
       builder: (context, state) {
         return RoundButton(
-          title: 'Save',
+          title: widget.restaurant != null ? 'Update' : 'Save',
           loading: state.registerRestaurantApi.status == Status.loading,
           onPress: () async {
             final isValid = widget.formKey.currentState?.validate() ?? false;
             if (isValid) {
-              if(widget.restaurant != null){
-                context.read<RestaurantBloc>().add(UpdateRestaurantEvent(id: widget.restaurant!.id));
-              }else {
+              if (widget.restaurant != null) {
+                setState(() => isUpdate = true);
                 context.read<RestaurantBloc>().add(
-                SubmitFormEvent(ownerId: widget.userId),
-              );
+                  UpdateRestaurantEvent(id: widget.restaurant!.id),
+                );
+              } else {
+                setState(() => isUpdate = false);
+                context.read<RestaurantBloc>().add(
+                  SubmitFormEvent(ownerId: widget.userId),
+                );
               }
             }
           },

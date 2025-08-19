@@ -82,15 +82,180 @@ class MenuManagementBloc
   void _onAddCategory(
     AddCategoryEvent event,
     Emitter<MenuManagementStates> emit,
-  ) {}
+  ) async {
+    emit(state.copyWith(categoriesApiResponse: const ApiResponse.loading()));
+
+    final Map<String, dynamic> data = {
+      "restaurant_id": event.category.restaurantId,
+      "name": event.category.name,
+      "photo": event.category.photo,
+    };
+
+    try {
+      final response = await vendorApiRepository.addMenuCategory(data);
+
+      if (response != null) {
+        if (response['success'] == true) {
+          // ✅ Create new category object from event (not from API)
+          final newCategory = Category(
+            id: event
+                .category
+                .id, // you can also parse from response if API returns id
+            restaurantId: event.category.restaurantId,
+            name: event.category.name,
+            photo: event.category.photo,
+          );
+
+          final updatedCategories = List<Category>.from(state.categories)
+            ..add(newCategory);
+
+          emit(
+            state.copyWith(
+              categories: updatedCategories,
+              categoriesApiResponse: ApiResponse.completed(updatedCategories),
+            ),
+          );
+        } else {
+          emit(
+            state.copyWith(
+              categoriesApiResponse: ApiResponse.error(
+                response['error'] ?? 'Failed to add category',
+              ),
+            ),
+          );
+        }
+      } else {
+        emit(
+          state.copyWith(
+            categoriesApiResponse: const ApiResponse.error(
+              'No response from server',
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(categoriesApiResponse: ApiResponse.error(e.toString())),
+      );
+    }
+  }
+
   void _onDeleteCategory(
     DeleteCategoryEvent event,
     Emitter<MenuManagementStates> emit,
-  ) {}
+  ) async {
+    emit(state.copyWith(categoriesApiResponse: const ApiResponse.loading()));
+
+    final Map<String, dynamic> data = {
+      "id": event.categoryId,
+      "restaurant_id": event.restaurantId,
+    };
+
+    try {
+      final response = await vendorApiRepository.deleteMenuCategory(data);
+
+      if (response != null) {
+        if (response['success'] == true) {
+          // remove category locally
+          final updatedCategories = state.categories
+              .where((c) => c.id.toString() != event.categoryId)
+              .toList();
+
+          emit(
+            state.copyWith(
+              categories: updatedCategories,
+              categoriesApiResponse: ApiResponse.completed(updatedCategories),
+            ),
+          );
+        } else {
+          emit(
+            state.copyWith(
+              categoriesApiResponse: ApiResponse.error(
+                response['error'] ?? 'Delete failed',
+              ),
+            ),
+          );
+        }
+      } else {
+        emit(
+          state.copyWith(
+            categoriesApiResponse: const ApiResponse.error(
+              'No response from server',
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(categoriesApiResponse: ApiResponse.error(e.toString())),
+      );
+    }
+  }
+
   void _onUpdateCategory(
     UpdateCategoryEvent event,
     Emitter<MenuManagementStates> emit,
-  ) {}
+  ) async {
+    emit(state.copyWith(categoriesApiResponse: const ApiResponse.loading()));
+
+    final Map<String, dynamic> data = {
+      "id": event.categoryId,
+      "restaurant_id": event.restaurantId,
+    };
+
+    if (event.name != null && event.name!.isNotEmpty) {
+      data["name"] = event.name;
+    }
+    if (event.photo != null) {
+      data["photo"] = event.photo;
+    }
+
+    try {
+      final response = await vendorApiRepository.updateMenuCategory(data);
+
+      if (response != null) {
+        if (response['success'] == true) {
+          // update locally
+          final updatedCategories = state.categories.map((c) {
+            if (c.id.toString() == event.categoryId) {
+              return c.copyWith(
+                name: event.name ?? c.name,
+                photo: event.photo?.path ?? c.photo,
+              );
+            }
+            return c;
+          }).toList();
+
+          emit(
+            state.copyWith(
+              categories: updatedCategories,
+              categoriesApiResponse: ApiResponse.completed(updatedCategories),
+            ),
+          );
+        } else {
+          emit(
+            state.copyWith(
+              categoriesApiResponse: ApiResponse.error(
+                response['error'] ?? 'Update failed',
+              ),
+            ),
+          );
+        }
+      } else {
+        emit(
+          state.copyWith(
+            categoriesApiResponse: const ApiResponse.error(
+              'No response from server',
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(categoriesApiResponse: ApiResponse.error(e.toString())),
+      );
+    }
+  }
 
   /// Fetch items for a specific category and cache results
   void _onFetchItem(
@@ -162,19 +327,43 @@ class MenuManagementBloc
       "name": event.name,
       "description": event.description,
       "price": event.price,
-      "status": "available",
+      "status": 'available',
       "photo": event.photo,
     };
-    print("data =============>  $data");
+
+    print("data => $data");
 
     try {
       final response = await vendorApiRepository.addMenuItem(data);
 
       if (response != null) {
-        if (response['success'] == true && response['message'] != null) {
+        if (response['success'] == true) {
+          final newItem = Item(
+            id: response['item_id'],
+            status: 'available',
+            name: event.name,
+            description: event.description,
+            restaurantId: int.parse(event.restaurantId),
+            categoryId: int.parse(event.categoryId),
+            photo: event.photo.path,
+            price: event.price,
+          );
+
+          final updatedItemsByCategory = Map<String, List<Item>>.from(
+            state.itemsByCategory,
+          );
+
+          final existingItems = List<Item>.from(
+            updatedItemsByCategory[event.categoryId] ?? [],
+          );
+          existingItems.add(newItem);
+
+          updatedItemsByCategory[event.categoryId] = existingItems;
+
           emit(
             state.copyWith(
-              itemsApiResponse: ApiResponse.completed(response['message']),
+              itemsByCategory: updatedItemsByCategory,
+              itemsApiResponse: ApiResponse.completed(existingItems),
             ),
           );
         } else {
@@ -203,7 +392,90 @@ class MenuManagementBloc
   void _onUpdateItem(
     UpdateItemEvent event,
     Emitter<MenuManagementStates> emit,
-  ) {}
+  ) async {
+    emit(state.copyWith(itemsApiResponse: const ApiResponse.loading()));
+
+    final Map<String, dynamic> data = {
+      "id": event.itemId,
+      "restaurant_id": event.restaurantId,
+      "category_id": event.categoryId,
+    };
+
+    if (event.name.isNotEmpty) data["name"] = event.name;
+    if (event.description.isNotEmpty) data["description"] = event.description;
+    if (event.price.isNotEmpty) data["price"] = event.price;
+    if (event.status.isNotEmpty) data["status"] = event.status;
+    if (event.photo.path.isNotEmpty) data["photo"] = event.photo;
+
+    try {
+      final response = await vendorApiRepository.updateMenuItem(data);
+
+      if (response != null) {
+        if (response['success'] == true) {
+          final updatedItemsByCategory = Map<String, List<Item>>.from(
+            state.itemsByCategory,
+          );
+
+          final items = List<Item>.from(
+            updatedItemsByCategory[event.categoryId] ?? [],
+          );
+
+          final itemIndex = items.indexWhere(
+            (item) => item.id.toString() == event.itemId,
+          );
+
+          if (itemIndex != -1) {
+            final oldItem = items[itemIndex];
+
+            final updatedItem = Item(
+              id: int.parse(event.itemId),
+              restaurantId: int.parse(event.restaurantId),
+              categoryId: int.parse(event.categoryId),
+              name: event.name.isNotEmpty ? event.name : oldItem.name,
+              description: event.description.isNotEmpty
+                  ? event.description
+                  : oldItem.description,
+              price: event.price.isNotEmpty ? event.price : oldItem.price,
+              status: event.status.isNotEmpty ? event.status : oldItem.status,
+              photo: event.photo.path.isNotEmpty
+                  ? event.photo.path
+                  : oldItem.photo,
+            );
+
+            items[itemIndex] = updatedItem;
+            updatedItemsByCategory[event.categoryId] = items;
+          }
+
+          emit(
+            state.copyWith(
+              itemsByCategory: updatedItemsByCategory,
+              itemsApiResponse: ApiResponse.completed(
+                updatedItemsByCategory[event.categoryId] ?? [],
+              ),
+            ),
+          );
+        } else {
+          emit(
+            state.copyWith(
+              itemsApiResponse: ApiResponse.error(
+                response['error'] ?? 'Failed to update item',
+              ),
+            ),
+          );
+        }
+      } else {
+        emit(
+          state.copyWith(
+            itemsApiResponse: const ApiResponse.error(
+              'No response from server',
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      emit(state.copyWith(itemsApiResponse: ApiResponse.error(e.toString())));
+    }
+  }
 
   void _onDeleteItem(
     DeleteItemEvent event,
@@ -250,6 +522,8 @@ class MenuManagementBloc
       } else {
         print('no response from server');
       }
-    } catch (e) {}
+    } catch (e) {
+      print('error: $e');
+    }
   }
 }

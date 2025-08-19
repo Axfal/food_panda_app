@@ -103,29 +103,32 @@ class FetchCategoriesEvent extends MenuManagementEvent {
 }
 
 class AddCategoryEvent extends MenuManagementEvent {
-  final String name;
+  final Category category;
 
-  const AddCategoryEvent(this.name);
+  const AddCategoryEvent(this.category);
 
   @override
-  List<Object?> get props => [name];
+  List<Object?> get props => [category];
 }
 
 class UpdateCategoryEvent extends MenuManagementEvent {
   final String categoryId;
-  final String name;
+  final String restaurantId;
+  final String? name;
+  final File? photo;
 
-  const UpdateCategoryEvent({required this.categoryId, required this.name});
+  const UpdateCategoryEvent({required this.restaurantId,required this.categoryId, this.name, this.photo});
 
   @override
-  List<Object?> get props => [categoryId, name];
+  List<Object?> get props => [categoryId, name, restaurantId, photo];
 }
 
 class DeleteCategoryEvent extends MenuManagementEvent {
   final String categoryId;
+  final String restaurantId;
 
-  const DeleteCategoryEvent(this.categoryId);
+  const DeleteCategoryEvent(this.restaurantId,this.categoryId);
 
   @override
-  List<Object?> get props => [categoryId];
+  List<Object?> get props => [categoryId, restaurantId];
 }

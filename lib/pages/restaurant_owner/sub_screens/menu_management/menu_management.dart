@@ -371,16 +371,21 @@ class _MenuManagementState extends State<MenuManagement> {
                                             photo: imageFile!,
                                           ),
                                         );
-                                        _menuManagementBloc.add(
-                                          FetchItemsEvent(
-                                            refreshItem: true,
-                                            restaurantId: widget.restaurantId,
-                                            categoryId: categoryId.toString(),
-                                          ),
-                                        );
+
                                         Future.delayed(
-                                          Duration(seconds: 2),
+                                          Duration(seconds: 3),
                                           () {
+                                            context
+                                                .read<MenuManagementBloc>()
+                                                .add(
+                                                  FetchItemsEvent(
+                                                    refreshItem: true,
+                                                    restaurantId:
+                                                        widget.restaurantId,
+                                                    categoryId: categoryId
+                                                        .toString(),
+                                                  ),
+                                                );
                                             Navigator.pop(context);
                                           },
                                         );
@@ -428,9 +433,7 @@ class _MenuManagementState extends State<MenuManagement> {
                   message: "${state.itemsApiResponse.message}",
                 );
               }
-              if(state.itemsApiResponse.status == Status.completed){
-
-              }
+              if (state.itemsApiResponse.status == Status.completed) {}
             },
             builder: (context, state) {
               return AlertDialog(
@@ -470,9 +473,8 @@ class _MenuManagementState extends State<MenuManagement> {
                           widget.restaurantId,
                         ),
                       );
-                      Future.delayed(Duration(seconds: 2), () {
-                        print("fetching .....==========");
-                        _menuManagementBloc.add(
+                      Future.delayed(Duration(seconds: 3), () {
+                        context.read<MenuManagementBloc>().add(
                           FetchItemsEvent(
                             refreshItem: true,
                             restaurantId: widget.restaurantId,
@@ -481,7 +483,6 @@ class _MenuManagementState extends State<MenuManagement> {
                         );
                         Navigator.pop(context);
                       });
-
                     },
                   ),
                 ],
@@ -513,7 +514,8 @@ class _MenuManagementState extends State<MenuManagement> {
               current.categoriesApiResponse.status !=
                   previous.categoriesApiResponse.status ||
               current.itemsApiResponse.status !=
-                  previous.itemsApiResponse.status,
+                  previous.itemsApiResponse.status ||
+              current.itemsByCategory != previous.itemsByCategory,
           builder: (BuildContext context, state) {
             if (state.categoriesApiResponse.status == Status.loading) {
               return const Center(

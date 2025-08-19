@@ -21,60 +21,6 @@ class _MyRestaurantScreenState extends State<MyRestaurantScreen> {
     }
   }
 
-
-  final List<Map<String, dynamic>> restaurants = [
-    {
-      "id": 10,
-      "name": "anfal",
-      "description": "asdasdasdasdasdasdasd",
-      "phone": "03418410597",
-      "address": "lahore",
-      "logo":
-          "https://adfirst.pk/Panda_API/API/uploads/logos/logo_689dc2e21a9d36.04895386.png",
-      "status": "closed",
-      "hours": "3",
-      "rating": "0.0",
-      "created_at": "2025-08-14 11:05:06",
-    },
-    {
-      "id": 11,
-      "name": "anfal",
-      "description": "asdasdasdasdasdasdasd",
-      "phone": "03418410597",
-      "address": "lahore",
-      "logo": null,
-      "status": "closed",
-      "hours": "3",
-      "rating": "0.0",
-      "created_at": "2025-08-14 12:01:25",
-    },
-    {
-      "id": 12,
-      "name": "anfal",
-      "description": "asdasdasdasdasdasdasd",
-      "phone": "03418410597",
-      "address": "lahore",
-      "logo": null,
-      "status": "closed",
-      "hours": "3",
-      "rating": "0.0",
-      "created_at": "2025-08-14 12:01:28",
-    },
-    {
-      "id": 6,
-      "name": "Pizza House",
-      "description": "Best pizza in town",
-      "phone": "03418410597",
-      "address": "lahore",
-      "logo":
-          "https://adfirst.pk/Panda_API/API/uploads/logos/logo_6899b7e5200a16.77744348.jpg",
-      "status": "open",
-      "hours": "Mon-Fri 10:00 AM - 9:00 PM",
-      "rating": "0.0",
-      "created_at": "2025-08-11 09:29:09",
-    },
-  ];
-
   void deleteRestaurant(int id, String name) {
     showDialog(
       context: context,
@@ -114,12 +60,6 @@ class _MyRestaurantScreenState extends State<MyRestaurantScreen> {
     );
   }
 
-  void editRestaurant(int index) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Edit ${restaurants[index]['name']}")),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,7 +74,10 @@ class _MyRestaurantScreenState extends State<MyRestaurantScreen> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: BlocBuilder<RestaurantBloc, RestaurantStates>(
-          buildWhen: (previous, current) => previous.restaurants != current.restaurants || previous.registerRestaurantApi.status != current.registerRestaurantApi.status,
+          buildWhen: (previous, current) =>
+              previous.restaurants != current.restaurants ||
+              previous.registerRestaurantApi.status !=
+                  current.registerRestaurantApi.status,
           builder: (context, state) {
             if (state.registerRestaurantApi.status == Status.loading) {
               return const Center(
@@ -317,6 +260,9 @@ class _MyRestaurantScreenState extends State<MyRestaurantScreen> {
                                           status: isOpen ? 'closed' : 'open',
                                         ),
                                       );
+                                      context.read<RestaurantBloc>().add(
+                                        FetchRestaurantEvent(),
+                                      );
                                     },
                                   ),
                                   IconButton(
@@ -325,11 +271,18 @@ class _MyRestaurantScreenState extends State<MyRestaurantScreen> {
                                       color: Colors.deepPurple,
                                     ),
                                     onPressed: () {
-                                      final String userId = SessionController.user.id.toString();
-                                      Navigator.pushNamed(context, RoutesName.registerRestaurant, arguments: {
-                                        "restaurant" : r,
-                                        "user_id": userId
-                                      });
+                                      final String userId = SessionController
+                                          .user
+                                          .id
+                                          .toString();
+                                      Navigator.pushNamed(
+                                        context,
+                                        RoutesName.registerRestaurant,
+                                        arguments: {
+                                          "restaurant": r,
+                                          "user_id": userId,
+                                        },
+                                      );
                                     },
                                   ),
                                   IconButton(

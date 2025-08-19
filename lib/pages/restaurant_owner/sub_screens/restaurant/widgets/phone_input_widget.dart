@@ -19,11 +19,10 @@ class _PhoneInputWidgetState extends State<PhoneInputWidget> {
 
     // Prefill from previous screen
     if (widget.phone != null && widget.phone!.isNotEmpty) {
-      // remove +92 if present so we don’t duplicate it in field
       String cleaned = widget.phone!.replaceFirst(RegExp(r'^\+92'), '');
       phoneController.text = cleaned;
 
-      // push to bloc
+      // push to bloc once at start
       context.read<RestaurantBloc>().add(
         PhoneChangeEvent(phone: widget.phone!),
       );
@@ -39,43 +38,40 @@ class _PhoneInputWidgetState extends State<PhoneInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RestaurantBloc, RestaurantStates>(
-      buildWhen: (previous, current) => previous.phone != current.phone,
-      builder: (context, state) {
-        // Sync controller with bloc state
-        if (state.phone.isNotEmpty &&
-            state.phone != ("+92${phoneController.text}")) {
+    return BlocListener<RestaurantBloc, RestaurantStates>(
+      listenWhen: (previous, current) => previous.phone != current.phone,
+      listener: (context, state) {
+        if (state.phone.isNotEmpty) {
           String cleaned = state.phone.replaceFirst(RegExp(r'^\+92'), '');
           phoneController.text = cleaned;
           phoneController.selection = TextSelection.fromPosition(
             TextPosition(offset: phoneController.text.length),
           );
         }
-
-        return CustomPhoneField(
-          label: "Phone Number",
-          hintText: "Enter your phone number",
-          controller: phoneController,
-          focusNode: focusNode,
-          textInputAction: TextInputAction.next,
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return "Phone number is required";
-            }
-            final cleaned = value.replaceAll(RegExp(r'[^0-9]'), '');
-            if (cleaned.length < 10) {
-              return "Enter a valid phone number";
-            }
-            return null;
-          },
-          onChanged: (code, number) {
-            final fullPhone = "$code$number".trim();
-            context.read<RestaurantBloc>().add(
-              PhoneChangeEvent(phone: fullPhone),
-            );
-          },
-        );
       },
+      child: CustomPhoneField(
+        label: "Phone Number",
+        hintText: "Enter your phone number",
+        controller: phoneController,
+        focusNode: focusNode,
+        textInputAction: TextInputAction.next,
+        validator: (value) {
+          if (value == null || value.trim().isEmpty) {
+            return "Phone number is required";
+          }
+          final cleaned = value.replaceAll(RegExp(r'[^0-9]'), '');
+          if (cleaned.length < 10) {
+            return "Enter a valid phone number";
+          }
+          return null;
+        },
+        onChanged: (code, number) {
+          final fullPhone = "$code$number".trim();
+          context.read<RestaurantBloc>().add(
+            PhoneChangeEvent(phone: fullPhone),
+          );
+        },
+      ),
     );
   }
 }

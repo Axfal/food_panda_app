@@ -34,11 +34,10 @@ class _DescriptionInputWidgetState extends State<DescriptionInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RestaurantBloc, RestaurantStates>(
-      buildWhen: (previous, current) =>
+    return BlocListener<RestaurantBloc, RestaurantStates>(
+      listenWhen: (previous, current) =>
       previous.description != current.description,
-      builder: (context, state) {
-        // Keep controller synced with bloc state
+      listener: (context, state) {
         if (state.description.isNotEmpty &&
             state.description != descriptionController.text) {
           descriptionController.text = state.description;
@@ -46,31 +45,30 @@ class _DescriptionInputWidgetState extends State<DescriptionInputWidget> {
             TextPosition(offset: descriptionController.text.length),
           );
         }
-
-        return CustomTextField(
-          label: "Description",
-          hintText: "Enter Description",
-          controller: descriptionController,
-          focusNode: focusNode,
-          maxLines: 5,
-          keyboardType: TextInputType.text,
-          textInputAction: TextInputAction.next,
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return "Description is required";
-            }
-            if (value.trim().length < 10) {
-              return "Description must be at least 10 characters";
-            }
-            return null;
-          },
-          onChanged: (value) {
-            context.read<RestaurantBloc>().add(
-              DescriptionChangeEvent(description: value.trim()),
-            );
-          },
-        );
       },
+      child: CustomTextField(
+        label: "Description",
+        hintText: "Enter Description",
+        controller: descriptionController,
+        focusNode: focusNode,
+        maxLines: 5,
+        keyboardType: TextInputType.text,
+        textInputAction: TextInputAction.next,
+        validator: (value) {
+          if (value == null || value.trim().isEmpty) {
+            return "Description is required";
+          }
+          if (value.trim().length < 10) {
+            return "Description must be at least 10 characters";
+          }
+          return null;
+        },
+        onChanged: (value) {
+          context.read<RestaurantBloc>().add(
+            DescriptionChangeEvent(description: value.trim()),
+          );
+        },
+      ),
     );
   }
 }
