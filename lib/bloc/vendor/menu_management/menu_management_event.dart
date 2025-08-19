@@ -13,7 +13,11 @@ class FetchItemsEvent extends MenuManagementEvent {
   final bool refreshItem;
   final String restaurantId;
   final String categoryId;
-  const FetchItemsEvent({required this.restaurantId, required this.categoryId, required this.refreshItem});
+  const FetchItemsEvent({
+    required this.restaurantId,
+    required this.categoryId,
+    required this.refreshItem,
+  });
 
   @override
   List<Object> get props => [restaurantId, categoryId, refreshItem];
@@ -104,11 +108,11 @@ class FetchCategoriesEvent extends MenuManagementEvent {
 
 class AddCategoryEvent extends MenuManagementEvent {
   final Category category;
-
-  const AddCategoryEvent(this.category);
+  final File? image;
+  const AddCategoryEvent(this.category, this.image);
 
   @override
-  List<Object?> get props => [category];
+  List<Object?> get props => [category, image];
 }
 
 class UpdateCategoryEvent extends MenuManagementEvent {
@@ -117,7 +121,12 @@ class UpdateCategoryEvent extends MenuManagementEvent {
   final String? name;
   final File? photo;
 
-  const UpdateCategoryEvent({required this.restaurantId,required this.categoryId, this.name, this.photo});
+  const UpdateCategoryEvent({
+    required this.restaurantId,
+    required this.categoryId,
+    this.name,
+    this.photo,
+  });
 
   @override
   List<Object?> get props => [categoryId, name, restaurantId, photo];
@@ -127,7 +136,7 @@ class DeleteCategoryEvent extends MenuManagementEvent {
   final String categoryId;
   final String restaurantId;
 
-  const DeleteCategoryEvent(this.restaurantId,this.categoryId);
+  const DeleteCategoryEvent(this.restaurantId, this.categoryId);
 
   @override
   List<Object?> get props => [categoryId, restaurantId];

@@ -88,7 +88,8 @@ class MenuManagementBloc
     final Map<String, dynamic> data = {
       "restaurant_id": event.category.restaurantId,
       "name": event.category.name,
-      "photo": event.category.photo,
+      "categories[]"
+      "photos[]": event.image,
     };
 
     try {
@@ -96,11 +97,8 @@ class MenuManagementBloc
 
       if (response != null) {
         if (response['success'] == true) {
-          // ✅ Create new category object from event (not from API)
           final newCategory = Category(
-            id: event
-                .category
-                .id, // you can also parse from response if API returns id
+            id: event.category.id,
             restaurantId: event.category.restaurantId,
             name: event.category.name,
             photo: event.category.photo,
@@ -156,7 +154,6 @@ class MenuManagementBloc
 
       if (response != null) {
         if (response['success'] == true) {
-          // remove category locally
           final updatedCategories = state.categories
               .where((c) => c.id.toString() != event.categoryId)
               .toList();
@@ -215,7 +212,6 @@ class MenuManagementBloc
 
       if (response != null) {
         if (response['success'] == true) {
-          // update locally
           final updatedCategories = state.categories.map((c) {
             if (c.id.toString() == event.categoryId) {
               return c.copyWith(
@@ -262,7 +258,6 @@ class MenuManagementBloc
     FetchItemsEvent event,
     Emitter<MenuManagementStates> emit,
   ) async {
-    /// If items for this category already exist, skip API call
     if (state.itemsByCategory.containsKey(event.categoryId) &&
         state.refreshItem == false) {
       return;
@@ -506,7 +501,6 @@ class MenuManagementBloc
       "restaurant_id": event.restaurantId,
     };
 
-    print("data ====>>>>> $data");
     try {
       final response = await vendorApiRepository.deleteMenuItem(data);
       if (response != null) {

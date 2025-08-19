@@ -6,6 +6,8 @@ import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_e
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../model/vender/menu_management/menu_category/menu_category_model.dart';
+
 class MenuManagement extends StatefulWidget {
   final String restaurantId;
   const MenuManagement({super.key, required this.restaurantId});
@@ -60,46 +62,233 @@ class _MenuManagementState extends State<MenuManagement> {
     });
   }
 
-  void addCategory() {
+  void addCategory(String restaurantId) {
+    String newCategoryName = '';
+    File? imageFile;
+
+    final ImagePicker picker = ImagePicker();
+
     showDialog(
       context: context,
       builder: (context) {
-        String newCategoryName = '';
-        return AlertDialog(
-          title: Text(
-            'Add Category',
-            style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
           ),
-          content: TextField(
-            autofocus: true,
-            decoration: const InputDecoration(hintText: 'Category Name'),
-            onChanged: (val) => newCategoryName = val,
-          ),
-          actions: [
-            TextButton(
-              child: Text(
-                'Cancel',
-                style: GoogleFonts.poppins(color: Colors.grey),
-              ),
-              onPressed: () => Navigator.pop(context),
+          insetPadding: const EdgeInsets.all(16),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 10,
+                  spreadRadius: 2,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
-            ElevatedButton(
-              child: Text(
-                'Add',
-                style: GoogleFonts.poppins(color: Colors.white),
-              ),
-              onPressed: () {
-                if (newCategoryName.trim().isNotEmpty) {
-                  setState(() {
-                    categories.add(
-                      MenuCategory(name: newCategoryName.trim(), items: []),
-                    );
-                  });
-                  Navigator.pop(context);
-                }
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                return SingleChildScrollView(
+                  child: BlocConsumer<MenuManagementBloc, MenuManagementStates>(
+                    listener: (context, state) {
+                      if (state.categoriesApiResponse.status ==
+                          Status.completed) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Category added successfully"),
+                          ),
+                        );
+                        Navigator.pop(context);
+                      } else if (state.categoriesApiResponse.status ==
+                          Status.error) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              state.categoriesApiResponse.message ??
+                                  'Failed to add category',
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    builder: (context, state) {
+                      bool isLoading =
+                          state.categoriesApiResponse.status == Status.loading;
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Add Category',
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+
+                          // Category Name Input
+                          TextField(
+                            style: GoogleFonts.poppins(color: Colors.black87),
+                            cursorColor: Colors.black,
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(
+                                Icons.category_outlined,
+                                color: AppColors.primary,
+                              ),
+                              labelText: 'Category Name',
+                              labelStyle: GoogleFonts.poppins(
+                                color: Colors.black,
+                              ),
+                              hintStyle: GoogleFonts.poppins(
+                                color: Colors.black54,
+                              ),
+                              filled: true,
+                              fillColor: Colors.grey[100],
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                            onChanged: (val) => newCategoryName = val,
+                          ),
+                          const SizedBox(height: 12),
+
+                          // Image Picker
+                          InkWell(
+                            onTap: () async {
+                              final pickedFile = await picker.pickImage(
+                                source: ImageSource.gallery,
+                              );
+                              if (pickedFile != null) {
+                                setState(() {
+                                  imageFile = File(pickedFile.path);
+                                });
+                              }
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[100],
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: Colors.grey.shade300),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.image_outlined,
+                                    color: AppColors.primary,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      imageFile == null
+                                          ? "Select Category Image"
+                                          : "Image Selected",
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ),
+                                  if (imageFile != null)
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Image.file(
+                                        imageFile!,
+                                        width: 40,
+                                        height: 40,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+
+                          // Buttons
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text(
+                                  'Cancel',
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primary,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                    vertical: 12,
+                                  ),
+                                ),
+                                onPressed: isLoading
+                                    ? null
+                                    : () {
+                                        if (newCategoryName.trim().isEmpty ||
+                                            imageFile == null) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                "Please enter a category name and select an image",
+                                              ),
+                                            ),
+                                          );
+                                          return;
+                                        }
+
+                                        final category = Category(
+                                          restaurantId: int.parse(restaurantId),
+                                          name: newCategoryName.trim(),
+                                        );
+
+                                        context.read<MenuManagementBloc>().add(
+                                          AddCategoryEvent(category, imageFile),
+                                        );
+                                      },
+                                child: isLoading
+                                    ? const SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CupertinoActivityIndicator(
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Text(
+                                        'Add',
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                );
               },
             ),
-          ],
+          ),
         );
       },
     );
@@ -140,6 +329,8 @@ class _MenuManagementState extends State<MenuManagement> {
               builder: (context, setState) {
                 return SingleChildScrollView(
                   child: BlocConsumer<MenuManagementBloc, MenuManagementStates>(
+                    buildWhen: (current, previous) =>
+                        current.itemsByCategory != previous.itemsByCategory,
                     listener: (context, state) {
                       if (state.itemsApiResponse.status == Status.completed) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -435,6 +626,8 @@ class _MenuManagementState extends State<MenuManagement> {
               }
               if (state.itemsApiResponse.status == Status.completed) {}
             },
+            buildWhen: (current, previous) =>
+                current.itemsByCategory != previous.itemsByCategory,
             builder: (context, state) {
               return AlertDialog(
                 backgroundColor: Colors.white,
@@ -833,7 +1026,7 @@ class _MenuManagementState extends State<MenuManagement> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: addCategory,
+        onPressed: () => addCategory(widget.restaurantId),
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.add, color: Colors.white, size: 25),
         label: Text(
