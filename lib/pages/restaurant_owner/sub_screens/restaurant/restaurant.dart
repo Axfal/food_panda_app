@@ -1,3 +1,4 @@
+import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/restaurant/widgets/set_category_input_widget.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/restaurant/widgets/timing_input_widget.dart';
 
 import '../../../../model/vender/restaurant/restaurant_model.dart';
@@ -29,7 +30,9 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: MyAppBar(
-        title: widget.restaurant == null? 'Register Restaurant' : 'Update Restaurant',
+        title: widget.restaurant == null
+            ? 'Register Restaurant'
+            : 'Update Restaurant',
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
@@ -57,7 +60,16 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                     NameInputWidget(name: widget.restaurant?.name),
                     const SizedBox(height: 16),
 
-                    TimingInputWidget(id: widget.restaurant?.id.toString(), timing: widget.restaurant?.hours),
+                    /// Category
+                    SetCategoryInputWidget(
+                      categories: widget.restaurant?.categories,
+                    ),
+                    const SizedBox(height: 16),
+
+                    TimingInputWidget(
+                      id: widget.restaurant?.id.toString(),
+                      timing: widget.restaurant?.hours,
+                    ),
                     const SizedBox(height: 16),
 
                     /// Phone
@@ -68,11 +80,17 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                     const SizedBox(height: 16),
 
                     /// Description
-                    DescriptionInputWidget(description: widget.restaurant?.description),
+                    DescriptionInputWidget(
+                      description: widget.restaurant?.description,
+                    ),
                     const SizedBox(height: 24),
 
                     /// Submit Button
-                    SubmitButton(formKey: _formKey, userId: widget.userId, restaurant: widget.restaurant,),
+                    SubmitButton(
+                      formKey: _formKey,
+                      userId: widget.userId,
+                      restaurant: widget.restaurant,
+                    ),
                   ],
                 ),
               ),

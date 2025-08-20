@@ -1,3 +1,4 @@
+import 'package:excellent_trade_app/model/category/category_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'restaurant_model.freezed.dart';
@@ -10,8 +11,6 @@ class RestaurantModel with _$RestaurantModel {
     @Default(0) @JsonKey(name: 'count') int count,
     @Default([]) @JsonKey(name: 'restaurants') List<Restaurant> restaurants,
   }) = _RestaurantModel;
-
-  const RestaurantModel._();
 
   factory RestaurantModel.fromJson(Map<String, dynamic> json) =>
       _$RestaurantModelFromJson(json);
@@ -49,9 +48,8 @@ class Restaurant with _$Restaurant {
     @Default('') @JsonKey(name: 'hours') String hours,
     @Default('') @JsonKey(name: 'rating') String rating,
     @Default('') @JsonKey(name: 'created_at') String createdAt,
+    @Default([]) @JsonKey(name: 'categories') List<Categories> categories,
   }) = _Restaurant;
-
-  const Restaurant._();
 
   factory Restaurant.fromJson(Map<String, dynamic> json) =>
       _$RestaurantFromJson(json);
@@ -59,6 +57,10 @@ class Restaurant with _$Restaurant {
   @override
   // TODO: implement address
   String get address => throw UnimplementedError();
+
+  @override
+  // TODO: implement categories
+  List<Categories> get categories => throw UnimplementedError();
 
   @override
   // TODO: implement createdAt

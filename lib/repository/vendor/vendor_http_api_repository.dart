@@ -66,4 +66,5 @@ class VendorHttpApiRepository implements VendorApiRepository {
     );
     return response;
   }
+
 }

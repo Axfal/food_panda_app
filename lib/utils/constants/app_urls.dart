@@ -18,6 +18,7 @@ class AppUrl {
   static const String updateMenuItem = '$baseUrl/menu_items_update.php';
 
   /// Categories
+  static const String getCategories = '$baseUrl/categories.php';
   static const String getMenuCategory =
       '$baseUrl/get_menu_categories.php?restaurant_id=6';
   static const String addMenuCategory = '$baseUrl/menu_categories.php';

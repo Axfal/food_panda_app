@@ -1,4 +1,3 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
 import 'package:excellent_trade_app/config/components/round_button_widget.dart';
 import 'package:excellent_trade_app/model/vender/restaurant/restaurant_model.dart';
@@ -59,6 +58,11 @@ class _SubmitButtonState extends State<SubmitButton> {
           title: widget.restaurant != null ? 'Update' : 'Save',
           loading: state.registerRestaurantApi.status == Status.loading,
           onPress: () async {
+            final selectedCategoryId = context
+                .read<CategoryBloc>()
+                .state
+                .selectedCategoryIds;
+            print("Anfal yeh check kr $selectedCategoryId");
             final isValid = widget.formKey.currentState?.validate() ?? false;
             if (isValid) {
               if (widget.restaurant != null) {
@@ -69,7 +73,10 @@ class _SubmitButtonState extends State<SubmitButton> {
               } else {
                 setState(() => isUpdate = false);
                 context.read<RestaurantBloc>().add(
-                  SubmitFormEvent(ownerId: widget.userId),
+                  SubmitFormEvent(
+                    ownerId: widget.userId,
+                    selectedCategoryIds: selectedCategoryId,
+                  ),
                 );
               }
             }

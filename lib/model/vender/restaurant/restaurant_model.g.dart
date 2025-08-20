@@ -36,6 +36,11 @@ _Restaurant _$RestaurantFromJson(Map<String, dynamic> json) => _Restaurant(
   hours: json['hours'] as String? ?? '',
   rating: json['rating'] as String? ?? '',
   createdAt: json['created_at'] as String? ?? '',
+  categories:
+      (json['categories'] as List<dynamic>?)
+          ?.map((e) => Categories.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
 );
 
 Map<String, dynamic> _$RestaurantToJson(_Restaurant instance) =>
@@ -51,4 +56,5 @@ Map<String, dynamic> _$RestaurantToJson(_Restaurant instance) =>
       'hours': instance.hours,
       'rating': instance.rating,
       'created_at': instance.createdAt,
+      'categories': instance.categories,
     };

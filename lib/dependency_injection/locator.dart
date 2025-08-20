@@ -1,11 +1,9 @@
+import 'package:excellent_trade_app/repository/category/category_api_repository.dart';
+import 'package:excellent_trade_app/repository/category/category_http_api_repository.dart';
 import 'package:excellent_trade_app/repository/vendor/restaurant/restaurant_api_repository.dart';
 import 'package:excellent_trade_app/repository/vendor/restaurant/restaurant_http_api_repository.dart';
-import 'package:excellent_trade_app/repository/vendor/vendor_api_repository.dart';
-import 'package:excellent_trade_app/repository/vendor/vendor_http_api_repository.dart';
-
 import 'dependency_injection.dart';
 
-// GetIt is a package used for service locator or to manage dependency injection
 GetIt getIt = GetIt.instance;
 
 class ServiceLocator {
@@ -18,6 +16,9 @@ class ServiceLocator {
     );
     getIt.registerLazySingleton<RestaurantApiRepository>(
       () => RestaurantHttpApiRepository(),
+    );
+    getIt.registerLazySingleton<CategoryApiRepository>(
+      () => CategoryHttpApiRepository(),
     );
   }
 }

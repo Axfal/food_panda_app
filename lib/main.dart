@@ -10,6 +10,7 @@ import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:flutter/services.dart';
 
+import 'bloc/category/category_bloc.dart';
 import 'config/routes/routes.dart';
 import 'config/routes/routes_name.dart';
 import 'config/themes/dark_theme.dart';
@@ -90,6 +91,7 @@ class MyApp extends StatelessWidget {
                 return MultiBlocProvider(providers: [
                   BlocProvider<RestaurantBloc>(create: (context) => RestaurantBloc(restaurantApiRepository: getIt())),
                   BlocProvider<MenuManagementBloc>(create: (context) => MenuManagementBloc(vendorApiRepository: getIt())),
+                  BlocProvider<CategoryBloc>(create: (context) => CategoryBloc(categoryApiRepository: getIt())),
                 ], child: MaterialApp(
                   debugShowCheckedModeBanner: false,
                   title: 'Food mate',

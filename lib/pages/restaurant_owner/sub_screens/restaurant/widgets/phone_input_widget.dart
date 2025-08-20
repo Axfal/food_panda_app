@@ -2,7 +2,7 @@ import 'package:excellent_trade_app/config/components/custom_phone_field.dart';
 import '../restaurant_exports.dart';
 
 class PhoneInputWidget extends StatefulWidget {
-  final String? phone; // phone from previous screen / API
+  final String? phone;
   const PhoneInputWidget({super.key, this.phone});
 
   @override
@@ -17,12 +17,10 @@ class _PhoneInputWidgetState extends State<PhoneInputWidget> {
   void initState() {
     super.initState();
 
-    // Prefill from previous screen
     if (widget.phone != null && widget.phone!.isNotEmpty) {
       String cleaned = widget.phone!.replaceFirst(RegExp(r'^\+92'), '');
       phoneController.text = cleaned;
 
-      // push to bloc once at start
       context.read<RestaurantBloc>().add(
         PhoneChangeEvent(phone: widget.phone!),
       );

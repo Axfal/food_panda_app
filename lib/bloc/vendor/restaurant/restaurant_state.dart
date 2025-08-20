@@ -9,6 +9,7 @@ class RestaurantStates extends Equatable {
   final String hours;
   final String description;
   final List<Restaurant>? restaurants;
+  final List<int>? selectedCategoryIds;
   final ApiResponse<String> registerRestaurantApi;
 
   const RestaurantStates({
@@ -20,6 +21,7 @@ class RestaurantStates extends Equatable {
     this.address = '',
     this.description = '',
     this.restaurants = const [],
+    this.selectedCategoryIds = const [],
     this.registerRestaurantApi = const ApiResponse.completed(''),
   });
 
@@ -30,6 +32,7 @@ class RestaurantStates extends Equatable {
     final String? phone,
     final String? hours,
     final String? address,
+    final List<int>? selectedCategoryIds,
     final String? description,
     final List<Restaurant>? restaurants,
     final ApiResponse<String>? registerRestaurantApi,
@@ -40,6 +43,7 @@ class RestaurantStates extends Equatable {
       ownerId: ownerId ?? this.ownerId,
       phone: phone ?? this.phone,
       hours: hours ?? this.hours,
+      selectedCategoryIds: selectedCategoryIds ?? this.selectedCategoryIds,
       restaurants: restaurants ?? this.restaurants,
       address: address ?? this.address,
       description: description ?? this.description,
@@ -58,6 +62,7 @@ class RestaurantStates extends Equatable {
     phone,
     address,
     description,
-    registerRestaurantApi,
+    selectedCategoryIds,
+    registerRestaurantApi
   ];
 }

@@ -2,6 +2,7 @@ import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
 import 'package:excellent_trade_app/model/vender/restaurant/restaurant_model.dart';
 import 'package:excellent_trade_app/repository/vendor/restaurant/restaurant_api_repository.dart';
 import 'dart:io';
+import '../../../pages/auth/signup/signup_exports.dart';
 part 'restaurant_event.dart';
 part 'restaurant_state.dart';
 
@@ -73,7 +74,10 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
         registerRestaurantApi: ApiResponse.loading(),
       ),
     );
-
+    if (kDebugMode) {
+      print("Selected ids are : => ${event.selectedCategoryIds}");
+    }
+    final categoryIdsString = event.selectedCategoryIds.join(',') ?? '';
     final Map<String, dynamic> data = {
       "owner_id": state.ownerId,
       "name": state.restaurantName,
@@ -83,6 +87,7 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
       "status": "open",
       "logo": state.logo,
       "hours": state.hours,
+      "category_ids": categoryIdsString,
     };
 
     try {
@@ -118,7 +123,6 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
     DeleteRestaurantEvent event,
     Emitter<RestaurantStates> emit,
   ) async {
-    // Indicate loading state
     emit(state.copyWith(registerRestaurantApi: ApiResponse.loading()));
     final userId = SessionController.user.id;
     final Map<String, dynamic> data = {"id": event.id, "owner_id": userId};
@@ -127,7 +131,6 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
       final response = await restaurantApiRepository.deleteRestaurant(data);
 
       if (response != null && response['success'] == true) {
-        /// Remove deleted restaurant from state
         final List<Restaurant> updatedList = state.restaurants!
             .where((r) => r.id.toString() != event.id)
             .cast<Restaurant>()

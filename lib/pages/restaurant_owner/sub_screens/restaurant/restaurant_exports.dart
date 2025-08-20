@@ -9,6 +9,7 @@ export 'package:excellent_trade_app/data/response/status.dart';
 export 'package:excellent_trade_app/utils/extensions/flush_bar_extension.dart';
 export 'package:excellent_trade_app/bloc/vendor/restaurant/restaurant_bloc.dart';
 export 'dart:io';
+export 'package:excellent_trade_app/bloc/category/category_bloc.dart';
 export 'package:google_fonts/google_fonts.dart';
 export 'package:image_picker/image_picker.dart';
 export 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/my_app_bar.dart';

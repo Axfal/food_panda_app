@@ -102,8 +102,8 @@ class DeleteItemEvent extends MenuManagementEvent {
 /// ---------- CATEGORY EVENTS ----------
 
 class FetchCategoriesEvent extends MenuManagementEvent {
-  final String restaurantId;
-  const FetchCategoriesEvent({required this.restaurantId});
+  final String? restaurantId;
+  const FetchCategoriesEvent({this.restaurantId});
 }
 
 class AddCategoryEvent extends MenuManagementEvent {

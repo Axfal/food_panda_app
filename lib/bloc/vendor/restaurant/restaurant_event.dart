@@ -107,8 +107,9 @@ class UpdateRestaurantEvent extends RestaurantEvent {
 
 class SubmitFormEvent extends RestaurantEvent {
   final String ownerId;
-  const SubmitFormEvent({required this.ownerId});
+  final List<int> selectedCategoryIds;
+  const SubmitFormEvent({required this.ownerId, required this.selectedCategoryIds});
   @override
   // TODO: implement props
-  List<Object?> get props => [ownerId];
+  List<Object?> get props => [ownerId, selectedCategoryIds];
 }

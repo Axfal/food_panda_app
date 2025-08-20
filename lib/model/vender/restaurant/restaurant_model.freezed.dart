@@ -210,8 +210,8 @@ return $default(_that.success,_that.count,_that.restaurants);case _:
 /// @nodoc
 @JsonSerializable()
 
-class _RestaurantModel extends RestaurantModel {
-  const _RestaurantModel({@JsonKey(name: 'success') this.success = false, @JsonKey(name: 'count') this.count = 0, @JsonKey(name: 'restaurants') final  List<Restaurant> restaurants = const []}): _restaurants = restaurants,super._();
+class _RestaurantModel implements RestaurantModel {
+  const _RestaurantModel({@JsonKey(name: 'success') this.success = false, @JsonKey(name: 'count') this.count = 0, @JsonKey(name: 'restaurants') final  List<Restaurant> restaurants = const []}): _restaurants = restaurants;
   factory _RestaurantModel.fromJson(Map<String, dynamic> json) => _$RestaurantModelFromJson(json);
 
 @override@JsonKey(name: 'success') final  bool success;
@@ -290,7 +290,7 @@ as List<Restaurant>,
 /// @nodoc
 mixin _$Restaurant {
 
-@JsonKey(name: 'id') int get id;@JsonKey(name: 'owner_id') int get ownerId;@JsonKey(name: 'name') String get name;@JsonKey(name: 'description') String get description;@JsonKey(name: 'phone') String get phone;@JsonKey(name: 'address') String get address;@JsonKey(name: 'logo') String? get logo;@JsonKey(name: 'status') String get status;@JsonKey(name: 'hours') String get hours;@JsonKey(name: 'rating') String get rating;@JsonKey(name: 'created_at') String get createdAt;
+@JsonKey(name: 'id') int get id;@JsonKey(name: 'owner_id') int get ownerId;@JsonKey(name: 'name') String get name;@JsonKey(name: 'description') String get description;@JsonKey(name: 'phone') String get phone;@JsonKey(name: 'address') String get address;@JsonKey(name: 'logo') String? get logo;@JsonKey(name: 'status') String get status;@JsonKey(name: 'hours') String get hours;@JsonKey(name: 'rating') String get rating;@JsonKey(name: 'created_at') String get createdAt;@JsonKey(name: 'categories') List<Categories> get categories;
 /// Create a copy of Restaurant
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -303,16 +303,16 @@ $RestaurantCopyWith<Restaurant> get copyWith => _$RestaurantCopyWithImpl<Restaur
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Restaurant&&(identical(other.id, id) || other.id == id)&&(identical(other.ownerId, ownerId) || other.ownerId == ownerId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.address, address) || other.address == address)&&(identical(other.logo, logo) || other.logo == logo)&&(identical(other.status, status) || other.status == status)&&(identical(other.hours, hours) || other.hours == hours)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Restaurant&&(identical(other.id, id) || other.id == id)&&(identical(other.ownerId, ownerId) || other.ownerId == ownerId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.address, address) || other.address == address)&&(identical(other.logo, logo) || other.logo == logo)&&(identical(other.status, status) || other.status == status)&&(identical(other.hours, hours) || other.hours == hours)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other.categories, categories));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,ownerId,name,description,phone,address,logo,status,hours,rating,createdAt);
+int get hashCode => Object.hash(runtimeType,id,ownerId,name,description,phone,address,logo,status,hours,rating,createdAt,const DeepCollectionEquality().hash(categories));
 
 @override
 String toString() {
-  return 'Restaurant(id: $id, ownerId: $ownerId, name: $name, description: $description, phone: $phone, address: $address, logo: $logo, status: $status, hours: $hours, rating: $rating, createdAt: $createdAt)';
+  return 'Restaurant(id: $id, ownerId: $ownerId, name: $name, description: $description, phone: $phone, address: $address, logo: $logo, status: $status, hours: $hours, rating: $rating, createdAt: $createdAt, categories: $categories)';
 }
 
 
@@ -323,7 +323,7 @@ abstract mixin class $RestaurantCopyWith<$Res>  {
   factory $RestaurantCopyWith(Restaurant value, $Res Function(Restaurant) _then) = _$RestaurantCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id') int id,@JsonKey(name: 'owner_id') int ownerId,@JsonKey(name: 'name') String name,@JsonKey(name: 'description') String description,@JsonKey(name: 'phone') String phone,@JsonKey(name: 'address') String address,@JsonKey(name: 'logo') String? logo,@JsonKey(name: 'status') String status,@JsonKey(name: 'hours') String hours,@JsonKey(name: 'rating') String rating,@JsonKey(name: 'created_at') String createdAt
+@JsonKey(name: 'id') int id,@JsonKey(name: 'owner_id') int ownerId,@JsonKey(name: 'name') String name,@JsonKey(name: 'description') String description,@JsonKey(name: 'phone') String phone,@JsonKey(name: 'address') String address,@JsonKey(name: 'logo') String? logo,@JsonKey(name: 'status') String status,@JsonKey(name: 'hours') String hours,@JsonKey(name: 'rating') String rating,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'categories') List<Categories> categories
 });
 
 
@@ -340,7 +340,7 @@ class _$RestaurantCopyWithImpl<$Res>
 
 /// Create a copy of Restaurant
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? ownerId = null,Object? name = null,Object? description = null,Object? phone = null,Object? address = null,Object? logo = freezed,Object? status = null,Object? hours = null,Object? rating = null,Object? createdAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? ownerId = null,Object? name = null,Object? description = null,Object? phone = null,Object? address = null,Object? logo = freezed,Object? status = null,Object? hours = null,Object? rating = null,Object? createdAt = null,Object? categories = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,ownerId: null == ownerId ? _self.ownerId : ownerId // ignore: cast_nullable_to_non_nullable
@@ -353,7 +353,8 @@ as String?,status: null == status ? _self.status : status // ignore: cast_nullab
 as String,hours: null == hours ? _self.hours : hours // ignore: cast_nullable_to_non_nullable
 as String,rating: null == rating ? _self.rating : rating // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as String,
+as String,categories: null == categories ? _self.categories : categories // ignore: cast_nullable_to_non_nullable
+as List<Categories>,
   ));
 }
 
@@ -438,10 +439,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'owner_id')  int ownerId, @JsonKey(name: 'name')  String name, @JsonKey(name: 'description')  String description, @JsonKey(name: 'phone')  String phone, @JsonKey(name: 'address')  String address, @JsonKey(name: 'logo')  String? logo, @JsonKey(name: 'status')  String status, @JsonKey(name: 'hours')  String hours, @JsonKey(name: 'rating')  String rating, @JsonKey(name: 'created_at')  String createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'owner_id')  int ownerId, @JsonKey(name: 'name')  String name, @JsonKey(name: 'description')  String description, @JsonKey(name: 'phone')  String phone, @JsonKey(name: 'address')  String address, @JsonKey(name: 'logo')  String? logo, @JsonKey(name: 'status')  String status, @JsonKey(name: 'hours')  String hours, @JsonKey(name: 'rating')  String rating, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'categories')  List<Categories> categories)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Restaurant() when $default != null:
-return $default(_that.id,_that.ownerId,_that.name,_that.description,_that.phone,_that.address,_that.logo,_that.status,_that.hours,_that.rating,_that.createdAt);case _:
+return $default(_that.id,_that.ownerId,_that.name,_that.description,_that.phone,_that.address,_that.logo,_that.status,_that.hours,_that.rating,_that.createdAt,_that.categories);case _:
   return orElse();
 
 }
@@ -459,10 +460,10 @@ return $default(_that.id,_that.ownerId,_that.name,_that.description,_that.phone,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'owner_id')  int ownerId, @JsonKey(name: 'name')  String name, @JsonKey(name: 'description')  String description, @JsonKey(name: 'phone')  String phone, @JsonKey(name: 'address')  String address, @JsonKey(name: 'logo')  String? logo, @JsonKey(name: 'status')  String status, @JsonKey(name: 'hours')  String hours, @JsonKey(name: 'rating')  String rating, @JsonKey(name: 'created_at')  String createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'owner_id')  int ownerId, @JsonKey(name: 'name')  String name, @JsonKey(name: 'description')  String description, @JsonKey(name: 'phone')  String phone, @JsonKey(name: 'address')  String address, @JsonKey(name: 'logo')  String? logo, @JsonKey(name: 'status')  String status, @JsonKey(name: 'hours')  String hours, @JsonKey(name: 'rating')  String rating, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'categories')  List<Categories> categories)  $default,) {final _that = this;
 switch (_that) {
 case _Restaurant():
-return $default(_that.id,_that.ownerId,_that.name,_that.description,_that.phone,_that.address,_that.logo,_that.status,_that.hours,_that.rating,_that.createdAt);case _:
+return $default(_that.id,_that.ownerId,_that.name,_that.description,_that.phone,_that.address,_that.logo,_that.status,_that.hours,_that.rating,_that.createdAt,_that.categories);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -479,10 +480,10 @@ return $default(_that.id,_that.ownerId,_that.name,_that.description,_that.phone,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'owner_id')  int ownerId, @JsonKey(name: 'name')  String name, @JsonKey(name: 'description')  String description, @JsonKey(name: 'phone')  String phone, @JsonKey(name: 'address')  String address, @JsonKey(name: 'logo')  String? logo, @JsonKey(name: 'status')  String status, @JsonKey(name: 'hours')  String hours, @JsonKey(name: 'rating')  String rating, @JsonKey(name: 'created_at')  String createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'owner_id')  int ownerId, @JsonKey(name: 'name')  String name, @JsonKey(name: 'description')  String description, @JsonKey(name: 'phone')  String phone, @JsonKey(name: 'address')  String address, @JsonKey(name: 'logo')  String? logo, @JsonKey(name: 'status')  String status, @JsonKey(name: 'hours')  String hours, @JsonKey(name: 'rating')  String rating, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'categories')  List<Categories> categories)?  $default,) {final _that = this;
 switch (_that) {
 case _Restaurant() when $default != null:
-return $default(_that.id,_that.ownerId,_that.name,_that.description,_that.phone,_that.address,_that.logo,_that.status,_that.hours,_that.rating,_that.createdAt);case _:
+return $default(_that.id,_that.ownerId,_that.name,_that.description,_that.phone,_that.address,_that.logo,_that.status,_that.hours,_that.rating,_that.createdAt,_that.categories);case _:
   return null;
 
 }
@@ -493,8 +494,8 @@ return $default(_that.id,_that.ownerId,_that.name,_that.description,_that.phone,
 /// @nodoc
 @JsonSerializable()
 
-class _Restaurant extends Restaurant {
-  const _Restaurant({@JsonKey(name: 'id') this.id = 0, @JsonKey(name: 'owner_id') this.ownerId = 0, @JsonKey(name: 'name') this.name = '', @JsonKey(name: 'description') this.description = '', @JsonKey(name: 'phone') this.phone = '', @JsonKey(name: 'address') this.address = '', @JsonKey(name: 'logo') this.logo, @JsonKey(name: 'status') this.status = '', @JsonKey(name: 'hours') this.hours = '', @JsonKey(name: 'rating') this.rating = '', @JsonKey(name: 'created_at') this.createdAt = ''}): super._();
+class _Restaurant implements Restaurant {
+  const _Restaurant({@JsonKey(name: 'id') this.id = 0, @JsonKey(name: 'owner_id') this.ownerId = 0, @JsonKey(name: 'name') this.name = '', @JsonKey(name: 'description') this.description = '', @JsonKey(name: 'phone') this.phone = '', @JsonKey(name: 'address') this.address = '', @JsonKey(name: 'logo') this.logo, @JsonKey(name: 'status') this.status = '', @JsonKey(name: 'hours') this.hours = '', @JsonKey(name: 'rating') this.rating = '', @JsonKey(name: 'created_at') this.createdAt = '', @JsonKey(name: 'categories') final  List<Categories> categories = const []}): _categories = categories;
   factory _Restaurant.fromJson(Map<String, dynamic> json) => _$RestaurantFromJson(json);
 
 @override@JsonKey(name: 'id') final  int id;
@@ -508,6 +509,13 @@ class _Restaurant extends Restaurant {
 @override@JsonKey(name: 'hours') final  String hours;
 @override@JsonKey(name: 'rating') final  String rating;
 @override@JsonKey(name: 'created_at') final  String createdAt;
+ final  List<Categories> _categories;
+@override@JsonKey(name: 'categories') List<Categories> get categories {
+  if (_categories is EqualUnmodifiableListView) return _categories;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_categories);
+}
+
 
 /// Create a copy of Restaurant
 /// with the given fields replaced by the non-null parameter values.
@@ -522,16 +530,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Restaurant&&(identical(other.id, id) || other.id == id)&&(identical(other.ownerId, ownerId) || other.ownerId == ownerId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.address, address) || other.address == address)&&(identical(other.logo, logo) || other.logo == logo)&&(identical(other.status, status) || other.status == status)&&(identical(other.hours, hours) || other.hours == hours)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Restaurant&&(identical(other.id, id) || other.id == id)&&(identical(other.ownerId, ownerId) || other.ownerId == ownerId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.address, address) || other.address == address)&&(identical(other.logo, logo) || other.logo == logo)&&(identical(other.status, status) || other.status == status)&&(identical(other.hours, hours) || other.hours == hours)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other._categories, _categories));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,ownerId,name,description,phone,address,logo,status,hours,rating,createdAt);
+int get hashCode => Object.hash(runtimeType,id,ownerId,name,description,phone,address,logo,status,hours,rating,createdAt,const DeepCollectionEquality().hash(_categories));
 
 @override
 String toString() {
-  return 'Restaurant(id: $id, ownerId: $ownerId, name: $name, description: $description, phone: $phone, address: $address, logo: $logo, status: $status, hours: $hours, rating: $rating, createdAt: $createdAt)';
+  return 'Restaurant(id: $id, ownerId: $ownerId, name: $name, description: $description, phone: $phone, address: $address, logo: $logo, status: $status, hours: $hours, rating: $rating, createdAt: $createdAt, categories: $categories)';
 }
 
 
@@ -542,7 +550,7 @@ abstract mixin class _$RestaurantCopyWith<$Res> implements $RestaurantCopyWith<$
   factory _$RestaurantCopyWith(_Restaurant value, $Res Function(_Restaurant) _then) = __$RestaurantCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id') int id,@JsonKey(name: 'owner_id') int ownerId,@JsonKey(name: 'name') String name,@JsonKey(name: 'description') String description,@JsonKey(name: 'phone') String phone,@JsonKey(name: 'address') String address,@JsonKey(name: 'logo') String? logo,@JsonKey(name: 'status') String status,@JsonKey(name: 'hours') String hours,@JsonKey(name: 'rating') String rating,@JsonKey(name: 'created_at') String createdAt
+@JsonKey(name: 'id') int id,@JsonKey(name: 'owner_id') int ownerId,@JsonKey(name: 'name') String name,@JsonKey(name: 'description') String description,@JsonKey(name: 'phone') String phone,@JsonKey(name: 'address') String address,@JsonKey(name: 'logo') String? logo,@JsonKey(name: 'status') String status,@JsonKey(name: 'hours') String hours,@JsonKey(name: 'rating') String rating,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'categories') List<Categories> categories
 });
 
 
@@ -559,7 +567,7 @@ class __$RestaurantCopyWithImpl<$Res>
 
 /// Create a copy of Restaurant
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? ownerId = null,Object? name = null,Object? description = null,Object? phone = null,Object? address = null,Object? logo = freezed,Object? status = null,Object? hours = null,Object? rating = null,Object? createdAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? ownerId = null,Object? name = null,Object? description = null,Object? phone = null,Object? address = null,Object? logo = freezed,Object? status = null,Object? hours = null,Object? rating = null,Object? createdAt = null,Object? categories = null,}) {
   return _then(_Restaurant(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,ownerId: null == ownerId ? _self.ownerId : ownerId // ignore: cast_nullable_to_non_nullable
@@ -572,7 +580,8 @@ as String?,status: null == status ? _self.status : status // ignore: cast_nullab
 as String,hours: null == hours ? _self.hours : hours // ignore: cast_nullable_to_non_nullable
 as String,rating: null == rating ? _self.rating : rating // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as String,
+as String,categories: null == categories ? _self._categories : categories // ignore: cast_nullable_to_non_nullable
+as List<Categories>,
   ));
 }
 
