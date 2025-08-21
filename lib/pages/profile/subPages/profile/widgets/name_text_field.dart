@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../config/components/custom_text_field.dart';
+import '../../../../../config/components/custom_text_field.dart';
 
 class NameTextField extends StatefulWidget {
   const NameTextField({super.key});

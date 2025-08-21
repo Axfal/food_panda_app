@@ -1,3 +1,4 @@
+import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/my_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -11,45 +12,18 @@ class PastOrdersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.background,
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.white,
-          automaticallyImplyLeading: false,
-          toolbarHeight: 50,
-          titleSpacing: 0,
-          title: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              children: [
-                InkWell(
-                  onTap: () => Navigator.pop(context),
-                  child: const Icon(Icons.close, size: 20),
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  "Orders",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: AppWeights.semiBold,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(1),
-            child: Container(
-              color: AppColors.textSecondary.withOpacity(0.25),
-              height: 1,
-            ),
-          ),
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: MyAppBar(
+        title: 'Orders',
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
+      ),
 
-        body: Column(
+      body: SafeArea(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
@@ -75,9 +49,7 @@ class PastOrdersPage extends StatelessWidget {
                     rating: order['rating'],
                     imagePath: order['imagePath'],
                     onReorder: () {
-                      debugPrint(
-                        "Reorder tapped for ${order['restaurantName']}",
-                      );
+                      debugPrint("Reorder tapped for ${order['restaurantName']}");
                     },
                   );
                 },

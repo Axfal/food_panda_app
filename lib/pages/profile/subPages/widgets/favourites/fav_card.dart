@@ -11,7 +11,6 @@ class FavFoodCard extends StatelessWidget {
   final String priceLevel;
   final String cuisine;
   final int deliveryFee;
-
   final bool isAd;
 
   const FavFoodCard({
@@ -24,54 +23,61 @@ class FavFoodCard extends StatelessWidget {
     required this.priceLevel,
     required this.cuisine,
     required this.deliveryFee,
-
     this.isAd = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 4,
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       color: AppColors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Image + Favorite + Ad Badge
           Stack(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                child: Image.asset(
-                  imagePath,
-                  height: 130,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                child: Container(
+                  height: 170,
                   width: double.infinity,
-                  fit: BoxFit.cover,
+                  color: AppColors.primary.withValues(alpha: .08),
+                  child: const Icon(Icons.fastfood, size: 40, color: Colors.grey),
                 ),
               ),
+              // Favorite button
               Positioned(
-                right: 8,
-                bottom: 8,
-                child: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  radius: 16,
-                  child: Icon(Icons.favorite, size: 18, color: Colors.pink),
+                right: 12,
+                bottom: 12,
+                child: Material(
+                  color: Colors.white,
+                  shape: const CircleBorder(),
+                  elevation: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: Icon(Icons.favorite, size: 18, color: AppColors.primary),
+                  ),
                 ),
               ),
+              // Ad badge
               if (isAd)
                 Positioned(
-                  right: 8,
-                  top: 8,
+                  right: 12,
+                  top: 12,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.6),
-                      borderRadius: BorderRadius.circular(4),
+                      color: Colors.black87,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Ad',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 10,
+                        fontSize: 11,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -79,58 +85,74 @@ class FavFoodCard extends StatelessWidget {
                 ),
             ],
           ),
+
+          // Title + Rating
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: AppWeights.extraBold,
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: AppWeights.extraBold,
+                      color: Colors.black87,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
                 Row(
                   children: [
-                    Icon(
-                      Icons.star,
-                      color: Colors.orange,
-                      size: 12,
-                      // fontWeight: AppWeights.bold,
-                    ),
-                    SizedBox(width: 4),
+                    const Icon(Icons.star, color: Colors.orange, size: 14),
+                    const SizedBox(width: 3),
                     Text(
-                      '$rating',
-                      style: TextStyle(
-                        fontSize: 12,
+                      rating.toStringAsFixed(1),
+                      style: const TextStyle(
+                        fontSize: 13,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(' ($reviewsCount+)', style: TextStyle(fontSize: 12)),
+                    Text(
+                      ' ($reviewsCount+)',
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                    ),
                   ],
                 ),
               ],
             ),
           ),
 
+          // Cuisine + Duration + Price Level
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
             child: Text(
               '$duration • $priceLevel • $cuisine',
-              style: TextStyle(color: Colors.grey[600], fontSize: 12),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(
-              '🚴‍♂️Rs.$deliveryFee ',
               style: TextStyle(color: Colors.grey[700], fontSize: 12),
             ),
           ),
-          SizedBox(height: 8),
+
+          // Delivery fee
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            child: Row(
+              children: [
+                const Icon(Icons.delivery_dining, size: 16, color: Colors.grey),
+                const SizedBox(width: 4),
+                Text(
+                  'Rs. $deliveryFee',
+                  style: TextStyle(
+                    color: Colors.grey[800],
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
         ],
       ),
     );

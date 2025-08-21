@@ -66,6 +66,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                     ),
                     const SizedBox(height: 16),
 
+                    /// Time
                     TimingInputWidget(
                       id: widget.restaurant?.id.toString(),
                       timing: widget.restaurant?.hours,

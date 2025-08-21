@@ -2,6 +2,7 @@ import 'package:excellent_trade_app/Utils/constants/appWeight.dart';
 import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
 import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/customeButtons.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class OrderCard extends StatelessWidget {
   final String restaurantName;
@@ -27,24 +28,30 @@ class OrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: AppColors.white,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 2,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      elevation: 13,
+      shadowColor: Colors.black12,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// Top Row - Icon + Details + Price
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.asset(
-                    imagePath,
-                    width: 80,
-                    height: 80,
-                    fit: BoxFit.cover,
+                Container(
+                  width: 70,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.fastfood,
+                    size: 35,
+                    color: AppColors.primary,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -52,83 +59,101 @@ class OrderCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      /// Restaurant Name + Price
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
                             child: Text(
                               restaurantName,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                                color: AppColors.textPrimary,
                               ),
-                              maxLines: 2,
+                              maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           const SizedBox(width: 8),
                           Text(
                             "Rs. ${amount.toStringAsFixed(2)}",
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: AppColors.primary,
+                            ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 6),
+
+                      /// Delivery Date
                       Text(
                         "Delivered on $dateTime",
-                        style: const TextStyle(
+                        style: GoogleFonts.poppins(
                           fontSize: 12,
-                          color: Colors.grey,
+                          color: AppColors.textSecondary,
                         ),
                       ),
-                      const SizedBox(height: 4),
+
+                      const SizedBox(height: 6),
+
+                      /// Items
                       Text(
                         items,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 12),
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          color: AppColors.textPrimary.withValues(alpha: 0.8),
+                        ),
                       ),
                     ],
                   ),
                 ),
               ],
             ),
-          ),
-          // const SizedBox(height: 12),
-          Container(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+
+            const SizedBox(height: 14),
+
+            /// Reorder Button
+            SizedBox(
+              width: double.infinity,
               child: CustomButton(
                 text: "Select Items to reorder",
                 onTap: onReorder,
               ),
             ),
-          ),
-          // const SizedBox(height: 6),
-          Divider(),
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: Row(
+
+            const SizedBox(height: 10),
+            const Divider(thickness: 0.8, height: 1),
+            const SizedBox(height: 8),
+
+            /// Rating Row
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
+                Text(
                   "You rated this ",
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     color: AppColors.textSecondary,
                     fontSize: 12,
                   ),
                 ),
-                const Icon(Icons.star, color: Colors.amber, size: 12),
+                const Icon(Icons.star, color: Colors.amber, size: 14),
                 Text(
                   " $rating",
-                  style: TextStyle(fontSize: 12, fontWeight: AppWeights.bold),
+                  style: GoogleFonts.poppins(
+                    fontSize: 12,
+                    fontWeight: AppWeights.bold,
+                    color: AppColors.textPrimary,
+                  ),
                 ),
               ],
             ),
-          ),
-          SizedBox(height: 5),
-        ],
+          ],
+        ),
       ),
     );
   }
