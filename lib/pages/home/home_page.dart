@@ -1,4 +1,7 @@
+import 'package:excellent_trade_app/bloc/account/profile/profile_bloc.dart';
+import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
 import 'package:excellent_trade_app/pages/Top_restaurants/top_res_page.dart';
+import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
 import 'package:excellent_trade_app/pages/home/widgets/discountCardList/discount_data.dart';
 import 'package:excellent_trade_app/pages/new_restaurants/new_restaurants_page.dart';
 import 'package:excellent_trade_app/pages/offers/offers_page.dart';
@@ -26,6 +29,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+
+    // Get the current user's ID from session
+    final userId = SessionController.user.id.toString();
+
+    // Trigger the ProfileBloc to fetch profile data
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProfileBloc>().add(FetchProfileEvent(id: userId));
+    });
+  }
 
   void _onNavItemTapped(int index) {
     setState(() {

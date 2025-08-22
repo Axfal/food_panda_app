@@ -1,11 +1,10 @@
 import 'package:excellent_trade_app/Utils/constants/appWeight.dart';
-import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
-import 'package:excellent_trade_app/config/components/round_button_widget.dart';
-import 'package:excellent_trade_app/config/routes/route_export.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/logout_dialog_box.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import '../../bloc/account/profile/profile_bloc.dart';
 import '../../globalWidgets/PrimeryWidgets/customeBottonNavBar.dart';
+import '../auth/forgot_password/forget_password_export.dart';
 import 'subPages/addresses_page.dart';
 import 'subPages/fav_page.dart';
 import 'subPages/order_page.dart';
@@ -38,48 +37,63 @@ class _AccountPageState extends State<AccountPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 8),
-              GestureDetector(
-                onTap: () => Navigator.pushNamed(context, RoutesName.profile),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 24,
-                      backgroundColor: AppColors.primary.withValues(
-                        alpha: .099,
-                      ),
-                      child: Icon(
-                        Icons.person,
-                        size: 35,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              BlocBuilder<ProfileBloc, ProfileState>(
+                buildWhen: (current, previous) =>
+                current.profileApiResponse.status != previous.profileApiResponse.status,
+                builder: (context, state) {
+                  final user = state.userModel;
+
+                  return GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, RoutesName.profile),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          "Muhammad Anfal",
-                          style: GoogleFonts.montserrat(
-                            fontWeight: AppWeights.extraBold,
-                            fontSize: 16,
-                            color: Colors.black,
+                        CircleAvatar(
+                          radius: 24,
+                          backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                          child: ClipOval(
+                            child: Image.network(
+                              user.photo,
+                              width: 48,
+                              height: 48,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, _, _) => Icon(
+                                Icons.person,
+                                size: 35,
+                                color: AppColors.primary,
+                              ),
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          "anfalshah72@gmail.com",
-                          style: GoogleFonts.montserrat(
-                            fontSize: 12,
-                            fontWeight: AppWeights.medium,
-                            color: Colors.black54,
-                          ),
+                        const SizedBox(width: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              user.name.isNotEmpty ? user.name : 'Unknown',
+                              style: GoogleFonts.montserrat(
+                                fontWeight: AppWeights.extraBold,
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              user.email.isNotEmpty ? user.email : 'No email',
+                              style: GoogleFonts.montserrat(
+                                fontSize: 12,
+                                fontWeight: AppWeights.medium,
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  );
+                },
               ),
+
 
               const SizedBox(height: 20),
               Container(
@@ -184,7 +198,7 @@ class _AccountPageState extends State<AccountPage> {
                   () => {},
                   () =>
                       Navigator.pushNamed(context, RoutesName.applyForVoucher),
-                  () =>  Navigator.pushNamed(context, RoutesName.inviteFriends),
+                  () => Navigator.pushNamed(context, RoutesName.inviteFriends),
                 ],
               ),
               buildItemList(
@@ -199,16 +213,12 @@ class _AccountPageState extends State<AccountPage> {
                   Icons.business_center_outlined,
                   Icons.policy_outlined,
                 ],
-                onTaps: [
-                  (){},
-                  (){},
-                  (){},
-                ],
+                onTaps: [() {}, () {}, () {}],
               ),
               const SizedBox(height: 20),
               RoundButton(
                 title: 'Logout',
-                onPress: () => showLogoutDialog(context)
+                onPress: () => showLogoutDialog(context),
               ),
             ],
           ),

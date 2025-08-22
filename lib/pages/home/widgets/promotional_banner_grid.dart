@@ -34,7 +34,7 @@ class PromotionalBannerWithGrid extends StatelessWidget {
               children: [
                 SizedBox(height: 6.h),
                 Text(
-                  "With up to 30% off,\nFoodpanda sambhal le ga!",
+                  "With up to 30% off,\nFoodMate sambhal le ga!",
                   style: GoogleFonts.poppins(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w700,

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'auth_repository.dart';
 
 class AuthHttpApiRepository implements AuthApiRepository {
@@ -32,15 +30,6 @@ class AuthHttpApiRepository implements AuthApiRepository {
   @override
   Future verifyOTP(dynamic data) async {
     dynamic response = await _apiServices.postApi(AppUrl.verifyOTP, data);
-    return response;
-  }
-
-  @override
-  Future registerRestaurant(dynamic data) async {
-    final response = await _apiServices.postMultipartApi(
-      AppUrl.registerRestaurant,
-      data,
-    );
     return response;
   }
 }

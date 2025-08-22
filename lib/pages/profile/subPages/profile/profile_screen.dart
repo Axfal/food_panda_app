@@ -39,30 +39,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Profile Image + Info
-                Column(
+                // Profile Image
+                Stack(
+                  alignment: Alignment.bottomRight,
                   children: [
-                    Stack(
-                      alignment: Alignment.bottomRight,
-                      children: [
-                        CircleAvatar(
-                          radius: 65,
-                          backgroundColor: AppColors.primary.withValues(alpha: 0.099),
-                          child: Icon(Icons.person, size: 55, color: AppColors.primary,),
+                    CircleAvatar(
+                      radius: 65,
+                      backgroundColor: AppColors.primary.withValues(alpha: 0.099),
+                      child: Icon(Icons.person, size: 55, color: AppColors.primary,),
+                    ),
+                    Positioned(
+                      right: 4,
+                      bottom: 10,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.primary,
                         ),
-                        Positioned(
-                          right: 4,
-                          bottom: 10,
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.primary,
-                            ),
-                            child: const Icon(Icons.edit, size: 20, color: Colors.white),
-                          ),
-                        ),
-                      ],
+                        child: const Icon(Icons.edit, size: 20, color: Colors.white),
+                      ),
                     ),
                   ],
                 ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
-import '../../../../../config/components/custom_text_field.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../bloc/account/profile/profile_bloc.dart';
+import '../../../../auth/forgot_password/forget_password_export.dart';
 
 class NameTextField extends StatefulWidget {
   const NameTextField({super.key});
@@ -10,16 +11,38 @@ class NameTextField extends StatefulWidget {
 }
 
 class _NameTextFieldState extends State<NameTextField> {
-  final nameController = TextEditingController();
-  final focusNode = FocusNode();
+  final TextEditingController nameController = TextEditingController();
+  final FocusNode focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+
+    final user = context.read<ProfileBloc>().state.userModel;
+    nameController.text = user.name;
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    focusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return CustomTextField(label: 'Name',
-        hintText: 'Enter your name',
-        controller: nameController,
-        focusNode: focusNode,
-        keyboardType: TextInputType.text,
-        textInputAction: TextInputAction.next
+    return BlocBuilder<ProfileBloc, ProfileState>(
+      buildWhen: (current, previous) => current.userModel.name != previous.userModel.name,
+      builder: (context, state) {
+        return CustomTextField(
+          label: 'Name',
+          hintText: 'Enter your name',
+          controller: nameController,
+          focusNode: focusNode,
+          keyboardType: TextInputType.text,
+          textInputAction: TextInputAction.next,
+        );
+      },
     );
   }
 }

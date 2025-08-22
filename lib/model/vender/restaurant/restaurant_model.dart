@@ -6,6 +6,8 @@ part 'restaurant_model.g.dart';
 
 @freezed
 class RestaurantModel with _$RestaurantModel {
+  const RestaurantModel._(); // 👈 required if you want to add custom getters later
+
   const factory RestaurantModel({
     @Default(false) @JsonKey(name: 'success') bool success,
     @Default(0) @JsonKey(name: 'count') int count,
@@ -36,6 +38,8 @@ class RestaurantModel with _$RestaurantModel {
 
 @freezed
 class Restaurant with _$Restaurant {
+  const Restaurant._();
+
   const factory Restaurant({
     @Default(0) @JsonKey(name: 'id') int id,
     @Default(0) @JsonKey(name: 'owner_id') int ownerId,

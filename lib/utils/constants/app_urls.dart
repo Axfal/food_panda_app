@@ -32,4 +32,8 @@ class AppUrl {
   static const String deleteRestaurant = '$baseUrl/restaurants_delete.php';
   static const String getRestaurant = '$baseUrl/restaurants_get.php?owner_id=';
   static const String updateRestaurant = '$baseUrl/restaurants_update.php';
+
+  /// Profile
+  static const String getProfile = '$baseUrl/profile_get.php?id=';
+  static const String updateProfile = '$baseUrl/update_profile.php';
 }

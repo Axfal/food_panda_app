@@ -48,8 +48,6 @@
     }
 
     @override
-    // TODO: implement props
-    @override
     List<Object?> get props => [
       userName,
       userId,

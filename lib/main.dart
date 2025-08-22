@@ -1,9 +1,8 @@
 import 'dart:async';
+import 'package:excellent_trade_app/bloc/account/profile/profile_bloc.dart';
 import 'package:excellent_trade_app/bloc/vendor/menu_management/menu_management_bloc.dart';
 import 'package:excellent_trade_app/bloc/vendor/restaurant/restaurant_bloc.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
-import 'package:excellent_trade_app/repository/vendor/vendor_http_api_repository.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
@@ -12,7 +11,6 @@ import 'package:flutter/services.dart';
 
 import 'bloc/category/category_bloc.dart';
 import 'config/routes/routes.dart';
-import 'config/routes/routes_name.dart';
 import 'config/themes/dark_theme.dart';
 import 'config/themes/light_theme.dart';
 import 'l10n/app_localizations.dart';
@@ -92,6 +90,7 @@ class MyApp extends StatelessWidget {
                   BlocProvider<RestaurantBloc>(create: (context) => RestaurantBloc(restaurantApiRepository: getIt())),
                   BlocProvider<MenuManagementBloc>(create: (context) => MenuManagementBloc(vendorApiRepository: getIt())),
                   BlocProvider<CategoryBloc>(create: (context) => CategoryBloc(categoryApiRepository: getIt())),
+                  BlocProvider<ProfileBloc>(create: (context) => ProfileBloc(profileApiRepository: getIt()))
                 ], child: MaterialApp(
                   debugShowCheckedModeBanner: false,
                   title: 'Food mate',

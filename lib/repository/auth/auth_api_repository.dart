@@ -1,5 +1,3 @@
-import 'package:excellent_trade_app/model/login/login_model.dart';
-
 /// Abstract class defining methods for authentication API repositories.
 abstract class AuthApiRepository {
   Future<dynamic> loginApi(dynamic data);
@@ -11,4 +9,6 @@ abstract class AuthApiRepository {
   Future<dynamic> verifyOTP(dynamic data);
 
   Future<dynamic> sigInOTP(dynamic data);
+
+
 }

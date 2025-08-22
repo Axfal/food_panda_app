@@ -210,8 +210,8 @@ return $default(_that.success,_that.count,_that.restaurants);case _:
 /// @nodoc
 @JsonSerializable()
 
-class _RestaurantModel implements RestaurantModel {
-  const _RestaurantModel({@JsonKey(name: 'success') this.success = false, @JsonKey(name: 'count') this.count = 0, @JsonKey(name: 'restaurants') final  List<Restaurant> restaurants = const []}): _restaurants = restaurants;
+class _RestaurantModel extends RestaurantModel {
+  const _RestaurantModel({@JsonKey(name: 'success') this.success = false, @JsonKey(name: 'count') this.count = 0, @JsonKey(name: 'restaurants') final  List<Restaurant> restaurants = const []}): _restaurants = restaurants,super._();
   factory _RestaurantModel.fromJson(Map<String, dynamic> json) => _$RestaurantModelFromJson(json);
 
 @override@JsonKey(name: 'success') final  bool success;
@@ -494,8 +494,8 @@ return $default(_that.id,_that.ownerId,_that.name,_that.description,_that.phone,
 /// @nodoc
 @JsonSerializable()
 
-class _Restaurant implements Restaurant {
-  const _Restaurant({@JsonKey(name: 'id') this.id = 0, @JsonKey(name: 'owner_id') this.ownerId = 0, @JsonKey(name: 'name') this.name = '', @JsonKey(name: 'description') this.description = '', @JsonKey(name: 'phone') this.phone = '', @JsonKey(name: 'address') this.address = '', @JsonKey(name: 'logo') this.logo, @JsonKey(name: 'status') this.status = '', @JsonKey(name: 'hours') this.hours = '', @JsonKey(name: 'rating') this.rating = '', @JsonKey(name: 'created_at') this.createdAt = '', @JsonKey(name: 'categories') final  List<Categories> categories = const []}): _categories = categories;
+class _Restaurant extends Restaurant {
+  const _Restaurant({@JsonKey(name: 'id') this.id = 0, @JsonKey(name: 'owner_id') this.ownerId = 0, @JsonKey(name: 'name') this.name = '', @JsonKey(name: 'description') this.description = '', @JsonKey(name: 'phone') this.phone = '', @JsonKey(name: 'address') this.address = '', @JsonKey(name: 'logo') this.logo, @JsonKey(name: 'status') this.status = '', @JsonKey(name: 'hours') this.hours = '', @JsonKey(name: 'rating') this.rating = '', @JsonKey(name: 'created_at') this.createdAt = '', @JsonKey(name: 'categories') final  List<Categories> categories = const []}): _categories = categories,super._();
   factory _Restaurant.fromJson(Map<String, dynamic> json) => _$RestaurantFromJson(json);
 
 @override@JsonKey(name: 'id') final  int id;
