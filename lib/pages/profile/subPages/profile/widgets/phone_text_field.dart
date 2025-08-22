@@ -39,6 +39,7 @@ class _PhoneTextFieldState extends State<PhoneTextField> {
           hintText: "Enter your mobile number",
           controller: phoneController,
           focusNode: focusNode,
+          enable: false,
           textInputAction: TextInputAction.next,
         );
       },

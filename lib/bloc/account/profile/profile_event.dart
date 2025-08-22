@@ -22,3 +22,33 @@ class UpdateProfileEvent extends ProfileEvent {
   @override
   List<Object?> get props => [userModel];
 }
+
+class NameChangeEvent extends ProfileEvent {
+  final String name;
+  const NameChangeEvent({required this.name});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [name];
+}
+class PhotoChangeEvent extends ProfileEvent {
+  final File photo;
+  const PhotoChangeEvent({required this.photo});
+  @override
+  List<Object> get props => [photo];
+}
+
+class OldPasswordChange extends ProfileEvent {
+  final String oldPassword;
+  const OldPasswordChange({required this.oldPassword});
+
+  @override
+  List<Object> get props => [oldPassword];
+}
+
+class NewPasswordChangeEvent extends ProfileEvent {
+  final String newPassword;
+  const NewPasswordChangeEvent({required this.newPassword});
+
+  @override
+  List<Object> get props => [newPassword];
+}

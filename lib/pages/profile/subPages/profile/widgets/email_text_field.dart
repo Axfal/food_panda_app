@@ -40,6 +40,7 @@ class _EmailTextFieldState extends State<EmailTextField> {
           hintText: "Enter your email",
           controller: emailController,
           focusNode: focusNode,
+          enable: false,
           keyboardType: TextInputType.emailAddress,
           textInputAction: TextInputAction.next,
         );

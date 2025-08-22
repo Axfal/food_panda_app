@@ -6,6 +6,7 @@ import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
 class CustomPhoneField extends StatelessWidget {
   final String label;
   final String hintText;
+  final bool enable;
   final TextEditingController controller;
   final FocusNode focusNode;
   final String initialCountryCode;
@@ -19,6 +20,7 @@ class CustomPhoneField extends StatelessWidget {
     required this.hintText,
     required this.controller,
     required this.focusNode,
+    this.enable = true,
     this.initialCountryCode = 'PK',
     this.onChanged,
     required this.textInputAction,
@@ -31,6 +33,7 @@ class CustomPhoneField extends StatelessWidget {
       controller: controller,
       focusNode: focusNode,
       cursorColor: AppColors.black,
+      enabled: enable,
       style: const TextStyle(
         fontSize: 16,
         color: AppColors.black,
@@ -57,6 +60,10 @@ class CustomPhoneField extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: AppColors.primary, width: 1),
         ),
+       disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: AppColors.primary, width: 1),
+        ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: AppColors.primary, width: 2),
@@ -74,6 +81,7 @@ class CustomPhoneField extends StatelessWidget {
           hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14),
           prefixIcon: const Icon(Icons.search, color: Colors.black54),
           filled: true,
+          enabled: enable,
           fillColor: Colors.grey.shade100,
           contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           border: OutlineInputBorder(

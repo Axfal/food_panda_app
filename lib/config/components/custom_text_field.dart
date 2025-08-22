@@ -10,6 +10,7 @@ class CustomTextField extends StatelessWidget {
   final int? maxLines;
   final TextEditingController controller;
   final FocusNode focusNode;
+  final bool enable;
   final TextInputType keyboardType;
   final TextInputAction textInputAction;
   final Function(String)? onChanged;
@@ -25,6 +26,7 @@ class CustomTextField extends StatelessWidget {
     required this.keyboardType,
     required this.textInputAction,
     this.onChanged,
+    this.enable = true,
     this.maxLines = 1,
     this.validator,
     this.prefixIcon,
@@ -58,6 +60,7 @@ class CustomTextField extends StatelessWidget {
           fontWeight: FontWeight.w500,
         ),
         hintText: hintText,
+        enabled: enable,
         hintStyle: TextStyle(color: Colors.grey.shade400),
         filled: true,
         fillColor: Colors.grey.shade100,
@@ -70,6 +73,10 @@ class CustomTextField extends StatelessWidget {
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: AppColors.primary, width: 1),
+        ),
+        disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: AppColors.primary, width: 1),
         ),

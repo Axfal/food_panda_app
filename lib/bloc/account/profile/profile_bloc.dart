@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'dart:io';
+
 import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
 import 'package:excellent_trade_app/dependency_injection/dependency_injection.dart';
 import 'package:excellent_trade_app/model/profile/profile_model.dart';
@@ -12,6 +14,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc({required this.profileApiRepository}) : super(ProfileState()) {
     on<FetchProfileEvent>(_onFetchProfile);
     on<UpdateProfileEvent>(_onUpdateProfile);
+    on<NameChangeEvent>(_onNameChange);
+    on<PhotoChangeEvent>(_onPhotoChange);
+    on<OldPasswordChange>(_onOldPasswordChange);
+    on<NewPasswordChangeEvent>(_onNewPasswordChange);
   }
   void _onFetchProfile(
     FetchProfileEvent event,
@@ -65,7 +71,94 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 
   void _onUpdateProfile(
-    UpdateProfileEvent event,
+      UpdateProfileEvent event,
+      Emitter<ProfileState> emit,
+      ) async {
+    emit(state.copyWith(profileApiResponse: ApiResponse.loading()));
+
+    if ((state.oldPassword.isNotEmpty && state.newPassword.isEmpty) ||
+        (state.oldPassword.isEmpty && state.newPassword.isNotEmpty)) {
+      emit(state.copyWith(
+        profileApiResponse:
+        const ApiResponse.error("Both old and new password are required."),
+      ));
+      return;
+    }
+
+    final Map<String, dynamic> data = {
+      "id": state.userModel.id,
+    };
+
+    if (state.name.isNotEmpty) {
+      data["name"] = state.name;
+    }
+
+    if (state.photo != null) {
+      data["photo"] = state.photo;
+    }
+
+    if (state.oldPassword.isNotEmpty && state.newPassword.isNotEmpty) {
+      data["old_password"] = state.oldPassword;
+      data["new_password"] = state.newPassword;
+    }
+
+    try {
+      print("data is ===>>>> $data");
+      final response = await profileApiRepository.updateProfile(data);
+
+      if (response != null) {
+        if (response['success'] == true) {
+          // Update userModel with the new data
+          UserModel updatedUser = state.userModel.copyWith(
+            name: data["name"] ?? state.userModel.name,
+            photo: data["photo"] ?? state.userModel.photo,
+          );
+
+          emit(state.copyWith(
+            userModel: updatedUser,
+            profileApiResponse:
+            ApiResponse.completed(response['message'] ?? "Profile updated"),
+            oldPassword: '',
+            newPassword: '',
+          ));
+        } else {
+          emit(state.copyWith(
+            profileApiResponse:
+            ApiResponse.error(response['error'] ?? "Update failed"),
+          ));
+        }
+      } else {
+
+        emit(state.copyWith(
+          profileApiResponse: const ApiResponse.error("No response from server"),
+        ));
+      }
+    } catch (e) {
+      emit(state.copyWith(
+        profileApiResponse: ApiResponse.error("Error: $e"),
+      ));
+    }
+  }
+
+  void _onNameChange(NameChangeEvent event, Emitter<ProfileState> emit) {
+    emit(state.copyWith(name: event.name));
+  }
+
+  void _onPhotoChange(PhotoChangeEvent event, Emitter<ProfileState> emit) {
+    emit(state.copyWith(photo: event.photo));
+  }
+
+  void _onOldPasswordChange(
+    OldPasswordChange event,
     Emitter<ProfileState> emit,
-  ) async {}
+  ) {
+    emit(state.copyWith(oldPassword: event.oldPassword));
+  }
+
+  void _onNewPasswordChange(
+    NewPasswordChangeEvent event,
+    Emitter<ProfileState> emit,
+  ) {
+    emit(state.copyWith(newPassword: event.newPassword));
+  }
 }
