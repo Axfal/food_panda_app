@@ -8,7 +8,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:flutter/services.dart';
-
 import 'bloc/category/category_bloc.dart';
 import 'config/routes/routes.dart';
 import 'config/themes/dark_theme.dart';
@@ -86,27 +85,42 @@ class MyApp extends StatelessWidget {
               minTextAdapt: true,
               splitScreenMode: true,
               builder: (context, child) {
-                return MultiBlocProvider(providers: [
-                  BlocProvider<RestaurantBloc>(create: (context) => RestaurantBloc(restaurantApiRepository: getIt())),
-                  BlocProvider<MenuManagementBloc>(create: (context) => MenuManagementBloc(vendorApiRepository: getIt())),
-                  BlocProvider<CategoryBloc>(create: (context) => CategoryBloc(categoryApiRepository: getIt())),
-                  BlocProvider<ProfileBloc>(create: (context) => ProfileBloc(profileApiRepository: getIt()))
-                ], child: MaterialApp(
-                  debugShowCheckedModeBanner: false,
-                  title: 'Food mate',
-                  themeMode: ThemeMode.dark,
-                  theme: lightTheme,
-                  darkTheme: darkTheme,
-                  localizationsDelegates: const [
-                    AppLocalizations.delegate,
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                    GlobalCupertinoLocalizations.delegate,
+                return MultiBlocProvider(
+                  providers: [
+                    BlocProvider<RestaurantBloc>(
+                      create: (context) =>
+                          RestaurantBloc(restaurantApiRepository: getIt()),
+                    ),
+                    BlocProvider<MenuManagementBloc>(
+                      create: (context) =>
+                          MenuManagementBloc(vendorApiRepository: getIt()),
+                    ),
+                    BlocProvider<CategoryBloc>(
+                      create: (context) =>
+                          CategoryBloc(categoryApiRepository: getIt()),
+                    ),
+                    BlocProvider<ProfileBloc>(
+                      create: (context) =>
+                          ProfileBloc(profileApiRepository: getIt()),
+                    ),
                   ],
-                  supportedLocales: const [Locale('en'), Locale('es')],
-                  initialRoute: RoutesName.splash,
-                  onGenerateRoute: Routes.generateRoute,
-                ));
+                  child: MaterialApp(
+                    debugShowCheckedModeBanner: false,
+                    title: 'Food mate',
+                    themeMode: ThemeMode.dark,
+                    theme: lightTheme,
+                    darkTheme: darkTheme,
+                    localizationsDelegates: const [
+                      AppLocalizations.delegate,
+                      GlobalMaterialLocalizations.delegate,
+                      GlobalWidgetsLocalizations.delegate,
+                      GlobalCupertinoLocalizations.delegate,
+                    ],
+                    supportedLocales: const [Locale('en'), Locale('es')],
+                    initialRoute: RoutesName.splash,
+                    onGenerateRoute: Routes.generateRoute,
+                  ),
+                );
               },
             );
           },

@@ -2,6 +2,7 @@ import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
 import '../../../Utils/constants/appWeight.dart';
+import '../../../globalWidgets/PrimeryWidgets/my_app_bar.dart';
 import 'widgets/address/address_card.dart';
 import 'widgets/address/address_data.dart';
 import 'widgets/address/address_form.dart';
@@ -11,90 +12,108 @@ class AddressesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.white,
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.white,
-          automaticallyImplyLeading: false,
-          toolbarHeight: 50,
-          titleSpacing: 0,
-          title: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              children: [
-                InkWell(
-                  onTap: () => Navigator.pop(context),
-                  child: const Icon(Icons.arrow_back, size: 20),
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  "Addresses",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: AppWeights.semiBold,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(1),
-            child: Container(
-              color: AppColors.textSecondary.withOpacity(0.25),
-              height: 1,
-            ),
-          ),
+    return Scaffold(
+      backgroundColor: AppColors.white,
+      appBar: MyAppBar(
+        title: 'My Addresses',
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
+      ),
 
-        body: addressList.isEmpty
-            ? Center(
+      body: addressList.isEmpty
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      "No addresses added yet.",
-                      style: TextStyle(fontSize: 16),
+                    // Placeholder illustration
+                    Icon(
+                      Icons.location_off,
+                      size: 80,
+                      color: AppColors.primary.withOpacity(0.5),
                     ),
                     const SizedBox(height: 20),
-                    ElevatedButton(
+                    Text(
+                      "No addresses added yet",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Add your delivery address to make shopping faster and easier.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey.shade500,
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    ElevatedButton.icon(
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => AddressFormPage()),
+                          MaterialPageRoute(
+                            builder: (_) => const AddressFormPage(),
+                          ),
                         );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 12,
+                          horizontal: 28,
+                          vertical: 14,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(12),
                         ),
+                        elevation: 4,
                       ),
-                      child: const Text(
+                      icon: const Icon(Icons.add, color: Colors.white),
+                      label: const Text(
                         "Add New Address",
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
                   ],
                 ),
-              )
-            : ListView.builder(
-                itemCount: addressList.length,
-                itemBuilder: (context, index) {
-                  return AddressCard(
-                    address: addressList[index],
-                    onEdit: () {},
-                    onDelete: () {},
-                  );
-                },
               ),
-      ),
+            )
+          : ListView.separated(
+              padding: const EdgeInsets.all(16),
+              itemCount: addressList.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              itemBuilder: (context, index) {
+                return AddressCard(
+                  address: addressList[index],
+                  onEdit: () {},
+                  onDelete: () {},
+                );
+              },
+            ),
+
+      // Floating Add Button
+      floatingActionButton: addressList.isNotEmpty
+          ? FloatingActionButton.extended(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const AddressFormPage()),
+                );
+              },
+              backgroundColor: AppColors.primary,
+              icon: const Icon(Icons.add_location_alt, color: Colors.white),
+              label: const Text(
+                "Add Address",
+                style: TextStyle(color: Colors.white),
+              ),
+            )
+          : null,
     );
   }
 }
