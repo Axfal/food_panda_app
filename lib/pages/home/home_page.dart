@@ -1,7 +1,10 @@
 import 'package:excellent_trade_app/bloc/account/profile/profile_bloc.dart';
 import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
+import 'package:excellent_trade_app/bloc/category/category_bloc.dart';
 import 'package:excellent_trade_app/pages/Top_restaurants/top_res_page.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
+import 'package:excellent_trade_app/pages/home/widgets/categories_input_widget.dart';
+import 'package:excellent_trade_app/pages/home/widgets/category_list.dart';
 import 'package:excellent_trade_app/pages/home/widgets/discountCardList/discount_data.dart';
 import 'package:excellent_trade_app/pages/new_restaurants/new_restaurants_page.dart';
 import 'package:excellent_trade_app/pages/offers/offers_page.dart';
@@ -39,6 +42,7 @@ class _HomePageState extends State<HomePage> {
     // Trigger the ProfileBloc to fetch profile data
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProfileBloc>().add(FetchProfileEvent(id: userId));
+      context.read<CategoryBloc>().add(FetchCategoriesEvent());
     });
   }
 
@@ -127,30 +131,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Divider(thickness: 1.5, color: AppColors.border),
                       SizedBox(height: 18.h),
-                      BrandList(
-                        title: "",
-                        labels: [
-                          {'label': 'Burger Lab'},
-                          {'label': 'California Pizza'},
-                          {'label': 'KFC'},
-                          {'label': 'Broadway Pizza'},
-                          {'label': 'OPTP'},
-                          {'label': 'Pizza Max'},
-                          {'label': 'McDonald\'s'},
-                          {'label': 'Hardee\'s'},
-                        ],
-                        onTaps: [
-                          () {},
-                          () {},
-                          () {},
-                          () {},
-                          () {},
-                          () {},
-                          () {},
-                          () {},
-                        ],
-                      ),
-                      // HorizontalCategoryList(),
+                      CategoriesInputWidget(),
                       DiscountCardList(
                         cards: discountCards,
                         onTapCard: (card) {

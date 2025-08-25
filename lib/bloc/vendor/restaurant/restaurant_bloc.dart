@@ -1,6 +1,6 @@
 import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
 import 'package:excellent_trade_app/model/vender/restaurant/restaurant_model.dart';
-import 'package:excellent_trade_app/repository/vendor/restaurant/restaurant_api_repository.dart';
+import 'package:excellent_trade_app/repository/restaurant/restaurant_api_repository.dart';
 import 'dart:io';
 import '../../../pages/auth/signup/signup_exports.dart';
 part 'restaurant_event.dart';

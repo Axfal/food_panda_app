@@ -7,11 +7,9 @@ abstract class BaseApiServices {
   Future<dynamic> postApi(String url, dynamic data);
 
   Future<dynamic> postMultipartApi(
-      String url,
-      Map<String, dynamic> data, {
-        Map<String, String>? headers,
-      });
-
+    String url,
+    Map<String, dynamic> data, {
+    Map<String, String>? headers,});
 
   Future<dynamic> putApi(String url, dynamic data);
 

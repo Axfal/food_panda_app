@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class RoutesName {
   static const String splash = 'splash_screen';
 
@@ -40,4 +42,8 @@ class RoutesName {
   static const String myRestaurant = 'my_restaurant';
 
   static const String menuManagement = 'menu_management';
+
+  static const String restaurantsByCategory = 'restaurant_by_category';
+
+  static const String restaurantMenu = 'restaurant_menu';
 }

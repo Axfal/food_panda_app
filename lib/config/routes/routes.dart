@@ -1,4 +1,5 @@
 import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
+import 'package:excellent_trade_app/pages/home/sub_screeens/restaurant_menu/restaurant_menu.dart';
 import 'package:excellent_trade_app/pages/order_now.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/menu_management/my_restaurants.dart';
 import 'package:excellent_trade_app/pages/restuarant_item_screen.dart';
@@ -89,13 +90,47 @@ class Routes {
         return MaterialPageRoute(
           builder: (BuildContext context) => const RestaurantOwnerScreen(),
         );
+
+      case RoutesName.restaurantsByCategory:
+        final args = settings.arguments;
+
+        if (args is Map<String, dynamic> && args['category_id'] is String) {
+          final String categoryId = args['category_id'] as String;
+          return MaterialPageRoute(
+            builder: (BuildContext context) => RestaurantsByCategory(
+              categoryId: categoryId,
+            ),
+          );
+        }
+        return MaterialPageRoute(
+          builder: (BuildContext context) => const Scaffold(
+            body: Center(child: Text('Category ID is required')),
+          ),
+        );
+
+      case RoutesName.restaurantMenu:
+        final args = settings.arguments;
+
+        if (args is Map<String, dynamic> && args['restaurant_id'] is String) {
+          final String restaurantId = args['restaurant_id'] as String;
+          return MaterialPageRoute(
+            builder: (BuildContext context) => RestaurantMenu(
+              restaurantId: restaurantId,
+            ),
+          );
+        }
+        return MaterialPageRoute(
+          builder: (BuildContext context) => const Scaffold(
+            body: Center(child: Text('Restaurant ID is required')),
+          ),
+        );
+
       case RoutesName.selectRestaurant:
         return MaterialPageRoute(
           builder: (BuildContext context) => const SelectRestaurant(),
         );
 
       case RoutesName.myRestaurant:
-
         return MaterialPageRoute(builder: (context) => MyRestaurantScreen());
 
       case RoutesName.menuManagement:
@@ -120,10 +155,8 @@ class Routes {
         }
 
         return MaterialPageRoute(
-          builder: (context) => RegisterRestaurant(
-            userId: userId,
-            restaurant: restaurant,
-          ),
+          builder: (context) =>
+              RegisterRestaurant(userId: userId, restaurant: restaurant),
         );
 
       default:
