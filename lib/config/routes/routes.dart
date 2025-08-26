@@ -1,5 +1,6 @@
 import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
 import 'package:excellent_trade_app/pages/home/sub_screeens/restaurant_menu/restaurant_menu.dart';
+import 'package:excellent_trade_app/pages/location/location.dart';
 import 'package:excellent_trade_app/pages/order_now.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/menu_management/my_restaurants.dart';
 import 'package:excellent_trade_app/pages/restuarant_item_screen.dart';
@@ -97,9 +98,8 @@ class Routes {
         if (args is Map<String, dynamic> && args['category_id'] is String) {
           final String categoryId = args['category_id'] as String;
           return MaterialPageRoute(
-            builder: (BuildContext context) => RestaurantsByCategory(
-              categoryId: categoryId,
-            ),
+            builder: (BuildContext context) =>
+                RestaurantsByCategory(categoryId: categoryId),
           );
         }
         return MaterialPageRoute(
@@ -114,9 +114,8 @@ class Routes {
         if (args is Map<String, dynamic> && args['restaurant_id'] is String) {
           final String restaurantId = args['restaurant_id'] as String;
           return MaterialPageRoute(
-            builder: (BuildContext context) => RestaurantMenu(
-              restaurantId: restaurantId,
-            ),
+            builder: (BuildContext context) =>
+                RestaurantMenu(restaurantId: restaurantId),
           );
         }
         return MaterialPageRoute(
@@ -158,6 +157,9 @@ class Routes {
           builder: (context) =>
               RegisterRestaurant(userId: userId, restaurant: restaurant),
         );
+
+      case RoutesName.locationScreen:
+        return MaterialPageRoute(builder: (context) => LocationScreen());
 
       default:
         return MaterialPageRoute(

@@ -1,5 +1,4 @@
-import 'package:excellent_trade_app/repository/auth/auth_repository.dart';
-import 'package:excellent_trade_app/repository/restaurant/restaurant_api_repository.dart';
+import 'restaurant_exports.dart';
 
 class RestaurantHttpApiRepository implements RestaurantApiRepository {
   final BaseApiServices _networkServices = NetworkApiService();

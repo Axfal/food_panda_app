@@ -46,4 +46,6 @@ class RoutesName {
   static const String restaurantsByCategory = 'restaurant_by_category';
 
   static const String restaurantMenu = 'restaurant_menu';
+
+  static const String locationScreen = 'location_screen';
 }

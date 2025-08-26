@@ -1,3 +1,4 @@
+import 'package:excellent_trade_app/config/routes/route_export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,12 +9,12 @@ class h_CustomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const h_CustomeAppBar({super.key});
 
   @override
-  Size get preferredSize => const Size.fromHeight(60); // Taller for visual balance
+  Size get preferredSize => const Size.fromHeight(60); 
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.transparent, // keep transparent, assumes parent has red
+      backgroundColor: Colors.transparent, 
       elevation: 0,
       automaticallyImplyLeading: false,
       titleSpacing: 16,
@@ -27,28 +28,31 @@ class h_CustomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           const SizedBox(width: 10),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Home',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
+            child: GestureDetector(
+              onTap: () => Navigator.pushNamed(context, RoutesName.locationScreen),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Home',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                Text(
-                  '10/50 C Lane 6, New Town',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.poppins(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                  Text(
+                    '10/50 C Lane 6, New Town',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.poppins(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

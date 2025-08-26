@@ -32,11 +32,16 @@ class AppUrl {
   static const String deleteRestaurant = '$baseUrl/restaurants_delete.php';
   static const String getRestaurant = '$baseUrl/restaurants_get.php?owner_id=';
   static const String updateRestaurant = '$baseUrl/restaurants_update.php';
-  static const String restaurantByCategory = '$baseUrl/restaurants_by_category.php?category_id=';
+  static const String restaurantByCategory =
+      '$baseUrl/restaurants_by_category.php?category_id=';
   static const String restaurantMenu = '$baseUrl/menu_get.php?restaurant_id=';
+
   /// Profile
   static const String getProfile = '$baseUrl/profile_get.php?id=';
   static const String updateProfile = '$baseUrl/update_profile.php';
 
-
+  /// Location
+  /// location suggestion
+  static const String locationSuggestion = '$baseUrl/location_suggestions.php';
+  static const String locationDetails = '$baseUrl/location_details.php';
 }

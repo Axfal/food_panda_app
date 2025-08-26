@@ -9,8 +9,6 @@ import 'base_api_service.dart';
 class NetworkApiService implements BaseApiServices {
   final Duration timeoutDuration = const Duration(seconds: 20);
 
-  /// Returns headers for the request.
-  /// You can pass a [token] or custom headers to override or add values.
   Map<String, String> getHeaders({
     Map<String, String>? customHeaders,
     String? token,
@@ -144,7 +142,7 @@ class NetworkApiService implements BaseApiServices {
 
     try {
       final response = await http
-          .delete(Uri.parse(url), body: jsonEncode(data),)
+          .delete(Uri.parse(url), body: jsonEncode(data))
           .timeout(timeoutDuration);
       return _returnResponse(response);
     } on SocketException {

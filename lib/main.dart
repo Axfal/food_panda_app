@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:excellent_trade_app/bloc/account/profile/profile_bloc.dart';
+import 'package:excellent_trade_app/bloc/location/location_bloc.dart';
 import 'package:excellent_trade_app/bloc/vendor/menu_management/menu_management_bloc.dart';
 import 'package:excellent_trade_app/bloc/vendor/restaurant/restaurant_bloc.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
@@ -106,12 +107,17 @@ class MyApp extends StatelessWidget {
                           ProfileBloc(profileApiRepository: getIt()),
                     ),
                     BlocProvider<RestaurantByCategoryBloc>(
-                      create: (context) =>
-                          RestaurantByCategoryBloc(restaurantApiRepository: getIt()),
+                      create: (context) => RestaurantByCategoryBloc(
+                        restaurantApiRepository: getIt(),
+                      ),
                     ),
                     BlocProvider<RestaurantMenuBloc>(
                       create: (context) =>
                           RestaurantMenuBloc(restaurantApiRepository: getIt()),
+                    ),
+                    BlocProvider<LocationBloc>(
+                      create: (context) =>
+                          LocationBloc(locationApiResponse: getIt()),
                     ),
                   ],
                   child: MaterialApp(
