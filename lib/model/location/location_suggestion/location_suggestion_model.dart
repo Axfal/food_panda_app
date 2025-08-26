@@ -31,6 +31,8 @@ class LocationSuggestionModel with _$LocationSuggestionModel {
     // TODO: implement toJson
     throw UnimplementedError();
   }
+
+
 }
 
 @freezed
@@ -56,4 +58,5 @@ class Suggestion with _$Suggestion {
     // TODO: implement toJson
     throw UnimplementedError();
   }
+
 }

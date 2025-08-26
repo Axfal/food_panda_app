@@ -1,40 +1,45 @@
 import 'package:excellent_trade_app/config/routes/route_export.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../../../../Utils/constants/app_colors.dart';
+import '../../../service/location/location_storage.dart';
 
-class h_CustomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const h_CustomeAppBar({super.key});
+class HCustomAppBar extends StatefulWidget implements PreferredSizeWidget {
+  const HCustomAppBar({super.key});
 
   @override
-  Size get preferredSize => const Size.fromHeight(60); 
+  State<HCustomAppBar> createState() => _HCustomAppBarState();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(60);
+}
+
+class _HCustomAppBarState extends State<HCustomAppBar> {
+  final locationSession = LocationSessionController();
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.transparent, 
+      backgroundColor: Colors.transparent,
       elevation: 0,
       automaticallyImplyLeading: false,
       titleSpacing: 16,
       title: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            LucideIcons.mapPin,
-            color: Colors.white,
-            size: 26,
-          ),
+          const Icon(LucideIcons.mapPin, color: Colors.white, size: 26),
           const SizedBox(width: 10),
           Expanded(
             child: GestureDetector(
-              onTap: () => Navigator.pushNamed(context, RoutesName.locationScreen),
+              onTap: () =>
+                  Navigator.pushNamed(context, RoutesName.locationScreen),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Home',
+                    locationSession.hasLocation
+                        ? locationSession.currentPlace?.name ?? "Unknown"
+                        : "Unknown",
                     style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
@@ -42,8 +47,10 @@ class h_CustomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ),
                   Text(
-                    '10/50 C Lane 6, New Town',
-                    maxLines: 1,
+                    locationSession.hasLocation
+                        ? locationSession.currentPlace?.address ?? "Unknown"
+                        : "Unknown",
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.poppins(
                       fontSize: 13,

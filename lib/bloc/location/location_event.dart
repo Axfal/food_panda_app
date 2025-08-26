@@ -14,3 +14,10 @@ class FetchLocationSuggestionEvent extends LocationEvent {
   // TODO: implement props
   List<Object?> get props => [query];
 }
+
+class FetchLocationDetailsEvent extends LocationEvent {
+  final String placeId;
+  const FetchLocationDetailsEvent({required this.placeId});
+  @override
+  List<Object> get props => [placeId];
+}

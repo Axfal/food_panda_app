@@ -4,6 +4,7 @@ import 'package:excellent_trade_app/bloc/location/location_bloc.dart';
 import 'package:excellent_trade_app/bloc/vendor/menu_management/menu_management_bloc.dart';
 import 'package:excellent_trade_app/bloc/vendor/restaurant/restaurant_bloc.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
+import 'package:excellent_trade_app/service/location/location_storage.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
@@ -67,7 +68,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   dependencyInjector.servicesLocator();
-
+  await LocationSessionController().loadLocation();
   // Await this once before runApp()
   // await initializeMapRenderer();
 

@@ -4,17 +4,16 @@ import 'package:excellent_trade_app/bloc/category/category_bloc.dart';
 import 'package:excellent_trade_app/pages/Top_restaurants/top_res_page.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
 import 'package:excellent_trade_app/pages/home/widgets/categories_input_widget.dart';
-import 'package:excellent_trade_app/pages/home/widgets/category_list.dart';
 import 'package:excellent_trade_app/pages/home/widgets/discountCardList/discount_data.dart';
 import 'package:excellent_trade_app/pages/new_restaurants/new_restaurants_page.dart';
 import 'package:excellent_trade_app/pages/offers/offers_page.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../Utils/constants/app_colors.dart';
 import '../../globalWidgets/PrimeryWidgets/customeBottonNavBar.dart';
+import '../../service/location/location_storage.dart';
 import '../Campaign/Campain_page.dart';
+import '../location/location.dart';
 import 'widgets/Explore/explore_Widget.dart';
 import 'widgets/brand_list.dart';
 import '../data/card_data.dart';
@@ -36,14 +35,44 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    // Get the current user's ID from session
     final userId = SessionController.user.id.toString();
 
-    // Trigger the ProfileBloc to fetch profile data
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProfileBloc>().add(FetchProfileEvent(id: userId));
       context.read<CategoryBloc>().add(FetchCategoriesEvent());
+
+      _selectLocation();
     });
+  }
+
+  void _selectLocation() async {
+    final locationSession = LocationSessionController();
+
+    if (!locationSession.hasLocation) {
+      Timer(const Duration(seconds: 1), () {
+        Navigator.of(context).push(_createRoute());
+      });
+    }
+  }
+
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          const LocationScreen(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.easeInOut;
+
+        var tween = Tween(
+          begin: begin,
+          end: end,
+        ).chain(CurveTween(curve: curve));
+        var offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(position: offsetAnimation, child: child);
+      },
+    );
   }
 
   void _onNavItemTapped(int index) {
@@ -58,12 +87,13 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: AppColors.lightPink,
       body: SingleChildScrollView(
         child: SizedBox(
-          height: MediaQuery.of(context).size.height *2.15,
+          height: MediaQuery.of(context).size.height * 2.15,
           child: Stack(
             clipBehavior: Clip.none,
             children: [
               /// Header Section
               headerSection(),
+
               /// Body Section
               Positioned(
                 top: 315.h,
@@ -208,7 +238,7 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          h_CustomeAppBar(),
+          HCustomAppBar(),
 
           /// Search Bar
           Padding(

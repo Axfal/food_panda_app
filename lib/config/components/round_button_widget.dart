@@ -6,7 +6,7 @@ import 'loading_widget.dart';
 class RoundButton extends StatelessWidget {
   final String title;
   final bool loading;
-  final VoidCallback onPress;
+  final VoidCallback? onPress;
 
   const RoundButton({
     super.key,

@@ -1,3 +1,6 @@
+import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
+import 'package:excellent_trade_app/config/components/round_button_widget.dart';
+import 'package:excellent_trade_app/config/routes/route_export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +9,7 @@ import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/my_app_bar.dart
 import '../../Utils/constants/app_colors.dart';
 import '../../bloc/location/location_bloc.dart';
 import '../../data/response/status.dart';
+import '../../service/location/location_storage.dart';
 
 class LocationScreen extends StatefulWidget {
   const LocationScreen({super.key});
@@ -16,7 +20,8 @@ class LocationScreen extends StatefulWidget {
 
 class _LocationScreenState extends State<LocationScreen> {
   final TextEditingController _searchController = TextEditingController();
-  String? selectedLocation;
+  String? selectedPlaceId;
+  String? selectedDescription;
 
   @override
   void initState() {
@@ -102,7 +107,7 @@ class _LocationScreenState extends State<LocationScreen> {
 
                 return ListView.separated(
                   itemCount: suggestions.length,
-                  separatorBuilder: (_, _) => Divider(
+                  separatorBuilder: (_, __) => Divider(
                     color: Colors.grey.shade300,
                     height: 0,
                     indent: 56,
@@ -127,19 +132,22 @@ class _LocationScreenState extends State<LocationScreen> {
                           color: Colors.black87,
                         ),
                       ),
-                      trailing: selectedLocation == item.description
+                      trailing: selectedPlaceId == item.placeId
                           ? CircleAvatar(
-                              radius: 12,
-                              backgroundColor: AppColors.primary,
-                              child: Icon(
-                                Icons.check,
-                                size: 20,
-                                color: Colors.white,
-                              ),
-                            )
+                        radius: 12,
+                        backgroundColor: AppColors.primary,
+                        child: const Icon(
+                          Icons.check,
+                          size: 20,
+                          color: Colors.white,
+                        ),
+                      )
                           : null,
                       onTap: () {
-                        setState(() => selectedLocation = item.description);
+                        setState(() {
+                          selectedPlaceId = item.placeId;
+                          selectedDescription = item.description;
+                        });
                       },
                     );
                   },
@@ -149,37 +157,40 @@ class _LocationScreenState extends State<LocationScreen> {
           ),
 
           // Confirm Button
-          // if (selectedLocation != null)
           Padding(
             padding: const EdgeInsets.all(16),
             child: SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: selectedLocation == null
-                      ? Colors.grey.shade400
-                      : AppColors.primary,
-                  elevation: selectedLocation == null ? 0 : 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                ),
-                onPressed: selectedLocation == null
-                    ? null
-                    : () => Navigator.pop(context, selectedLocation),
-                child: Text(
-                  "Confirm Location",
-                  style: GoogleFonts.poppins(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
+              child: BlocConsumer<LocationBloc, LocationState>(
+                listenWhen: (current, previous) => current.locationDetailsModel != previous.locationDetailsModel,
+                listener: (context, state) async {
+                  if (state.apiResponse.status == Status.completed &&
+                      state.locationDetailsModel.success) {
+                    await LocationSessionController().saveLocation(
+                      state.locationDetailsModel,
+                    );
+
+                    Navigator.pushNamedAndRemoveUntil(context, RoutesName.home, (route) => false);
+                  }
+                },
+                builder: (context, state) {
+                  return RoundButton(
+                    loading: state.apiResponse.status == Status.loading,
+                    title: "Confirm Location",
+                    onPress: selectedPlaceId == null
+                        ? null
+                        : () {
+                      context.read<LocationBloc>().add(
+                        FetchLocationDetailsEvent(
+                          placeId: selectedPlaceId!,
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
             ),
-          )
-
+          ),
         ],
       ),
     );

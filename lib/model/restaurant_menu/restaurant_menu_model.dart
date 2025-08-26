@@ -62,8 +62,6 @@ class Restaurant with _$Restaurant {
     // TODO: implement toJson
     throw UnimplementedError();
   }
-
-
 }
 
 @freezed
@@ -146,6 +144,5 @@ class MenuItem with _$MenuItem {
     // TODO: implement toJson
     throw UnimplementedError();
   }
-
 
 }
