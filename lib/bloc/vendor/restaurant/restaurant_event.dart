@@ -71,6 +71,30 @@ class FetchRestaurantEvent extends RestaurantEvent {
   List<Object> get props => [];
 }
 
+class PlaceIdChangeEvent extends RestaurantEvent {
+  final String placeId;
+  const PlaceIdChangeEvent({required this.placeId});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [placeId];
+}
+
+class LatChangeEvent extends RestaurantEvent {
+  final String lat;
+  const LatChangeEvent({required this.lat});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [lat];
+}
+
+class LngChangeEvent extends RestaurantEvent {
+  final String lng;
+  const LngChangeEvent({required this.lng});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [lng];
+}
+
 class DeleteRestaurantEvent extends RestaurantEvent {
   final String id;
   const DeleteRestaurantEvent({required this.id});
@@ -101,14 +125,25 @@ class UpdateRestaurantEvent extends RestaurantEvent {
   });
 
   @override
-  List<Object?> get props => [id, name, description, phone, address, status, hours, logo];
+  List<Object?> get props => [
+    id,
+    name,
+    description,
+    phone,
+    address,
+    status,
+    hours,
+    logo,
+  ];
 }
-
 
 class SubmitFormEvent extends RestaurantEvent {
   final String ownerId;
   final List<int> selectedCategoryIds;
-  const SubmitFormEvent({required this.ownerId, required this.selectedCategoryIds});
+  const SubmitFormEvent({
+    required this.ownerId,
+    required this.selectedCategoryIds,
+  });
   @override
   // TODO: implement props
   List<Object?> get props => [ownerId, selectedCategoryIds];

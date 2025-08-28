@@ -1,5 +1,4 @@
 import 'package:badges/badges.dart' as badges;
-import 'package:excellent_trade_app/config/routes/routes.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/featured_card.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/logout_dialog_box.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/summary_itme.dart';

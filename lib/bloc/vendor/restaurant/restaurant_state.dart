@@ -2,6 +2,9 @@ part of 'restaurant_bloc.dart';
 
 class RestaurantStates extends Equatable {
   final String? ownerId;
+  final String? placeId;
+  final String? lat;
+  final String? lng;
   final File? logo;
   final String restaurantName;
   final String phone;
@@ -18,6 +21,9 @@ class RestaurantStates extends Equatable {
     this.restaurantName = '',
     this.phone = '',
     this.hours = '',
+    this.placeId = '',
+    this.lat = '',
+    this.lng = '',
     this.address = '',
     this.description = '',
     this.restaurants = const [],
@@ -28,6 +34,9 @@ class RestaurantStates extends Equatable {
   RestaurantStates copyWith({
     final File? logo,
     final String? ownerId,
+    final String? placeId,
+    final String? lat,
+    final String? lng,
     final String? restaurantName,
     final String? phone,
     final String? hours,
@@ -41,6 +50,9 @@ class RestaurantStates extends Equatable {
       restaurantName: restaurantName ?? this.restaurantName,
       logo: logo ?? this.logo,
       ownerId: ownerId ?? this.ownerId,
+      lat: lat ?? this.lat,
+      lng: lng ?? this.lng,
+      placeId: placeId ?? this.placeId,
       phone: phone ?? this.phone,
       hours: hours ?? this.hours,
       selectedCategoryIds: selectedCategoryIds ?? this.selectedCategoryIds,
@@ -57,6 +69,9 @@ class RestaurantStates extends Equatable {
     logo,
     restaurantName,
     ownerId,
+    lng,
+    lat,
+    placeId,
     restaurants,
     hours,
     phone,

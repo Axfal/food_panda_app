@@ -20,7 +20,21 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
     on<DeleteRestaurantEvent>(_onDeleteRestaurant);
     on<UpdateRestaurantEvent>(_onUpdateRestaurant);
     on<HoursChangeEvent>(_onHoursChange);
+    on<PlaceIdChangeEvent>(_onPlaceIdChangeEvent);
+    on<LngChangeEvent>(_onLngChangeEvent);
+    on<LatChangeEvent>(_onLatChangeEvent);
   }
+
+  void _onPlaceIdChangeEvent(PlaceIdChangeEvent event, Emitter<RestaurantStates> emit) {
+    emit(state.copyWith(placeId: event.placeId));
+  }
+  void _onLngChangeEvent(LngChangeEvent event, Emitter<RestaurantStates> emit) {
+    emit(state.copyWith(lng: event.lng));
+  }
+  void _onLatChangeEvent(LatChangeEvent event, Emitter<RestaurantStates> emit) {
+    emit(state.copyWith(lat: event.lat));
+  }
+
   void _onHoursChange(HoursChangeEvent event, Emitter<RestaurantStates> emit) {
     emit(state.copyWith(hours: event.hours));
 
@@ -87,6 +101,9 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
       "status": "open",
       "logo": state.logo,
       "hours": state.hours,
+      "place_id": state.placeId,
+      "lat": state.lat,
+      "lng":state.lng,
       "category_ids": categoryIdsString,
     };
 
@@ -252,6 +269,9 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
         "name": state.restaurantName,
         "description": state.description,
         "phone": state.phone,
+        "place_id": state.placeId,
+        "lat": state.lat,
+        "lng":state.lng,
         "status": currentRestaurant.status,
         "address": state.address,
         "logo": state.logo ?? currentRestaurant.logo,

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../service/location/location_storage.dart';
+import 'package:marquee/marquee.dart';
 
 class HCustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   const HCustomAppBar({super.key});
@@ -36,27 +37,86 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    locationSession.hasLocation
-                        ? locationSession.currentPlace?.name ?? "Unknown"
-                        : "Unknown",
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
+                  // Location Name
+                  SizedBox(
+                    height: 20,
+                    child:
+                        // locationSession.hasLocation &&
+                        //     (locationSession.currentPlace?.name ?? "Unknown")
+                        //             .length >
+                        //         20
+                        // ? Marquee(
+                        //     text: locationSession.hasLocation
+                        //         ? locationSession.currentPlace?.name ??
+                        //               "Unknown"
+                        //         : "Unknown",
+                        //     style: GoogleFonts.poppins(
+                        //       fontSize: 16,
+                        //       fontWeight: FontWeight.w700,
+                        //       color: Colors.white,
+                        //     ),
+                        //     scrollAxis: Axis.horizontal,
+                        //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     blankSpace: 20,
+                        //     velocity: 30.0,
+                        //     pauseAfterRound: const Duration(seconds: 1),
+                        //     startPadding: 10,
+                        //     accelerationDuration: const Duration(seconds: 1),
+                        //     accelerationCurve: Curves.linear,
+                        //     decelerationDuration: const Duration(seconds: 1),
+                        //     decelerationCurve: Curves.easeOut,
+                        //   )
+                        // :
+                        Text(
+                            locationSession.currentPlace?.name ?? "Unknown",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                          ),
                   ),
-                  Text(
-                    locationSession.hasLocation
-                        ? locationSession.currentPlace?.address ?? "Unknown"
-                        : "Unknown",
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.poppins(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
+                  const SizedBox(height: 2),
+                  // Scrolling Address
+                  SizedBox(
+                    height: 18,
+                    child:
+                        locationSession.hasLocation &&
+                            (locationSession.currentPlace?.address ?? "")
+                                    .length >
+                                20
+                        ? Marquee(
+                            text:
+                                locationSession.currentPlace?.address ??
+                                "Unknown",
+                            style: GoogleFonts.poppins(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                            scrollAxis: Axis.horizontal,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            blankSpace: 20,
+                            velocity: 30.0,
+                            pauseAfterRound: const Duration(seconds: 1),
+                            startPadding: 10,
+                            accelerationDuration: const Duration(seconds: 1),
+                            accelerationCurve: Curves.linear,
+                            decelerationDuration: const Duration(seconds: 1),
+                            decelerationCurve: Curves.easeOut,
+                          )
+                        : Text(
+                            locationSession.currentPlace?.address ?? "Unknown",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.poppins(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
                   ),
                 ],
               ),
