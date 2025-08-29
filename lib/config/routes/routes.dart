@@ -3,9 +3,12 @@ import 'package:excellent_trade_app/pages/home/sub_screeens/restaurant_menu/rest
 import 'package:excellent_trade_app/pages/location/location.dart';
 import 'package:excellent_trade_app/pages/order_now.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/menu_management/my_restaurants.dart';
+import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/order_history/order_history.dart';
+import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/performance_screen/performance_screen.dart';
 import 'package:excellent_trade_app/pages/restuarant_item_screen.dart';
 import '../../model/vender/restaurant/restaurant_model.dart';
 import '../../pages/auth/forgot_password/forget_password_export.dart';
+import '../../pages/restaurant_owner/sub_screens/order_screen/order_screen.dart';
 import 'route_export.dart';
 
 class Routes {
@@ -161,6 +164,13 @@ class Routes {
       case RoutesName.locationScreen:
         return MaterialPageRoute(builder: (context) => LocationScreen());
 
+      case RoutesName.orderScreen:
+        return MaterialPageRoute(builder: (context) => OrderScreen());
+
+      case RoutesName.orderHistory:
+        return MaterialPageRoute(builder: (context) => OrderHistory());
+      case RoutesName.performanceScreen:
+        return MaterialPageRoute(builder: (context) => PerformanceScreen());
       default:
         return MaterialPageRoute(
           builder: (_) {

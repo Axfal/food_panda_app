@@ -21,6 +21,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onSearchPressed;
   final VoidCallback? onNotificationPressed;
   final VoidCallback? onRewardPressed;
+  final PreferredSizeWidget? bottom;
 
   const MyAppBar({
     super.key,
@@ -37,6 +38,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onSearchPressed,
     this.onNotificationPressed,
     this.onRewardPressed,
+    this.bottom,
   });
 
   @override
@@ -49,12 +51,11 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
       ),
-      title:
-          titleWidget ??
+      title: titleWidget ??
           Text(
             title ?? '',
             style: GoogleFonts.poppins(
-              fontSize: 20,
+              fontSize: 22, // slightly bigger for better UI
               fontWeight: FontWeight.w600,
               letterSpacing: 0.5,
               color: AppColors.white,
@@ -62,9 +63,14 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
       leading: leading,
       actions: actions,
+      bottom: bottom,
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(
+    kToolbarHeight +
+        (bottom?.preferredSize.height ?? 0) +
+        8, // extra padding for better look
+  );
 }

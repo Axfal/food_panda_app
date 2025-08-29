@@ -40,12 +40,12 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
         "route": RoutesName.selectRestaurant,
         // 'arg': {'restaurant_id': "6"},
       },
-      {"title": "Orders", "icon": Icons.shopping_bag, "route": "/orders"},
-      {"title": "Order History", "icon": Icons.history, "route": "/orderHistory"},
+      {"title": "Orders", "icon": Icons.shopping_bag, "route": RoutesName.orderScreen},
+      {"title": "Order History", "icon": Icons.history, "route": RoutesName.orderHistory},
       {
-        "title": "Sales Summary",
+        "title": "Performance",
         "icon": Icons.bar_chart,
-        "route": "/salesSummary",
+        "route": RoutesName.performanceScreen,
       },
       {
         "title": "Logout",

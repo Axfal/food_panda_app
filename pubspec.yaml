@@ -48,6 +48,7 @@ dependencies:
   phosphor_flutter: ^2.1.0
   bloc: ^9.0.0
   marquee: ^2.3.0
+  fl_chart: ^1.0.0
   flutter_bloc: ^9.1.1
   http: ^1.4.0
   typewritertext: ^3.0.9

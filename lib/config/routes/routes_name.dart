@@ -48,4 +48,10 @@ class RoutesName {
   static const String restaurantMenu = 'restaurant_menu';
 
   static const String locationScreen = 'location_screen';
+
+  static const String orderScreen = 'order_screen';
+
+  static const String orderHistory = 'order_history';
+
+  static const String performanceScreen = 'performance_screen';
 }
