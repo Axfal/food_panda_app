@@ -59,4 +59,5 @@ class Suggestion with _$Suggestion {
     throw UnimplementedError();
   }
 
+
 }

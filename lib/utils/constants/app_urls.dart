@@ -44,4 +44,8 @@ class AppUrl {
   /// location suggestion
   static const String locationSuggestion = '$baseUrl/location_suggestions.php';
   static const String locationDetails = '$baseUrl/location_details.php';
+
+  /// Search
+  static const String search = '$baseUrl/search.php';
+
 }
