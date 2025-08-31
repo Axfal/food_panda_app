@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:excellent_trade_app/bloc/account/profile/profile_bloc.dart';
 import 'package:excellent_trade_app/bloc/location/location_bloc.dart';
+import 'package:excellent_trade_app/bloc/new_restaurant/new_restaurant_bloc.dart';
 import 'package:excellent_trade_app/bloc/vendor/menu_management/menu_management_bloc.dart';
 import 'package:excellent_trade_app/bloc/vendor/restaurant/restaurant_bloc.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'bloc/category/category_bloc.dart';
 import 'bloc/restaurant_by_category/restaurant_by_category_bloc.dart';
 import 'bloc/restaurant_menu/restaurant_menu_bloc.dart';
+import 'bloc/search/search_bloc.dart';
 import 'config/routes/routes.dart';
 import 'config/themes/dark_theme.dart';
 import 'config/themes/light_theme.dart';
@@ -119,6 +121,14 @@ class MyApp extends StatelessWidget {
                     BlocProvider<LocationBloc>(
                       create: (context) =>
                           LocationBloc(locationApiResponse: getIt()),
+                    ),
+                    BlocProvider<SearchBloc>(
+                      create: (context) =>
+                          SearchBloc(searchApiRepository: getIt()),
+                    ),
+                    BlocProvider(
+                      create: (context) =>
+                          NewRestaurantBloc(restaurantApiRepository: getIt()),
                     ),
                   ],
                   child: MaterialApp(

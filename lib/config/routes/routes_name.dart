@@ -54,4 +54,6 @@ class RoutesName {
   static const String orderHistory = 'order_history';
 
   static const String performanceScreen = 'performance_screen';
+
+  static const String searchScreen = 'search_screen';
 }

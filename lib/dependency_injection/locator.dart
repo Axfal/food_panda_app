@@ -1,4 +1,6 @@
 import 'package:excellent_trade_app/repository/location/location_api_response.dart';
+import 'package:excellent_trade_app/repository/search/search_api_response.dart';
+import 'package:excellent_trade_app/repository/search/search_http_api_response.dart';
 
 import '../repository/location/location_https_api_response.dart';
 import 'dependency_injection.dart';
@@ -24,6 +26,9 @@ class ServiceLocator {
     );
     getIt.registerLazySingleton<LocationApiResponse>(
       () => LocationHttpApiResponse(),
+    );
+    getIt.registerLazySingleton<SearchApiRepository>(
+      () => SearchHttpApiRepository(),
     );
   }
 }

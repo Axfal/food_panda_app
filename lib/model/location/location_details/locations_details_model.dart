@@ -33,6 +33,7 @@ class LocationDetailsModel with _$LocationDetailsModel {
   }
 
 
+
 }
 
 @freezed
@@ -72,6 +73,7 @@ class Place with _$Place {
     // TODO: implement toJson
     throw UnimplementedError();
   }
+
 
 
 }

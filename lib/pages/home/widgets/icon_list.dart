@@ -24,12 +24,12 @@ class HorizontalIconList extends StatelessWidget {
     {
       'image': "assets/images/icons/dish_cover.jpg",
       'label': 'New Restaurants',
-      'page': NewRestaurantsPage(cardsData: foodCards),
+      'page': NewRestaurantsPage(),
     },
     {
       'image': "assets/images/icons/pick_up.png",
       'label': 'Pick-up',
-      'page': NewRestaurantsPage(cardsData: foodCards),
+      'page': NewRestaurantsPage(),
     },
     {
       'image': "assets/images/icons/homechef.png",
@@ -67,7 +67,7 @@ class HorizontalIconList extends StatelessWidget {
                   height: 70,
                   width: 70,
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.099),
+                    color: AppColors.primary.withValues(alpha: 0.099),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(

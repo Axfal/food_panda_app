@@ -39,13 +39,24 @@ class RestaurantHttpApiRepository implements RestaurantApiRepository {
 
   @override
   Future restaurantByCategory(String categoryId) async {
-    final response = await _networkServices.getApi(AppUrl.restaurantByCategory + categoryId);
+    final response = await _networkServices.getApi(
+      AppUrl.restaurantByCategory + categoryId,
+    );
     return response;
   }
 
   @override
-  Future restaurantMenu(String restaurantId) async{
-    final response = await _networkServices.getApi(AppUrl.restaurantMenu + restaurantId);
+  Future restaurantMenu(String restaurantId) async {
+    final response = await _networkServices.getApi(
+      AppUrl.restaurantMenu + restaurantId,
+    );
+    return response;
+  }
+
+  @override
+  Future newRestaurant(dynamic data) async {
+    final uri = Uri.parse(AppUrl.newRestaurant).replace(queryParameters: data);
+    final response = await _networkServices.getApi(uri.toString());
     return response;
   }
 }

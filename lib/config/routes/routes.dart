@@ -6,6 +6,7 @@ import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/menu_mana
 import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/order_history/order_history.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/performance_screen/performance_screen.dart';
 import 'package:excellent_trade_app/pages/restuarant_item_screen.dart';
+import 'package:excellent_trade_app/pages/search/search_page.dart';
 import '../../model/vender/restaurant/restaurant_model.dart';
 import '../../pages/auth/forgot_password/forget_password_export.dart';
 import '../../pages/restaurant_owner/sub_screens/order_screen/order_screen.dart';
@@ -171,6 +172,11 @@ class Routes {
         return MaterialPageRoute(builder: (context) => OrderHistory());
       case RoutesName.performanceScreen:
         return MaterialPageRoute(builder: (context) => PerformanceScreen());
+
+      case RoutesName.searchScreen:
+        return MaterialPageRoute(
+          builder: (context) => SearchPage(),
+        );
       default:
         return MaterialPageRoute(
           builder: (_) {

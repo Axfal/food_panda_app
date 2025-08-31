@@ -36,6 +36,7 @@ class SearchModel with _$SearchModel {
     // TODO: implement toJson
     throw UnimplementedError();
   }
+
 }
 
 @freezed
@@ -81,4 +82,5 @@ class Results with _$Results {
     // TODO: implement toJson
     throw UnimplementedError();
   }
+
 }

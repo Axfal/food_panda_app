@@ -142,7 +142,7 @@ class _HomePageState extends State<HomePage> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  NewRestaurantsPage(cardsData: foodCards),
+                                  NewRestaurantsPage(),
                             ),
                           ),
                           () {},
@@ -282,6 +282,12 @@ class _HomePageState extends State<HomePage> {
                         isCollapsed: true,
                         contentPadding: EdgeInsets.zero,
                       ),
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          RoutesName.searchScreen
+                        );
+                      },
                     ),
                   ),
                 ],

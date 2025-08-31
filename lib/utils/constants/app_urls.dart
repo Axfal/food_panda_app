@@ -35,6 +35,8 @@ class AppUrl {
   static const String restaurantByCategory =
       '$baseUrl/restaurants_by_category.php?category_id=';
   static const String restaurantMenu = '$baseUrl/menu_get.php?restaurant_id=';
+  static const String newRestaurant =
+      '$baseUrl/new_restaurants_get.php?lat=31.15060600&lng=73.91907590';
 
   /// Profile
   static const String getProfile = '$baseUrl/profile_get.php?id=';
@@ -47,5 +49,4 @@ class AppUrl {
 
   /// Search
   static const String search = '$baseUrl/search.php';
-
 }
