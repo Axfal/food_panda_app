@@ -32,6 +32,7 @@ class LocationSuggestionModel with _$LocationSuggestionModel {
     throw UnimplementedError();
   }
 
+
 }
 
 @freezed

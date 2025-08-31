@@ -99,8 +99,6 @@ class MenuCategory with _$MenuCategory {
     throw UnimplementedError();
   }
 
-
-
 }
 
 @freezed

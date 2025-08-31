@@ -49,4 +49,7 @@ class AppUrl {
 
   /// Search
   static const String search = '$baseUrl/search.php';
+
+  /// Wish List
+  static const String wishList = '$baseUrl/wishlist.php';
 }
