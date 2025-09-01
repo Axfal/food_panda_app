@@ -4,6 +4,7 @@ import 'package:excellent_trade_app/bloc/location/location_bloc.dart';
 import 'package:excellent_trade_app/bloc/new_restaurant/new_restaurant_bloc.dart';
 import 'package:excellent_trade_app/bloc/vendor/menu_management/menu_management_bloc.dart';
 import 'package:excellent_trade_app/bloc/vendor/restaurant/restaurant_bloc.dart';
+import 'package:excellent_trade_app/bloc/wish_list/wish_list_bloc.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
 import 'package:excellent_trade_app/service/location/location_storage.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -129,6 +130,10 @@ class MyApp extends StatelessWidget {
                     BlocProvider(
                       create: (context) =>
                           NewRestaurantBloc(restaurantApiRepository: getIt()),
+                    ),
+                    BlocProvider(
+                      create: (context) =>
+                          WishListBloc(wishListApiRepository: getIt()),
                     ),
                   ],
                   child: MaterialApp(

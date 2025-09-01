@@ -2,125 +2,160 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
-
-import '../Utils/constants/app_colors.dart';
+import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../bloc/restaurant_menu/restaurant_menu_bloc.dart';
 import '../config/routes/routes_name.dart';
 
-class MenuScreen extends StatelessWidget {
-  const MenuScreen({super.key});
+class MenuScreen extends StatefulWidget {
+  final String restaurantId;
+  const MenuScreen({super.key, this.restaurantId = '0'});
+
+  @override
+  State<MenuScreen> createState() => _MenuScreenState();
+}
+
+class _MenuScreenState extends State<MenuScreen> {
+  // int selectedCategoryIndex = 0;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   context.read<RestaurantMenuBloc>().add(
+  //     FetchRestaurantMenuEvent(
+  //       restaurantId: int.parse(widget.restaurantId),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.info_outline_rounded, color: Colors.black),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(
-              Icons.favorite_outline_rounded,
-              color: Colors.black,
-            ),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.share_outlined, color: Colors.black),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              headerWidget(),
-              const TrackerWidget(),
-
-              // Discount Cards (Horizontal Scroll)
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0, left: 16),
-                child: Text(
-                  'Discount',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverAppBar(
+              backgroundColor: Colors.white,
+              elevation: 0,
+              pinned: true,
+              expandedHeight: 220,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+                onPressed: () => Navigator.pop(context),
+              ),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.info_outline_rounded,
+                      color: Colors.black),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.favorite_outline_rounded,
                     color: Colors.black,
                   ),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: const Icon(Icons.share_outlined, color: Colors.black),
+                  onPressed: () {},
+                ),
+              ],
+              flexibleSpace: FlexibleSpaceBar(
+                background: Image.asset(
+                  "assets/images/homechef_bg.jpg",
+                  fit: BoxFit.cover,
                 ),
               ),
+            ),
+          ];
+        },
+        body: SafeArea(
+          top: false,
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 10),
+                headerWidget(),
+                const TrackerWidget(),
 
-              SizedBox(
-                height: 130,
-                child: ListView.builder(
-                  itemCount: 4,
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.only(left: 8, right: 8, top: 2),
+                // Discount Cards (Horizontal Scroll)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4.0, left: 16),
+                  child: Text(
+                    'Discount',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+
+                SizedBox(
+                  height: 130,
+                  child: ListView.builder(
+                    itemCount: 4,
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.only(left: 8, right: 8, top: 2),
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: discountWidget(
+                          "Get amazing discounts on your first order",
+                          "20",
+                          Icons.local_offer,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+                /// search
+                searchWidget(),
+
+                // TabBar-like Row
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        TabItem(text: 'All Items', selected: true),
+                        SizedBox(width: 8),
+                        TabItem(text: 'PSL Deals'),
+                        SizedBox(width: 8),
+                        TabItem(text: 'PEPSI Kamaal Kombos'),
+                        SizedBox(width: 8),
+                        TabItem(text: 'Weekend Specials'),
+                      ],
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                // Items List
+                ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: 5,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: discountWidget(
-                        "Get amazing discounts on your first order",
-                        "20",
-                        Icons.local_offer,
-                      ),
+                    return ItemCard(
+                      title: 'Beef Pulao Full',
+                      subtitle: 'with raita & salad',
+                      price: 'Rs. 899',
                     );
                   },
                 ),
-              ),
 
-              /// search
-              searchWidget(),
-
-              // TabBar-like Row
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: const [
-                      TabItem(text: 'All Items', selected: true),
-                      SizedBox(width: 8),
-                      TabItem(text: 'PSL Deals'),
-                      SizedBox(width: 8),
-                      TabItem(text: 'PEPSI Kamaal Kombos'),
-                      SizedBox(width: 8),
-                      TabItem(text: 'Weekend Specials'),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              // Items List
-              ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemCount: 5,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return ItemCard(
-                    title: 'Beef Pulao Full',
-                    subtitle: 'with raita & salad',
-                    price: 'Rs. 899',
-                  );
-                },
-              ),
-
-              const SizedBox(height: 16),
-            ],
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       ),
@@ -139,7 +174,8 @@ class MenuScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.local_offer_rounded, color: AppColors.primary, size: 20.sp),
+                    Icon(Icons.local_offer_rounded,
+                        color: AppColors.primary, size: 20.sp),
                     SizedBox(width: 8.w),
                     Expanded(
                       child: Text(
@@ -162,7 +198,8 @@ class MenuScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 48.h,
                 child: ElevatedButton.icon(
-                  onPressed: () => Navigator.pushNamed(context, RoutesName.cartSection),
+                  onPressed: () =>
+                      Navigator.pushNamed(context, RoutesName.cartSection),
                   icon: const Icon(Icons.shopping_cart_outlined, size: 20),
                   label: Text(
                     "View your cart",
@@ -185,7 +222,6 @@ class MenuScreen extends StatelessWidget {
           ),
         ),
       ),
-
     );
   }
 
@@ -220,7 +256,8 @@ class MenuScreen extends StatelessWidget {
             ),
             Text(
               "(4000+ ratings)",
-              style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
+              style: GoogleFonts.poppins(
+                  fontSize: 14, color: Colors.grey[600]),
             ),
           ],
         ),
@@ -295,7 +332,8 @@ class MenuScreen extends StatelessWidget {
           filled: true,
           fillColor: Colors.grey.shade100,
           hintText: 'Search in menu',
-          hintStyle: GoogleFonts.poppins(fontSize: 13, color: Colors.grey[600]),
+          hintStyle:
+          GoogleFonts.poppins(fontSize: 13, color: Colors.grey[600]),
           labelText: 'Search in menu',
           labelStyle: GoogleFonts.poppins(
             fontSize: 13,
@@ -463,7 +501,8 @@ class DiscountChip extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.w500),
+        style:
+        TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.w500),
       ),
     );
   }
@@ -498,7 +537,8 @@ class ItemCard extends StatelessWidget {
   final String subtitle;
   final String price;
 
-  const ItemCard({super.key, this.title = 'Item', this.subtitle = '', this.price = ''});
+  const ItemCard(
+      {super.key, this.title = 'Item', this.subtitle = '', this.price = ''});
 
   @override
   Widget build(BuildContext context) {
@@ -537,12 +577,14 @@ class ItemCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style:
+                    TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: TextStyle(color: Colors.grey.shade700, fontSize: 14),
+                    style:
+                    TextStyle(color: Colors.grey.shade700, fontSize: 14),
                   ),
                   SizedBox(height: 8),
                   Row(
@@ -566,7 +608,8 @@ class ItemCard extends StatelessWidget {
                         ),
                         child: Text(
                           'Add',
-                          style: TextStyle(color: Colors.white, fontSize: 14),
+                          style:
+                          TextStyle(color: Colors.white, fontSize: 14),
                         ),
                       ),
                     ],

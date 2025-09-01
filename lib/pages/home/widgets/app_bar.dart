@@ -126,7 +126,9 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
       ),
       actions: [
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, RoutesName.wishList);
+          },
           icon: const Icon(CupertinoIcons.heart),
           color: Colors.white,
           iconSize: 25,

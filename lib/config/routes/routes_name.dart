@@ -56,4 +56,6 @@ class RoutesName {
   static const String performanceScreen = 'performance_screen';
 
   static const String searchScreen = 'search_screen';
+
+  static const String wishList = 'wish_list';
 }

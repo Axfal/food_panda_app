@@ -10,6 +10,7 @@ import 'package:excellent_trade_app/pages/search/search_page.dart';
 import '../../model/vender/restaurant/restaurant_model.dart';
 import '../../pages/auth/forgot_password/forget_password_export.dart';
 import '../../pages/restaurant_owner/sub_screens/order_screen/order_screen.dart';
+import '../../pages/wish_list/wish_list_screen.dart';
 import 'route_export.dart';
 
 class Routes {
@@ -174,9 +175,10 @@ class Routes {
         return MaterialPageRoute(builder: (context) => PerformanceScreen());
 
       case RoutesName.searchScreen:
-        return MaterialPageRoute(
-          builder: (context) => SearchPage(),
-        );
+        return MaterialPageRoute(builder: (context) => SearchPage());
+
+      case RoutesName.wishList:
+        return MaterialPageRoute(builder: (context) => FavouriteScreen());
       default:
         return MaterialPageRoute(
           builder: (_) {

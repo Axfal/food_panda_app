@@ -57,7 +57,7 @@ class WishListBloc extends Bloc<WishListEvent, WishListState> {
       if (response != null && response['success'] == true) {
         emit(state.copyWith(
             apiResponse: ApiResponse.completed("Added to wishlist")));
-        // Optionally refetch updated list
+        // Optionally re-fetch updated list
         add(FetchWishListEvent(userId: event.userId));
       } else {
         emit(state.copyWith(
