@@ -124,6 +124,13 @@ class _HomePageState extends State<HomePage> {
                           {'label': 'Pick-up'},
                           {'label': 'Home Chef'},
                         ],
+                        images: [
+                          'assets/icons/offers.png',
+                          'assets/icons/super_restaurant.png',
+                          'assets/icons/new_restaurant.png',
+                          'assets/icons/pick_up.png',
+                          'assets/icons/home_chef.png',
+                        ],
                         onTaps: [
                           () => Navigator.push(
                             context,
@@ -185,28 +192,28 @@ class _HomePageState extends State<HomePage> {
                       ),
 
                       SizedBox(height: 16.h),
-                      BrandList(
-                        labels: [
-                          {'label': 'Burger Lab'},
-                          {'label': 'California Pizza'},
-                          {'label': 'KFC'},
-                          {'label': 'Broadway Pizza'},
-                          {'label': 'OPTP'},
-                          {'label': 'Pizza Max'},
-                          {'label': 'McDonald\'s'},
-                          {'label': 'Hardee\'s'},
-                        ],
-                        onTaps: [
-                          () {},
-                          () {},
-                          () {},
-                          () {},
-                          () {},
-                          () {},
-                          () {},
-                          () {},
-                        ],
-                      ),
+                      // BrandList(
+                      //   labels: [
+                      //     {'label': 'Burger Lab'},
+                      //     {'label': 'California Pizza'},
+                      //     {'label': 'KFC'},
+                      //     {'label': 'Broadway Pizza'},
+                      //     {'label': 'OPTP'},
+                      //     {'label': 'Pizza Max'},
+                      //     {'label': 'McDonald\'s'},
+                      //     {'label': 'Hardee\'s'},
+                      //   ],
+                      //   onTaps: [
+                      //     () {},
+                      //     () {},
+                      //     () {},
+                      //     () {},
+                      //     () {},
+                      //     () {},
+                      //     () {},
+                      //     () {},
+                      //   ],
+                      // ),
                       CardList(
                         title: 'Try Something New',
                         cardsData: foodCards,

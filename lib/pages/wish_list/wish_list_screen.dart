@@ -1,10 +1,9 @@
 import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/my_app_bar.dart';
 import 'package:excellent_trade_app/model/wish_list/wish_list_model.dart';
-import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
+import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart' hide Restaurant;
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:excellent_trade_app/bloc/wish_list/wish_list_bloc.dart';
-import '../../service/session_manager/session_controller.dart';
 
 class FavouriteScreen extends StatefulWidget {
   const FavouriteScreen({super.key});

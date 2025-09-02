@@ -6,12 +6,14 @@ import 'package:excellent_trade_app/bloc/vendor/menu_management/menu_management_
 import 'package:excellent_trade_app/bloc/vendor/restaurant/restaurant_bloc.dart';
 import 'package:excellent_trade_app/bloc/wish_list/wish_list_bloc.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
+import 'package:excellent_trade_app/service/cart/cart_service.dart';
 import 'package:excellent_trade_app/service/location/location_storage.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:flutter/services.dart';
+import 'bloc/cart/cart_bloc.dart';
 import 'bloc/category/category_bloc.dart';
 import 'bloc/restaurant_by_category/restaurant_by_category_bloc.dart';
 import 'bloc/restaurant_menu/restaurant_menu_bloc.dart';
@@ -72,6 +74,7 @@ void main() async {
 
   dependencyInjector.servicesLocator();
   await LocationSessionController().loadLocation();
+  await CartSessionController().loadCart();
   // Await this once before runApp()
   // await initializeMapRenderer();
 
@@ -127,7 +130,7 @@ class MyApp extends StatelessWidget {
                       create: (context) =>
                           SearchBloc(searchApiRepository: getIt()),
                     ),
-                    BlocProvider(
+                    BlocProvider<NewRestaurantBloc>(
                       create: (context) =>
                           NewRestaurantBloc(restaurantApiRepository: getIt()),
                     ),
@@ -135,6 +138,7 @@ class MyApp extends StatelessWidget {
                       create: (context) =>
                           WishListBloc(wishListApiRepository: getIt()),
                     ),
+                    BlocProvider<CartBloc>(create: (context) => CartBloc()),
                   ],
                   child: MaterialApp(
                     debugShowCheckedModeBanner: false,

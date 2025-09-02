@@ -5,28 +5,34 @@ import 'package:flutter/material.dart';
 import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../bloc/restaurant_menu/restaurant_menu_bloc.dart';
+import '../bloc/cart/cart_bloc.dart';
 import '../config/routes/routes_name.dart';
+import 'package:excellent_trade_app/model/restaurant_by_category/restaurant_by_category_model.dart';
+import '../data/response/status.dart';
+import '../model/cart/cart_model.dart';
+import '../service/cart/cart_service.dart';
 
 class MenuScreen extends StatefulWidget {
-  final String restaurantId;
-  const MenuScreen({super.key, this.restaurantId = '0'});
+  final RestaurantData restaurantData;
+
+  const MenuScreen({super.key, required this.restaurantData});
 
   @override
   State<MenuScreen> createState() => _MenuScreenState();
 }
 
 class _MenuScreenState extends State<MenuScreen> {
-  // int selectedCategoryIndex = 0;
+  int selectedCategoryIndex = 0;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   context.read<RestaurantMenuBloc>().add(
-  //     FetchRestaurantMenuEvent(
-  //       restaurantId: int.parse(widget.restaurantId),
-  //     ),
-  //   );
-  // }
+  @override
+  void initState() {
+    super.initState();
+    context.read<RestaurantMenuBloc>().add(
+      FetchRestaurantMenuEvent(
+        restaurantId: widget.restaurantData.restaurantId,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,32 +46,36 @@ class _MenuScreenState extends State<MenuScreen> {
               elevation: 0,
               pinned: true,
               expandedHeight: 220,
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-                onPressed: () => Navigator.pop(context),
-              ),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.info_outline_rounded,
-                      color: Colors.black),
-                  onPressed: () {},
+              leading: Container(
+                margin: EdgeInsets.all(8),
+                padding: EdgeInsets.only(left: 5),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.5),
+                  shape: BoxShape.circle,
                 ),
-                IconButton(
+                child: IconButton(
+                  padding: EdgeInsets.zero,
                   icon: const Icon(
-                    Icons.favorite_outline_rounded,
-                    color: Colors.black,
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                    size: 22,
                   ),
-                  onPressed: () {},
+                  onPressed: () => Navigator.pop(context),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.share_outlined, color: Colors.black),
-                  onPressed: () {},
-                ),
+              ),
+
+              actions: [
+                _buildActionButton(Icons.info_outline_rounded, () {}),
+                _buildActionButton(Icons.favorite_outline_rounded, () {}),
+                _buildActionButton(Icons.share_outlined, () {}),
               ],
               flexibleSpace: FlexibleSpaceBar(
-                background: Image.asset(
-                  "assets/images/homechef_bg.jpg",
+                background: Image.network(
+                  widget.restaurantData.restaurantLogo ?? '',
                   fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Icon(Icons.restaurant, size: 80, color: Colors.grey);
+                  },
                 ),
               ),
             ),
@@ -82,7 +92,6 @@ class _MenuScreenState extends State<MenuScreen> {
                 headerWidget(),
                 const TrackerWidget(),
 
-                // Discount Cards (Horizontal Scroll)
                 Padding(
                   padding: const EdgeInsets.only(top: 4.0, left: 16),
                   child: Text(
@@ -98,6 +107,8 @@ class _MenuScreenState extends State<MenuScreen> {
                 SizedBox(
                   height: 130,
                   child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     itemCount: 4,
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.only(left: 8, right: 8, top: 2),
@@ -117,38 +128,251 @@ class _MenuScreenState extends State<MenuScreen> {
                 /// search
                 searchWidget(),
 
-                // TabBar-like Row
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
+                BlocBuilder<RestaurantMenuBloc, RestaurantMenuState>(
+                  builder: (context, state) {
+                    final menu = state
+                        .menus[widget.restaurantData.restaurantId]
+                        ?.restaurant;
+
+                    if (state.apiResponse.status == Status.loading &&
+                        menu == null) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (state.apiResponse.status == Status.error &&
+                        menu == null) {
+                      return Center(
+                        child: Text(state.apiResponse.message ?? "Error"),
+                      );
+                    }
+
+                    if (menu == null || menu.categories.isEmpty) {
+                      return const Center(child: Text("No menu available"));
+                    }
+
+                    final categories = menu.categories;
+                    final selectedCategory = categories[selectedCategoryIndex];
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        TabItem(text: 'All Items', selected: true),
-                        SizedBox(width: 8),
-                        TabItem(text: 'PSL Deals'),
-                        SizedBox(width: 8),
-                        TabItem(text: 'PEPSI Kamaal Kombos'),
-                        SizedBox(width: 8),
-                        TabItem(text: 'Weekend Specials'),
+                        /// Categories (Horizontal)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 12,
+                            horizontal: 8,
+                          ),
+                          height: 60,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: categories.length,
+                            separatorBuilder: (_, _) =>
+                                const SizedBox(width: 12),
+                            itemBuilder: (context, index) {
+                              final category = categories[index];
+                              final isSelected = index == selectedCategoryIndex;
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedCategoryIndex = index;
+                                  });
+                                },
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 250),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 18,
+                                    vertical: 10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? AppColors.primary
+                                        : Colors.grey.shade200,
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: isSelected
+                                        ? [
+                                            BoxShadow(
+                                              color: AppColors.primary
+                                                  .withValues(alpha: 0.4),
+                                              blurRadius: 6,
+                                              offset: const Offset(0, 3),
+                                            ),
+                                          ]
+                                        : [],
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      category.categoryName,
+                                      style: GoogleFonts.poppins(
+                                        color: isSelected
+                                            ? Colors.white
+                                            : Colors.black87,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+
+                        const Divider(height: 1),
+
+                        /// Items
+                        GridView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          padding: const EdgeInsets.all(16),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2, // Two items per row
+                                mainAxisSpacing: 16,
+                                crossAxisSpacing: 16,
+                                childAspectRatio: 0.75, // Control card height
+                              ),
+                          itemCount: selectedCategory.items.length,
+                          itemBuilder: (context, index) {
+                            final item = selectedCategory.items[index];
+                            final cartController = CartSessionController();
+                            return Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.05),
+                                    blurRadius: 6,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  /// Item Image
+                                  Expanded(
+                                    child: ClipRRect(
+                                      borderRadius: const BorderRadius.vertical(
+                                        top: Radius.circular(16),
+                                      ),
+                                      child: Stack(
+                                        children: [
+                                          Image.network(
+                                            item.itemPhoto ?? "",
+                                            width: double.infinity,
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (
+                                                  context,
+                                                  error,
+                                                  stackTrace,
+                                                ) => Container(
+                                                  width: double.infinity,
+                                                  height: double.infinity,
+                                                  color: Colors.grey.shade200,
+                                                  child: const Center(
+                                                    child: Icon(
+                                                      Icons.fastfood,
+                                                      color: Colors.grey,
+                                                      size:
+                                                          50, // keep icon prominent but not stretched
+                                                    ),
+                                                  ),
+                                                ),
+                                          ),
+
+                                          /// Add to cart button
+                                          BlocBuilder<CartBloc, CartState>(
+                                            builder: (context, cartState) {
+                                              final isInCart = cartState.items.any((i) => i.id == item.itemId.toString());
+
+                                              return Positioned(
+                                                bottom: 8,
+                                                right: 8,
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    final itemObject = CartItemModel(
+                                                      id: item.itemId.toString(),
+                                                      name: item.itemName,
+                                                      price: double.parse(item.itemPrice),
+                                                      quantity: 1,
+                                                      imageUrl: item.itemPhoto ?? "",
+                                                    );
+
+                                                    if (isInCart) {
+                                                      context
+                                                          .read<CartBloc>()
+                                                          .add(RemoveCartItem(item.itemId.toString()));
+                                                    } else {
+                                                      context.read<CartBloc>().add(AddOrUpdateCartItem(itemObject));
+                                                    }
+                                                  },
+                                                  child: Container(
+                                                    padding: const EdgeInsets.all(6),
+                                                    decoration: BoxDecoration(
+                                                      color: AppColors.primary,
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: Icon(
+                                                      isInCart ? Icons.check : Icons.add,
+                                                      color: Colors.white,
+                                                      size: 25,
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          )
+
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  /// Item Details
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          item.itemName,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          item.itemDescription,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            color: Colors.black54,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 6),
+                                        Text(
+                                          "Rs. ${item.itemPrice}",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.primary,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
                       ],
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 12),
-
-                // Items List
-                ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: 5,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return ItemCard(
-                      title: 'Beef Pulao Full',
-                      subtitle: 'with raita & salad',
-                      price: 'Rs. 899',
                     );
                   },
                 ),
@@ -174,8 +398,11 @@ class _MenuScreenState extends State<MenuScreen> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.local_offer_rounded,
-                        color: AppColors.primary, size: 20.sp),
+                    Icon(
+                      Icons.local_offer_rounded,
+                      color: AppColors.primary,
+                      size: 20.sp,
+                    ),
                     SizedBox(width: 8.w),
                     Expanded(
                       child: Text(
@@ -231,7 +458,7 @@ class _MenuScreenState extends State<MenuScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Bannu Beef Pulao - Turab Foods - Thokkar',
+          widget.restaurantData.restaurantName,
           style: GoogleFonts.poppins(
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -256,14 +483,28 @@ class _MenuScreenState extends State<MenuScreen> {
             ),
             Text(
               "(4000+ ratings)",
-              style: GoogleFonts.poppins(
-                  fontSize: 14, color: Colors.grey[600]),
+              style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
             ),
           ],
         ),
       ],
     ),
   );
+
+  // Reusable action button widget
+  Widget _buildActionButton(IconData icon, VoidCallback onPressed) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.5),
+        shape: BoxShape.circle,
+      ),
+      child: IconButton(
+        icon: Icon(icon, color: Colors.white),
+        onPressed: onPressed,
+      ),
+    );
+  }
 
   Widget discountWidget(String text, String percent, IconData icon) {
     return Card(
@@ -332,8 +573,7 @@ class _MenuScreenState extends State<MenuScreen> {
           filled: true,
           fillColor: Colors.grey.shade100,
           hintText: 'Search in menu',
-          hintStyle:
-          GoogleFonts.poppins(fontSize: 13, color: Colors.grey[600]),
+          hintStyle: GoogleFonts.poppins(fontSize: 13, color: Colors.grey[600]),
           labelText: 'Search in menu',
           labelStyle: GoogleFonts.poppins(
             fontSize: 13,
@@ -501,8 +741,7 @@ class DiscountChip extends StatelessWidget {
       ),
       child: Text(
         text,
-        style:
-        TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.w500),
+        style: TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.w500),
       ),
     );
   }
@@ -537,8 +776,12 @@ class ItemCard extends StatelessWidget {
   final String subtitle;
   final String price;
 
-  const ItemCard(
-      {super.key, this.title = 'Item', this.subtitle = '', this.price = ''});
+  const ItemCard({
+    super.key,
+    this.title = 'Item',
+    this.subtitle = '',
+    this.price = '',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -577,14 +820,12 @@ class ItemCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style:
-                    TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style:
-                    TextStyle(color: Colors.grey.shade700, fontSize: 14),
+                    style: TextStyle(color: Colors.grey.shade700, fontSize: 14),
                   ),
                   SizedBox(height: 8),
                   Row(
@@ -608,8 +849,7 @@ class ItemCard extends StatelessWidget {
                         ),
                         child: Text(
                           'Add',
-                          style:
-                          TextStyle(color: Colors.white, fontSize: 14),
+                          style: TextStyle(color: Colors.white, fontSize: 14),
                         ),
                       ),
                     ],

@@ -2,7 +2,6 @@ import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'widgets/res_app_bar.dart';
 import 'widgets/res_heaader.dart';
 

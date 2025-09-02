@@ -105,6 +105,7 @@ flutter:
     - assets/images/food/large_card/
     - assets/images/icons/
     - assets/images/
+    - assets/icons/
     - assets/logo/
   #   - images/a_dot_ham.jpeg
 

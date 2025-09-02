@@ -47,7 +47,8 @@ class _RestaurantsByCategoryState extends State<RestaurantsByCategory> {
         backgroundColor: AppColors.primary,
         child: BlocBuilder<RestaurantByCategoryBloc, RestaurantByCategoryState>(
           builder: (context, state) {
-            final restaurants = state.restaurantDataByCategory[categoryId] ?? [];
+            final restaurants =
+                state.restaurantDataByCategory[categoryId] ?? [];
 
             switch (state.apiResponse.status) {
               case Status.loading:
@@ -62,11 +63,18 @@ class _RestaurantsByCategoryState extends State<RestaurantsByCategory> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                        const Icon(
+                          Icons.error_outline,
+                          color: Colors.red,
+                          size: 48,
+                        ),
                         const SizedBox(height: 12),
                         Text(
                           state.apiResponse.message ?? "Something went wrong",
-                          style: const TextStyle(fontSize: 16, color: Colors.black87),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.black87,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 16),
@@ -78,7 +86,10 @@ class _RestaurantsByCategoryState extends State<RestaurantsByCategory> {
                             ),
                           ),
                           icon: const Icon(Icons.refresh, color: Colors.white),
-                          label: const Text("Retry", style: TextStyle(color: Colors.white)),
+                          label: const Text(
+                            "Retry",
+                            style: TextStyle(color: Colors.white),
+                          ),
                           onPressed: _refreshData,
                         ),
                       ],
@@ -91,7 +102,10 @@ class _RestaurantsByCategoryState extends State<RestaurantsByCategory> {
                   return const Center(
                     child: Text(
                       "No restaurants found",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   );
                 }
@@ -102,7 +116,10 @@ class _RestaurantsByCategoryState extends State<RestaurantsByCategory> {
                     // Filter & Sort Bar
                     SliverToBoxAdapter(
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
                         color: Colors.white,
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
@@ -122,27 +139,35 @@ class _RestaurantsByCategoryState extends State<RestaurantsByCategory> {
                     // Restaurant list
                     SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
-                        final RestaurantData restaurant = restaurants[index];
+                        final RestaurantData restaurantData = restaurants[index];
                         return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
                           child: GestureDetector(
                             onTap: () {
                               Navigator.pushNamed(
                                 context,
-                                RoutesName.restaurantMenu,
-                                arguments: {"restaurant_id": restaurant.restaurantId.toString()},
+                                RoutesName.menu,
+                                arguments: {"restaurant_data": restaurantData},
                               );
                             },
                             child: RestaurantCard(
-                              imagePath: restaurant.restaurantLogo ?? "",
-                              title: restaurant.restaurantName,
-                              rating: 4.5, // Replace with real rating if available
+                              imagePath: restaurantData.restaurantLogo ?? "",
+                              title: restaurantData.restaurantName,
+                              rating:
+                                  4.5, // Replace with real rating if available
                               reviewsCount: 120, // Replace with API reviews
-                              duration: "30 min", // Replace with API time if available
-                              priceLevel: "\$\$", // Replace with API pricing info
-                              cuisine: "Italian, Pizza", // Replace with API cuisines
+                              duration:
+                                  "30 min", // Replace with API time if available
+                              priceLevel:
+                                  "\$\$", // Replace with API pricing info
+                              cuisine:
+                                  "Italian, Pizza", // Replace with API cuisines
                               deliveryFee: 150, // Replace with API delivery fee
-                              discountLabel: "30% OFF", // Replace with API discount info
+                              discountLabel:
+                                  "30% OFF", // Replace with API discount info
                             ),
                           ),
                         );

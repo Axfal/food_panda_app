@@ -7,12 +7,14 @@ import '../../../../Utils/constants/appWeight.dart';
 class BrandList extends StatefulWidget {
   final String title;
   final List<Map<String, dynamic>> labels;
+  final List<String> images;
   final List<VoidCallback> onTaps;
 
   const BrandList({
     super.key,
     this.title = "Top Brands",
     required this.labels,
+    required this.images,
     required this.onTaps,
   });
 
@@ -32,11 +34,11 @@ class _BrandListState extends State<BrandList> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget.title != "") ...[
+          if (widget.title.isNotEmpty) ...[
             Text(
               widget.title,
               style: GoogleFonts.montserrat(
@@ -63,19 +65,17 @@ class _BrandListState extends State<BrandList> {
                         width: 70,
                         height: 70,
                         decoration: BoxDecoration(
-                          color: AppColors.primary.withValues(alpha: 0.1),
+                          color: AppColors.white,
                           borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withValues(alpha: 0.15),
-                              spreadRadius: 1,
-                              blurRadius: 6,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
                         ),
-                        child: Image(image: AssetImage('assets/images/burder.png')),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset(
+                            widget.images[index],
+                            fit: BoxFit.cover,
+                          ),
                         ),
+                      ),
                       const SizedBox(height: 8),
                       SizedBox(
                         width: 80,
@@ -85,8 +85,8 @@ class _BrandListState extends State<BrandList> {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.poppins(
-                            fontWeight: AppWeights.medium,
-                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 11,
                             color: AppColors.textPrimary,
                           ),
                         ),

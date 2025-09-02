@@ -1,16 +1,6 @@
-import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
-import 'package:excellent_trade_app/pages/home/sub_screeens/restaurant_menu/restaurant_menu.dart';
-import 'package:excellent_trade_app/pages/location/location.dart';
 import 'package:excellent_trade_app/pages/order_now.dart';
-import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/menu_management/my_restaurants.dart';
-import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/order_history/order_history.dart';
-import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/performance_screen/performance_screen.dart';
 import 'package:excellent_trade_app/pages/restuarant_item_screen.dart';
-import 'package:excellent_trade_app/pages/search/search_page.dart';
-import '../../model/vender/restaurant/restaurant_model.dart';
 import '../../pages/auth/forgot_password/forget_password_export.dart';
-import '../../pages/restaurant_owner/sub_screens/order_screen/order_screen.dart';
-import '../../pages/wish_list/wish_list_screen.dart';
 import 'route_export.dart';
 
 class Routes {
@@ -65,9 +55,24 @@ class Routes {
           builder: (BuildContext context) => const CheckoutScreen(),
         );
       case RoutesName.menu:
+        final args = settings.arguments as Map<String, dynamic>?;
+        final RestaurantData restaurantData =
+            args?['restaurant_data'] ??
+            RestaurantData(restaurantId: 0, restaurantName: "Unknown");
+
+        if (restaurantData.restaurantId == 0 &&
+            restaurantData.restaurantName == "Unknown") {
+          return MaterialPageRoute(
+            builder: (BuildContext context) =>
+                Scaffold(body: Center(child: Text('No Restaurant data found'))),
+          );
+        }
+
         return MaterialPageRoute(
-          builder: (BuildContext context) => const MenuScreen(),
+          builder: (BuildContext context) =>
+              MenuScreen(restaurantData: restaurantData),
         );
+
       case RoutesName.restaurantItems:
         return MaterialPageRoute(
           builder: (BuildContext context) => const RestaurantItemScreen(),
