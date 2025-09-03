@@ -73,5 +73,4 @@ class Place with _$Place {
     throw UnimplementedError();
   }
 
-
 }

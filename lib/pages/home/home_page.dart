@@ -1,26 +1,6 @@
-import 'package:excellent_trade_app/bloc/account/profile/profile_bloc.dart';
-import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
-import 'package:excellent_trade_app/bloc/category/category_bloc.dart';
-import 'package:excellent_trade_app/pages/Top_restaurants/top_res_page.dart';
-import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
-import 'package:excellent_trade_app/pages/home/widgets/categories_input_widget.dart';
-import 'package:excellent_trade_app/pages/home/widgets/discountCardList/discount_data.dart';
-import 'package:excellent_trade_app/pages/new_restaurants/new_restaurants_page.dart';
-import 'package:excellent_trade_app/pages/offers/offers_page.dart';
+import 'package:excellent_trade_app/bloc/near_by_restaurant/near_by_restaurant_bloc.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../../globalWidgets/PrimeryWidgets/customeBottonNavBar.dart';
-import '../../service/location/location_storage.dart';
-import '../Campaign/Campain_page.dart';
-import '../location/location.dart';
-import 'widgets/Explore/explore_Widget.dart';
-import 'widgets/brand_list.dart';
-import '../data/card_data.dart';
-import 'widgets/app_bar.dart';
-import 'widgets/cardList/card_list.dart';
-import 'widgets/promotional_banner_grid.dart';
-import 'widgets/discountCardList/discount_card_list.dart';
+import 'home_exports.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -41,6 +21,16 @@ class _HomePageState extends State<HomePage> {
       context.read<ProfileBloc>().add(FetchProfileEvent(id: userId));
       context.read<CategoryBloc>().add(FetchCategoriesEvent());
 
+      final locationSessionController = LocationSessionController();
+      final lat =
+          locationSessionController.currentPlace?.lat.toString() ??
+          '31.15060600';
+      final lng =
+          locationSessionController.currentPlace?.lng.toString() ??
+          '73.91907590';
+      context.read<NearByRestaurantBloc>().add(
+        FetchNearByRestaurantEvent(lat: lat, lng: lng),
+      );
       _selectLocation();
     });
   }
@@ -87,7 +77,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: AppColors.lightPink,
       body: SingleChildScrollView(
         child: SizedBox(
-          height: MediaQuery.of(context).size.height * 2.15,
+          height: MediaQuery.of(context).size.height + 145.h,
           child: Stack(
             clipBehavior: Clip.none,
             children: [
@@ -125,11 +115,11 @@ class _HomePageState extends State<HomePage> {
                           {'label': 'Home Chef'},
                         ],
                         images: [
-                          'assets/icons/offers.png',
-                          'assets/icons/super_restaurant.png',
-                          'assets/icons/new_restaurant.png',
-                          'assets/icons/pick_up.png',
-                          'assets/icons/home_chef.png',
+                          'assets/logos/offers.png',
+                          'assets/logos/super_restaurants.png',
+                          'assets/logos/new_restaurant.png',
+                          'assets/logos/pick_up.png',
+                          'assets/logos/home_chef.png',
                         ],
                         onTaps: [
                           () => Navigator.push(
@@ -148,8 +138,7 @@ class _HomePageState extends State<HomePage> {
                           () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  NewRestaurantsPage(),
+                              builder: (context) => NewRestaurantsPage(),
                             ),
                           ),
                           () {},
@@ -169,29 +158,28 @@ class _HomePageState extends State<HomePage> {
                       Divider(thickness: 1.5, color: AppColors.border),
                       SizedBox(height: 18.h),
                       CategoriesInputWidget(),
-                      DiscountCardList(
-                        cards: discountCards,
-                        onTapCard: (card) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => CampaignPage(
-                                campaignImage: card['campaignImage'] ?? '',
-                                sheetTitle:
-                                    card['sheetTitle'] ?? 'Special Offer',
-                                sheetSubtitle:
-                                    card['sheetSubtitle'] ??
-                                    'Enjoy exciting deals!',
-                                cardsData: List<Map<String, dynamic>>.from(
-                                  card['cardsData'] ?? [],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-
-                      SizedBox(height: 16.h),
+                      // DiscountCardList(
+                      //   cards: discountCards,
+                      //   onTapCard: (card) {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (_) => CampaignPage(
+                      //           campaignImage: card['campaignImage'] ?? '',
+                      //           sheetTitle:
+                      //               card['sheetTitle'] ?? 'Special Offer',
+                      //           sheetSubtitle:
+                      //               card['sheetSubtitle'] ??
+                      //               'Enjoy exciting deals!',
+                      //           cardsData: List<Map<String, dynamic>>.from(
+                      //             card['cardsData'] ?? [],
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     );
+                      //   },
+                      // ),
+                      // SizedBox(height: 16.h),
                       // BrandList(
                       //   labels: [
                       //     {'label': 'Burger Lab'},
@@ -212,14 +200,14 @@ class _HomePageState extends State<HomePage> {
                       //     () {},
                       //     () {},
                       //     () {},
-                      //   ],
+                      //   ], images: ,
                       // ),
-                      CardList(
-                        title: 'Try Something New',
-                        cardsData: foodCards,
-                      ),
-                      SizedBox(height: 16.h),
-                      ExploreWidget(cardsData: foodCards),
+                      // CardList(
+                      //   title: 'Try Something New',
+                      //   cardsData: foodCards,
+                      // ),
+                      // SizedBox(height: 16.h),
+                      ExploreWidget(),
                       SizedBox(height: 20.h),
                     ],
                   ),
@@ -290,10 +278,7 @@ class _HomePageState extends State<HomePage> {
                         contentPadding: EdgeInsets.zero,
                       ),
                       onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          RoutesName.searchScreen
-                        );
+                        Navigator.pushNamed(context, RoutesName.searchScreen);
                       },
                     ),
                   ),

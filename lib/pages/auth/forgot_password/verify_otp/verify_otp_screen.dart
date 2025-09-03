@@ -33,7 +33,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                     const SizedBox(height: 40),
 
                     Image.asset(
-                      'assets/logo/bike.png',
+                      'assets/logos/foodmate.png',
                       height: 140,
                       width: 140,
                       fit: BoxFit.contain,

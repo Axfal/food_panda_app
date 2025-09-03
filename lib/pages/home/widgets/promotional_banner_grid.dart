@@ -85,7 +85,7 @@ class PromotionalBannerWithGrid extends StatelessWidget {
           SizedBox(width: 20.w),
 
           /// logo
-          Image.asset('assets/logo/bike.png', height: 150),
+          Image.asset('assets/logos/foodmate.png', height: 150),
         ],
       ),
     );

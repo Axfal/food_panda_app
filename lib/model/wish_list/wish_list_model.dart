@@ -31,6 +31,7 @@ class WishListModel with _$WishListModel {
     // TODO: implement toJson
     throw UnimplementedError();
   }
+
 }
 
 @freezed
@@ -96,4 +97,5 @@ class Restaurant with _$Restaurant {
     // TODO: implement toJson
     throw UnimplementedError();
   }
+
 }

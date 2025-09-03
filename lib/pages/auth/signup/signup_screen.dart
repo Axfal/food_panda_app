@@ -45,7 +45,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     children: [
                       const SizedBox(height: 5),
                       Image.asset(
-                        'assets/logo/bike.png',
+                        'assets/logos/foodmate.png',
                         height: 150,
                         width: 150,
                         fit: BoxFit.contain,

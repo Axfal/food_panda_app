@@ -52,13 +52,13 @@ class LargeFoodCard extends StatelessWidget {
                   ),
                   child: Container(
                     height: 140,
-                    width: double.infinity,
+                    width: 350,
                     color: Colors.grey.shade100,
                     child: Center(
                       child: Icon(
                         Icons.fastfood_rounded,
                         size: 80,
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                       ),
                     ),
                   ),

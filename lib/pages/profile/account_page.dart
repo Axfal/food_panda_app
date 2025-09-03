@@ -150,35 +150,35 @@ class _AccountPageState extends State<AccountPage> {
                 ],
               ),
               const SizedBox(height: 20),
-              Container(
-                padding: EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: AppColors.textSecondary.withAlpha(55),
-                    width: 0.5,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    const Image(
-                      image: AssetImage("assets/images/icons/pandaPay.png"),
-                      height: 20,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      "Food mate Credit",
-                      style: GoogleFonts.poppins(color: Colors.black87),
-                    ),
-                    const Spacer(),
-                    Text(
-                      "Rs 0.00",
-                      style: GoogleFonts.poppins(color: Colors.black87),
-                    ),
-                  ],
-                ),
-              ),
+              // Container(
+              //   padding: EdgeInsets.all(12),
+              //   decoration: BoxDecoration(
+              //     color: AppColors.white,
+              //     borderRadius: BorderRadius.circular(8),
+              //     border: Border.all(
+              //       color: AppColors.textSecondary.withAlpha(55),
+              //       width: 0.5,
+              //     ),
+              //   ),
+              //   child: Row(
+              //     children: [
+              //       const Image(
+              //         image: AssetImage("assets/images/icons/pandaPay.png"),
+              //         height: 20,
+              //       ),
+              //       const SizedBox(width: 8),
+              //       Text(
+              //         "Food mate Credit",
+              //         style: GoogleFonts.poppins(color: Colors.black87),
+              //       ),
+              //       const Spacer(),
+              //       Text(
+              //         "Rs 0.00",
+              //         style: GoogleFonts.poppins(color: Colors.black87),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               buildItemList(
                 heading: 'Perks for you',
                 titles: [

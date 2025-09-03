@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Image.asset(
-                        'assets/logo/bike.png',
+                        'assets/logos/foodmate.png',
                         height: 280,
                         width: 280,
                         fit: BoxFit.contain,

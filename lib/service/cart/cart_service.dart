@@ -26,7 +26,6 @@ class CartSessionController {
           quantity: (cartItems[index].quantity + item.quantity),
         );
       } else {
-        // Add new item
         cartItems.add(item);
       }
 
@@ -47,7 +46,6 @@ class CartSessionController {
       return null; // Item not found
     }
   }
-
 
   Future<void> updateItemQuantity(String itemId, int newQuantity) async {
     try {
@@ -106,7 +104,6 @@ class CartSessionController {
   Future<void> loadCart() async {
     await _loadCartOnStart();
   }
-
 
   /// Getters
   int get cartCount => cartItems.length;

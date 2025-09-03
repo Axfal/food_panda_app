@@ -44,7 +44,7 @@ class _SplashViewState extends State<SplashView> {
                   from: 10,
                   duration: const Duration(seconds: 2),
                   child: Image.asset(
-                    'assets/logo/bike.png',
+                    'assets/logos/foodmate.png',
                     height: 200.h,
                   ),
                 ),

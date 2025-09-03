@@ -1,21 +1,21 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'new_restaurant_model.freezed.dart';
-part 'new_restaurant_model.g.dart';
+part 'near_by_restaurant.freezed.dart';
+part 'near_by_restaurant.g.dart';
 
 @freezed
-class NewRestaurantModel with _$NewRestaurantModel {
-  const factory NewRestaurantModel({
-    @Default(false) @JsonKey(name: 'success') bool success,
-    @Default(0) @JsonKey(name: 'count') int count,
-    @Default(0) @JsonKey(name: 'limit') int limit,
-    @Default(0) @JsonKey(name: 'offset') int offset,
-    @Default(0) @JsonKey(name: 'radius') int radius,
-    @Default([]) @JsonKey(name: 'restaurants') List<Restaurant> restaurants,
-  }) = _NewRestaurantModel;
+class NearByRestaurant with _$NearByRestaurant {
+  const factory NearByRestaurant({
+    @Default(false) @JsonKey(name: "success") bool success,
+    @Default(0) @JsonKey(name: "count") int count,
+    @Default(0) @JsonKey(name: "limit") int limit,
+    @Default(0) @JsonKey(name: "offset") int offset,
+    @Default(0) @JsonKey(name: "radius") int radius,
+    @Default([]) @JsonKey(name: "restaurants") List<Restaurant> restaurants,
+  }) = _NearByRestaurant;
 
-  factory NewRestaurantModel.fromJson(Map<String, dynamic> json) =>
-      _$NewRestaurantModelFromJson(json);
+  factory NearByRestaurant.fromJson(Map<String, dynamic> json) =>
+      _$NearByRestaurantFromJson(json);
 
   @override
   // TODO: implement count
@@ -46,27 +46,26 @@ class NewRestaurantModel with _$NewRestaurantModel {
     // TODO: implement toJson
     throw UnimplementedError();
   }
-
 }
 
 @freezed
 class Restaurant with _$Restaurant {
   const factory Restaurant({
-    @Default(0) @JsonKey(name: 'id') int id,
-    @Default(0) @JsonKey(name: 'owner_id') int ownerId,
-    @Default('') @JsonKey(name: 'name') String name,
-    @Default('') @JsonKey(name: 'description') String description,
-    @Default('') @JsonKey(name: 'phone') String phone,
-    @Default('') @JsonKey(name: 'logo') String? logo,
-    @Default('') @JsonKey(name: 'status') String status,
-    @Default('') @JsonKey(name: 'hours') String hours,
-    @Default('0.0') @JsonKey(name: 'rating') String rating,
-    @Default('') @JsonKey(name: 'created_at') String createdAt,
-    @Default('') @JsonKey(name: 'lat') String lat,
-    @Default('') @JsonKey(name: 'lng') String lng,
-    @Default(0) @JsonKey(name: 'distance') int distance,
-    @Default([]) @JsonKey(name: 'categories') List<dynamic> categories,
-    @Default(Location()) @JsonKey(name: 'location') Location location,
+    @Default(0) @JsonKey(name: "id") int id,
+    @Default(0) @JsonKey(name: "owner_id") int ownerId,
+    @Default('') @JsonKey(name: "name") String name,
+    @Default('') @JsonKey(name: "description") String description,
+    @Default('') @JsonKey(name: "phone") String phone,
+    String? logo,
+    @Default('') @JsonKey(name: "status") String status,
+    @Default('') @JsonKey(name: "hours") String hours,
+    @Default('0.0') @JsonKey(name: "rating") String rating,
+    @Default('') @JsonKey(name: "created_at") String createdAt,
+    @JsonKey(fromJson: _stringToDouble, toJson: _doubleToString) double? lat,
+    @JsonKey(fromJson: _stringToDouble, toJson: _doubleToString) double? lng,
+    @Default(0) @JsonKey(name: "distance") double distance,
+    @Default([]) List<dynamic> categories,
+    Location? location,
   }) = _Restaurant;
 
   factory Restaurant.fromJson(Map<String, dynamic> json) =>
@@ -86,7 +85,7 @@ class Restaurant with _$Restaurant {
 
   @override
   // TODO: implement distance
-  int get distance => throw UnimplementedError();
+  double get distance => throw UnimplementedError();
 
   @override
   // TODO: implement hours
@@ -98,15 +97,15 @@ class Restaurant with _$Restaurant {
 
   @override
   // TODO: implement lat
-  String get lat => throw UnimplementedError();
+  double? get lat => throw UnimplementedError();
 
   @override
   // TODO: implement lng
-  String get lng => throw UnimplementedError();
+  double? get lng => throw UnimplementedError();
 
   @override
   // TODO: implement location
-  Location get location => throw UnimplementedError();
+  Location? get location => throw UnimplementedError();
 
   @override
   // TODO: implement logo
@@ -137,17 +136,16 @@ class Restaurant with _$Restaurant {
     // TODO: implement toJson
     throw UnimplementedError();
   }
-
 }
 
 @freezed
 class Location with _$Location {
   const factory Location({
-    @Default(0) @JsonKey(name: 'restaurant_id') int restaurantId,
-    @Default('') @JsonKey(name: 'place_id') String placeId,
-    @Default('') @JsonKey(name: 'address') String address,
-    @Default('') @JsonKey(name: 'lat') String lat,
-    @Default('') @JsonKey(name: 'lng') String lng,
+    @Default(0) @JsonKey(name: "restaurant_id") int restaurantId,
+    @Default('') @JsonKey(name: "place_id") String placeId,
+    @Default('') @JsonKey(name: "address") String address,
+    @JsonKey(fromJson: _stringToDouble, toJson: _doubleToString) double? lat,
+    @JsonKey(fromJson: _stringToDouble, toJson: _doubleToString) double? lng,
   }) = _Location;
 
   factory Location.fromJson(Map<String, dynamic> json) =>
@@ -159,11 +157,11 @@ class Location with _$Location {
 
   @override
   // TODO: implement lat
-  String get lat => throw UnimplementedError();
+  double? get lat => throw UnimplementedError();
 
   @override
   // TODO: implement lng
-  String get lng => throw UnimplementedError();
+  double? get lng => throw UnimplementedError();
 
   @override
   // TODO: implement placeId
@@ -178,6 +176,10 @@ class Location with _$Location {
     // TODO: implement toJson
     throw UnimplementedError();
   }
-
-
 }
+
+/// Helper functions to convert String to double and back
+double _stringToDouble(dynamic value) =>
+    value is String ? double.tryParse(value) ?? 0.0 : (value?.toDouble() ?? 0.0);
+
+String _doubleToString(double? value) => value?.toString() ?? '0.0';

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:excellent_trade_app/bloc/account/profile/profile_bloc.dart';
 import 'package:excellent_trade_app/bloc/location/location_bloc.dart';
+import 'package:excellent_trade_app/bloc/near_by_restaurant/near_by_restaurant_bloc.dart';
 import 'package:excellent_trade_app/bloc/new_restaurant/new_restaurant_bloc.dart';
 import 'package:excellent_trade_app/bloc/vendor/menu_management/menu_management_bloc.dart';
 import 'package:excellent_trade_app/bloc/vendor/restaurant/restaurant_bloc.dart';
@@ -139,6 +140,11 @@ class MyApp extends StatelessWidget {
                           WishListBloc(wishListApiRepository: getIt()),
                     ),
                     BlocProvider<CartBloc>(create: (context) => CartBloc()),
+                    BlocProvider<NearByRestaurantBloc>(
+                      create: (context) => NearByRestaurantBloc(
+                        restaurantApiRepository: getIt(),
+                      ),
+                    ),
                   ],
                   child: MaterialApp(
                     debugShowCheckedModeBanner: false,

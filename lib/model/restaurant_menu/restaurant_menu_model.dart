@@ -145,5 +145,4 @@ class MenuItem with _$MenuItem {
     throw UnimplementedError();
   }
 
-
 }
