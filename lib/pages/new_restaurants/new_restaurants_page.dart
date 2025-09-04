@@ -63,6 +63,8 @@ class _NewRestaurantsPageState extends State<NewRestaurantsPage> {
           final restaurants = state.newRestaurantModel.restaurants;
 
           return RefreshIndicator(
+            backgroundColor: Colors.white,
+            color: AppColors.primary,
             onRefresh: () async => _fetchRestaurants(),
             child: ListView.builder(
               padding: const EdgeInsets.all(16),
@@ -106,128 +108,127 @@ class _NewRestaurantsPageState extends State<NewRestaurantsPage> {
       ),
     );
   }
-  Widget _buildRestaurantCard(r) {
-    return Card(
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18),
-        side: BorderSide(color: Colors.grey.shade200, width: 1), // subtle border
-      ),
-      margin: const EdgeInsets.only(bottom: 16),
-      elevation: 6, // soft elevation
-      shadowColor: Colors.black.withOpacity(0.08),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // --- Restaurant Logo ---
-            ClipRRect(
-              borderRadius: BorderRadius.circular(14),
-              child: r.logo != null && r.logo!.isNotEmpty
-                  ? Image.network(
-                r.logo!,
-                width: 90,
-                height: 90,
-                fit: BoxFit.cover,
-              )
-                  : Container(
-                width: 90,
-                height: 90,
-                color: Colors.grey[100],
-                child: const Icon(Icons.restaurant, color: Colors.grey),
-              ),
-            ),
-            const SizedBox(width: 14),
 
-            // --- Info Section ---
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Top Row (Name + Distance)
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          r.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.poppins(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black87,
+  Widget _buildRestaurantCard(r) {
+    return GestureDetector(
+      onTap: () {
+        // TODO: Navigate to restaurant detail
+      },
+      child: Card(
+        elevation: 2,
+        color: Colors.white,
+        margin: const EdgeInsets.only(bottom: 16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(14),
+                  ),
+                  child: r.logo != null && r.logo!.isNotEmpty
+                      ? Image.network(
+                          r.logo!,
+                          height: 140,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        )
+                      : Container(
+                          height: 140,
+                          width: double.infinity,
+                          color: Colors.grey.shade100,
+                          child: Icon(
+                            Icons.restaurant,
+                            size: 80,
+                            color: Colors.black.withValues(alpha: 0.08),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        "${r.distance} km",
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.poppins(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.teal,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-
-                  // Description
-                  Text(
-                    r.description,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.poppins(
-                      fontSize: 13,
-                      color: Colors.grey[700],
+                ),
+                Positioned(
+                  right: 10,
+                  top: 10,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 16,
+                    child: const Icon(
+                      Icons.favorite_border,
+                      size: 18,
+                      color: Colors.grey,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                ),
+              ],
+            ),
 
-                  // Rating + Time Row
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      r.name,
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                   Row(
                     children: [
-                      // Rating Chip
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.orange.withOpacity(0.12),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                              color: Colors.orange.withOpacity(0.3), width: 0.6),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.star,
-                                color: Colors.orange, size: 16),
-                            const SizedBox(width: 4),
-                            Text(
-                              r.rating,
-                              style: GoogleFonts.poppins(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Icon(Icons.access_time,
-                          size: 14, color: Colors.grey[600]),
+                      const Icon(Icons.star, color: Colors.orange, size: 14),
                       const SizedBox(width: 4),
                       Text(
-                        r.hours,
+                        r.rating,
                         style: GoogleFonts.poppins(
                           fontSize: 12,
-                          color: Colors.grey[700],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        " (${r.distance} km)",
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          color: Colors.grey[600],
                         ),
                       ),
                     ],
+                  ),
+                ],
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+              child: Text(
+                r.description,
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 6, 12, 12),
+              child: Row(
+                children: [
+                  Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
+                  const SizedBox(width: 4),
+                  Text(
+                    r.hours,
+                    style: GoogleFonts.poppins(
+                      fontSize: 12,
+                      color: Colors.grey[700],
+                    ),
                   ),
                 ],
               ),
@@ -237,5 +238,4 @@ class _NewRestaurantsPageState extends State<NewRestaurantsPage> {
       ),
     );
   }
-
 }

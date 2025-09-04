@@ -10,6 +10,7 @@ class CartSessionController {
       CartSessionController._internal();
 
   static List<CartItemModel> cartItems = [];
+  static String? currentRestaurantId;
 
   CartSessionController._internal() {
     _loadCartOnStart();
@@ -19,6 +20,13 @@ class CartSessionController {
 
   Future<void> addOrUpdateItem(CartItemModel item) async {
     try {
+      if (currentRestaurantId != null &&
+          currentRestaurantId != item.restaurantId) {
+        await clearCart();
+      }
+
+      currentRestaurantId ??= item.restaurantId;
+
       final index = cartItems.indexWhere((cartItem) => cartItem.id == item.id);
 
       if (index != -1) {
@@ -33,6 +41,49 @@ class CartSessionController {
     } catch (e) {
       debugPrint("Error adding/updating cart item: $e");
     }
+  }
+
+  Future<void> clearCart() async {
+    try {
+      cartItems.clear();
+      currentRestaurantId = null;
+      await _localStorage.clearValue('cart_items');
+      await _localStorage.clearValue('current_restaurant');
+    } catch (e) {
+      debugPrint("Error clearing cart: $e");
+    }
+  }
+
+  Future<void> _persistCart() async {
+    final cartJson = jsonEncode(cartItems.map((e) => e.toJson()).toList());
+    await _localStorage.setValue('cart_items', cartJson);
+
+    if (currentRestaurantId != null) {
+      await _localStorage.setValue('current_restaurant', currentRestaurantId!);
+    }
+  }
+
+  Future<void> _loadCartOnStart() async {
+    try {
+      final storedData = await _localStorage.readValue('cart_items');
+      if (storedData.isNotEmpty) {
+        final List decoded = jsonDecode(storedData);
+        cartItems = decoded.map((e) => CartItemModel.fromJson(e)).toList();
+      } else {
+        cartItems = [];
+      }
+
+      final restaurant = await _localStorage.readValue('current_restaurant');
+      currentRestaurantId = restaurant.isNotEmpty ? restaurant : null;
+    } catch (e) {
+      debugPrint('Error loading cart: $e');
+      cartItems = [];
+      currentRestaurantId = null;
+    }
+  }
+
+  Future<void> loadCart() async {
+    await _loadCartOnStart();
   }
 
   bool isItemInCart(String itemId) {
@@ -72,39 +123,6 @@ class CartSessionController {
     }
   }
 
-  Future<void> clearCart() async {
-    try {
-      cartItems.clear();
-      await _localStorage.clearValue('cart_items');
-    } catch (e) {
-      debugPrint("Error clearing cart: $e");
-    }
-  }
-
-  Future<void> _persistCart() async {
-    final cartJson = jsonEncode(cartItems.map((e) => e.toJson()).toList());
-    await _localStorage.setValue('cart_items', cartJson);
-  }
-
-  Future<void> _loadCartOnStart() async {
-    try {
-      final storedData = await _localStorage.readValue('cart_items');
-      if (storedData.isNotEmpty) {
-        final List decoded = jsonDecode(storedData);
-        cartItems = decoded.map((e) => CartItemModel.fromJson(e)).toList();
-      } else {
-        cartItems = [];
-      }
-    } catch (e) {
-      debugPrint('Error loading cart: $e');
-      cartItems = [];
-    }
-  }
-
-  Future<void> loadCart() async {
-    await _loadCartOnStart();
-  }
-
   /// Getters
   int get cartCount => cartItems.length;
 
@@ -112,4 +130,6 @@ class CartSessionController {
       cartItems.fold(0.0, (sum, item) => sum + (item.price * item.quantity));
 
   bool get hasItems => cartItems.isNotEmpty;
+
+  String? get restaurantId => currentRestaurantId;
 }

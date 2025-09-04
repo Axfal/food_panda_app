@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
@@ -284,37 +284,66 @@ class _MenuScreenState extends State<MenuScreen> {
                                           /// Add to cart button
                                           BlocBuilder<CartBloc, CartState>(
                                             builder: (context, cartState) {
-                                              final isInCart = cartState.items.any((i) => i.id == item.itemId.toString());
+                                              final isInCart = cartState.items
+                                                  .any(
+                                                    (i) =>
+                                                        i.id ==
+                                                        item.itemId.toString(),
+                                                  );
 
                                               return Positioned(
                                                 bottom: 8,
                                                 right: 8,
                                                 child: InkWell(
                                                   onTap: () {
-                                                    final itemObject = CartItemModel(
-                                                      id: item.itemId.toString(),
-                                                      name: item.itemName,
-                                                      price: double.parse(item.itemPrice),
-                                                      quantity: 1,
-                                                      imageUrl: item.itemPhoto ?? "",
-                                                    );
+                                                    final itemObject =
+                                                        CartItemModel(
+                                                          id: item.itemId
+                                                              .toString(),
+                                                          name: item.itemName,
+                                                          price: double.parse(
+                                                            item.itemPrice,
+                                                          ),
+                                                          quantity: 1,
+                                                          imageUrl:
+                                                              item.itemPhoto ??
+                                                              "",
+                                                          restaurantId: widget
+                                                              .restaurantData
+                                                              .restaurantId
+                                                              .toString(),
+                                                        );
 
                                                     if (isInCart) {
                                                       context
                                                           .read<CartBloc>()
-                                                          .add(RemoveCartItem(item.itemId.toString()));
+                                                          .add(
+                                                            RemoveCartItem(
+                                                              item.itemId
+                                                                  .toString(),
+                                                            ),
+                                                          );
                                                     } else {
-                                                      context.read<CartBloc>().add(AddOrUpdateCartItem(itemObject));
+                                                      context
+                                                          .read<CartBloc>()
+                                                          .add(
+                                                            AddOrUpdateCartItem(
+                                                              itemObject,
+                                                            ),
+                                                          );
                                                     }
                                                   },
                                                   child: Container(
-                                                    padding: const EdgeInsets.all(6),
+                                                    padding:
+                                                        const EdgeInsets.all(6),
                                                     decoration: BoxDecoration(
                                                       color: AppColors.primary,
                                                       shape: BoxShape.circle,
                                                     ),
                                                     child: Icon(
-                                                      isInCart ? Icons.check : Icons.add,
+                                                      isInCart
+                                                          ? Icons.check
+                                                          : Icons.add,
                                                       color: Colors.white,
                                                       size: 25,
                                                     ),
@@ -322,8 +351,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                                 ),
                                               );
                                             },
-                                          )
-
+                                          ),
                                         ],
                                       ),
                                     ),

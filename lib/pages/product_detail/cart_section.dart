@@ -1,6 +1,8 @@
 import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
 import 'package:excellent_trade_app/config/routes/route_export.dart';
-import 'package:flutter/material.dart';
+import 'package:excellent_trade_app/model/cart/cart_model.dart';
+import 'package:excellent_trade_app/bloc/cart/cart_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -12,6 +14,12 @@ class CartSection extends StatefulWidget {
 }
 
 class _CartSectionState extends State<CartSection> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<CartBloc>().add(LoadCart());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,202 +39,202 @@ class _CartSectionState extends State<CartSection> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            /// Step Indicator
-            /// Step Indicator
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
-              child: IntrinsicHeight(
-                // Ensures equal height for line and steps
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    stepItem("1", "Menu", isCompleted: true),
-                    stepLine(isActive: true),
-                    stepItem("2", "Cart", isActive: true),
-                    stepLine(isActive: false),
-                    stepItem("3", "Checkout"),
-                  ],
-                ),
-              ),
-            ),
 
-            estimatedDelivery(),
-            ...List.generate(4, (index) => itemsWidget()),
-          ],
-        ),
-      ),
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 10,
-                offset: Offset(0, -2),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              /// Total Summary
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    /// Left
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+      body: BlocBuilder<CartBloc, CartState>(
+        buildWhen: (previous, current) => previous.items != current.items,
+        builder: (context, state) {
+          final cartItems = state.items;
+
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding:
+                  EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+                  child: IntrinsicHeight(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          "Total (incl. fee & tax)",
-                          style: GoogleFonts.poppins(
-                            fontSize: 13.sp,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(height: 4.h),
-                        GestureDetector(
-                          onTap: () {},
-                          child: Text(
-                            "See summary",
-                            style: GoogleFonts.poppins(
-                              fontSize: 12.sp,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w500,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
+                        stepItem("1", "Menu", isCompleted: true),
+                        stepLine(isActive: true),
+                        stepItem("2", "Cart", isActive: true),
+                        stepLine(isActive: false),
+                        stepItem("3", "Checkout"),
                       ],
                     ),
+                  ),
+                ),
 
-                    /// Right
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                estimatedDelivery(),
+
+                if (cartItems.isEmpty)
+                  Padding(
+                    padding: EdgeInsets.all(20.h),
+                    child: Text(
+                      "Your cart is empty",
+                      style: GoogleFonts.poppins(
+                        fontSize: 14.sp,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  )
+                else
+                  ...cartItems.map((item) => itemsWidget(item)),
+              ],
+            ),
+          );
+        },
+      ),
+
+      bottomNavigationBar: BlocBuilder<CartBloc, CartState>(
+        buildWhen: (previous, current) => previous.items != current.items,
+        builder: (context, state) {
+          final total = state.items.fold(
+            0.0,
+                (sum, item) => sum + (item.price * item.quantity),
+          );
+
+          return SafeArea(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 10,
+                    offset: Offset(0, -2),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding:
+                    EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Total (incl. fee & tax)",
+                              style: GoogleFonts.poppins(
+                                fontSize: 13.sp,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(height: 4.h),
+                            GestureDetector(
+                              onTap: () {},
+                              child: Text(
+                                "See summary",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 12.sp,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w500,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
                         Text(
-                          'Rs. 220.50',
+                          'Rs. ${total.toStringAsFixed(2)}',
                           style: GoogleFonts.poppins(
                             color: AppColors.primary,
                             fontWeight: FontWeight.w600,
                             fontSize: 15.sp,
                           ),
                         ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          "Rs. 440.50",
-                          style: GoogleFonts.poppins(
-                            fontSize: 11.sp,
-                            color: Colors.grey,
-                            decoration: TextDecoration.lineThrough,
-                          ),
-                        ),
                       ],
                     ),
-                  ],
-                ),
-              ),
+                  ),
 
-              SizedBox(height: 14.h),
+                  SizedBox(height: 14.h),
 
-              /// Confirm Button
-              SizedBox(
-                width: double.infinity,
-                height: 48.h,
-                child: ElevatedButton.icon(
-                  onPressed: () => Navigator.pushNamed(context, RoutesName.checkout),
-                  icon: Icon(Icons.location_on_outlined, size: 18.sp),
-                  label: Text(
-                    "Confirm payment & address",
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14.sp,
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48.h,
+                    child: ElevatedButton.icon(
+                      onPressed: state.items.isEmpty
+                          ? null
+                          : () => Navigator.pushNamed(
+                        context,
+                        RoutesName.checkout,
+                      ),
+                      icon: Icon(Icons.location_on_outlined, size: 18.sp),
+                      label: Text(
+                        "Confirm payment & address",
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6.r),
+                        ),
+                        elevation: 4,
+                      ),
                     ),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6.r),
-                    ),
-                    elevation: 4,
-                  ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  /// Step Item
   Widget stepItem(
-    String number,
-    String label, {
-    bool isActive = false,
-    bool isCompleted = false,
-  }) {
-    final bgColor = isCompleted || isActive
-        ? AppColors.primary
-        : Colors.grey.shade300;
+      String number,
+      String label, {
+        bool isActive = false,
+        bool isCompleted = false,
+      }) {
+    final bgColor =
+    isCompleted || isActive ? AppColors.primary : Colors.grey.shade300;
 
     final content = isCompleted
         ? Icon(Icons.check, color: Colors.white, size: 16.sp)
         : Text(
-            number,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 13.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          );
+      number,
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 13.sp,
+        fontWeight: FontWeight.bold,
+      ),
+    );
 
     return Column(
       children: [
         CircleAvatar(radius: 16.r, backgroundColor: bgColor, child: content),
-
-        // SizedBox(height: 6.h),
-        // Text(
-        //   label,
-        //   maxLines: 2,
-        //   overflow: TextOverflow.ellipsis,
-        //   textAlign: TextAlign.center,
-        //   style: GoogleFonts.poppins(
-        //     fontSize: 11.sp,
-        //     fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
-        //     color: isActive ? AppColors.primary : Colors.black54,
-        //   ),
-        // ),
       ],
     );
   }
 
-  /// Step Line
   Widget stepLine({bool isActive = false}) {
     return Expanded(
       child: Container(
         height: 4.h,
-        // margin: EdgeInsets.only(bottom: 16.h),
         color: isActive ? AppColors.primary : Colors.grey.shade300,
       ),
     );
   }
 
-  /// Estimated Delivery
   Widget estimatedDelivery() => Padding(
     padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
     child: Container(
@@ -235,7 +243,11 @@ class _CartSectionState extends State<CartSection> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 4)),
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 8,
+            offset: Offset(0, 4),
+          ),
         ],
       ),
       child: Row(
@@ -294,8 +306,7 @@ class _CartSectionState extends State<CartSection> {
     ),
   );
 
-  /// Cart Item
-  Widget itemsWidget() => Padding(
+  Widget itemsWidget(CartItemModel item) => Padding(
     padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
     child: Container(
       padding: EdgeInsets.all(12.r),
@@ -303,20 +314,25 @@ class _CartSectionState extends State<CartSection> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 6,
+            offset: Offset(0, 3),
+          ),
         ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.fastfood, color: Colors.deepOrangeAccent, size: 30.sp),
+          Icon(Icons.fastfood,
+              color: Colors.deepOrangeAccent, size: 30.sp),
           SizedBox(width: 12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Chicken Biryani',
+                  item.name,
                   style: GoogleFonts.poppins(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
@@ -325,18 +341,34 @@ class _CartSectionState extends State<CartSection> {
                 SizedBox(height: 6.h),
                 Row(
                   children: [
-                    counterWidget(Icons.remove, () {}),
+                    counterWidget(Icons.remove, () {
+                      final newQty = item.quantity - 1;
+                      if (newQty <= 0) {
+                        context
+                            .read<CartBloc>()
+                            .add(RemoveCartItem(item.id));
+                      } else {
+                        context
+                            .read<CartBloc>()
+                            .add(UpdateCartItemQuantity(item.id, newQty));
+                      }
+                    }),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 12.w),
                       child: Text(
-                        "1",
+                        "${item.quantity}",
                         style: GoogleFonts.poppins(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
-                    counterWidget(Icons.add, () {}),
+                    counterWidget(Icons.add, () {
+                      final newQty = item.quantity + 1;
+                      context
+                          .read<CartBloc>()
+                          .add(UpdateCartItemQuantity(item.id, newQty));
+                    }),
                   ],
                 ),
               ],
@@ -347,7 +379,7 @@ class _CartSectionState extends State<CartSection> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                'Rs. 220.50',
+                'Rs. ${(item.price * item.quantity).toStringAsFixed(2)}',
                 style: GoogleFonts.poppins(
                   color: AppColors.primary,
                   fontWeight: FontWeight.w600,
@@ -356,7 +388,7 @@ class _CartSectionState extends State<CartSection> {
               ),
               SizedBox(height: 4.h),
               Text(
-                "Rs. 440.50",
+                "Rs. ${item.price.toStringAsFixed(2)}",
                 style: GoogleFonts.poppins(
                   fontSize: 11.sp,
                   color: Colors.grey,
@@ -370,7 +402,6 @@ class _CartSectionState extends State<CartSection> {
     ),
   );
 
-  /// Plus / Minus Button
   Widget counterWidget(IconData icon, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,

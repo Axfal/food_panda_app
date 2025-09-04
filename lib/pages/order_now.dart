@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../Utils/constants/app_colors.dart';
+import '../globalWidgets/PrimeryWidgets/my_app_bar.dart';
 
 class OrderNow extends StatefulWidget {
   const OrderNow({super.key});
@@ -29,72 +30,101 @@ class _OrderNowState extends State<OrderNow> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5),
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          SliverAppBar(
-            pinned: true,
-            floating: true,
-            backgroundColor: Colors.white,
-            elevation: 0.4,
-            leading: IconButton(
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-            ),
-            titleSpacing: 0,
-            title: Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Container(
-                height: 45,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
-                child: TextFormField(
-                  cursorColor: AppColors.primary,
-                  style: GoogleFonts.poppins(fontSize: 13),
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.symmetric(vertical: 10),
-                    prefixIcon: const Icon(
-                      Icons.search_rounded,
-                      size: 22,
-                      color: Colors.black54,
-                    ),
-                    hintText: 'Search in Bannu Beef Pulao - Thokar',
-                    hintStyle: GoogleFonts.poppins(
-                      fontSize: 13,
-                      color: Colors.grey[600],
-                    ),
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-            ),
-            actions: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.more_vert, color: Colors.black),
-              ),
-            ],
-            bottom: TabBar(
-              isScrollable: true,
-              controller: tabController,
-              labelColor: AppColors.primary,
-              unselectedLabelColor: Colors.grey,
-              indicatorColor: AppColors.primary,
-              labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-              tabs: tabs.map((e) => Tab(text: e)).toList(),
-            ),
-          ),
-        ],
-        body: TabBarView(
-          controller: tabController,
-          children: tabs.map((tab) => buildTabContent(tab)).toList(),
+      backgroundColor: AppColors.background,
+      appBar: MyAppBar(
+        title: 'Order Now',
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+        ),
+      ),
+      body: Center(
+        child: Text(
+          'Coming Soon',
+          style: GoogleFonts.poppins(fontSize: 22, color: Colors.black54),
         ),
       ),
     );
   }
+
+
+
+
+
+
+
+
+
+
+  // return Scaffold(
+  //       backgroundColor: Color(0xFFF5F5F5),
+  //       body: NestedScrollView(
+  //         headerSliverBuilder: (context, innerBoxIsScrolled) => [
+  //           SliverAppBar(
+  //             pinned: true,
+  //             floating: true,
+  //             backgroundColor: Colors.white,
+  //             elevation: 0.4,
+  //             leading: IconButton(
+  //               onPressed: () => Navigator.pop(context),
+  //               icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+  //             ),
+  //             titleSpacing: 0,
+  //             title: Padding(
+  //               padding: const EdgeInsets.only(right: 8.0),
+  //               child: Container(
+  //                 height: 45,
+  //                 decoration: BoxDecoration(
+  //                   color: Colors.grey.shade100,
+  //                   borderRadius: BorderRadius.circular(10),
+  //                   border: Border.all(color: Colors.grey.shade300),
+  //                 ),
+  //                 child: TextFormField(
+  //                   cursorColor: AppColors.primary,
+  //                   style: GoogleFonts.poppins(fontSize: 13),
+  //                   decoration: InputDecoration(
+  //                     contentPadding: const EdgeInsets.symmetric(vertical: 10),
+  //                     prefixIcon: const Icon(
+  //                       Icons.search_rounded,
+  //                       size: 22,
+  //                       color: Colors.black54,
+  //                     ),
+  //                     hintText: 'Search in Bannu Beef Pulao - Thokar',
+  //                     hintStyle: GoogleFonts.poppins(
+  //                       fontSize: 13,
+  //                       color: Colors.grey[600],
+  //                     ),
+  //                     border: InputBorder.none,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //             actions: [
+  //               IconButton(
+  //                 onPressed: () {},
+  //                 icon: const Icon(Icons.more_vert, color: Colors.black),
+  //               ),
+  //             ],
+  //             bottom: TabBar(
+  //               isScrollable: true,
+  //               controller: tabController,
+  //               labelColor: AppColors.primary,
+  //               unselectedLabelColor: Colors.grey,
+  //               indicatorColor: AppColors.primary,
+  //               labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+  //               tabs: tabs.map((e) => Tab(text: e)).toList(),
+  //             ),
+  //           ),
+  //         ],
+  //         body: TabBarView(
+  //           controller: tabController,
+  //           children: tabs.map((tab) => buildTabContent(tab)).toList(),
+  //         ),
+  //       ),
+  //     );
+
+
+
 
   Widget buildTabContent(String title) {
     return ListView(

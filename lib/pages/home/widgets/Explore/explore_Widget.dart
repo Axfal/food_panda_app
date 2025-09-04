@@ -67,7 +67,7 @@ class ExploreWidget extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         elevation: 4,
-                        shadowColor: AppColors.primary.withOpacity(0.4),
+                        shadowColor: AppColors.primary.withValues(alpha: 0.4),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(40),
                         ),

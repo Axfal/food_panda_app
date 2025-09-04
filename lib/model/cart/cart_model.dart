@@ -4,6 +4,7 @@ class CartItemModel {
   final double price;
   final int quantity;
   final String imageUrl;
+  final String restaurantId;
 
   CartItemModel({
     required this.id,
@@ -11,6 +12,7 @@ class CartItemModel {
     required this.price,
     this.quantity = 1,
     this.imageUrl = '',
+    required this.restaurantId,
   });
 
   CartItemModel copyWith({
@@ -19,6 +21,7 @@ class CartItemModel {
     double? price,
     int? quantity,
     String? imageUrl,
+    String? restaurantId,
   }) {
     return CartItemModel(
       id: id ?? this.id,
@@ -26,6 +29,7 @@ class CartItemModel {
       price: price ?? this.price,
       quantity: quantity ?? this.quantity,
       imageUrl: imageUrl ?? this.imageUrl,
+      restaurantId: restaurantId ?? this.restaurantId,
     );
   }
 
@@ -36,6 +40,7 @@ class CartItemModel {
       'price': price,
       'quantity': quantity,
       'imageUrl': imageUrl,
+      'restaurantId': restaurantId,
     };
   }
 
@@ -46,6 +51,7 @@ class CartItemModel {
       price: (json['price'] as num).toDouble(),
       quantity: json['quantity'],
       imageUrl: json['imageUrl'] ?? '',
+      restaurantId: json['restaurantId'],
     );
   }
 }

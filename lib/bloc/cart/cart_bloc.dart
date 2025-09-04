@@ -1,6 +1,5 @@
 import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
 import 'package:excellent_trade_app/model/cart/cart_model.dart';
-
 import '../../service/cart/cart_service.dart';
 
 part 'cart_event.dart';
@@ -12,30 +11,54 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   CartBloc() : super(const CartState()) {
     on<LoadCart>((event, emit) async {
       await _cartSessionController.loadCart();
-      emit(state.copyWith(items: CartSessionController.cartItems));
+      emit(
+        state.copyWith(
+          items: List.from(CartSessionController.cartItems),
+          restaurantId: CartSessionController.currentRestaurantId,
+        ),
+      );
     });
 
     on<AddOrUpdateCartItem>((event, emit) async {
       await _cartSessionController.addOrUpdateItem(event.item);
-      emit(state.copyWith(items: CartSessionController.cartItems));
+      emit(
+        state.copyWith(
+          items: List.from(CartSessionController.cartItems),
+          restaurantId: CartSessionController.currentRestaurantId,
+        ),
+      );
     });
 
     on<UpdateCartItemQuantity>((event, emit) async {
-      await _cartSessionController.updateItemQuantity(
-        event.itemId,
-        event.newQuantity,
+      if (event.newQuantity <= 0) {
+        await _cartSessionController.removeItem(event.itemId);
+      } else {
+        await _cartSessionController.updateItemQuantity(
+          event.itemId,
+          event.newQuantity,
+        );
+      }
+      emit(
+        state.copyWith(
+          items: List.from(CartSessionController.cartItems),
+          restaurantId: CartSessionController.currentRestaurantId,
+        ),
       );
-      emit(state.copyWith(items: CartSessionController.cartItems));
     });
 
     on<RemoveCartItem>((event, emit) async {
       await _cartSessionController.removeItem(event.itemId);
-      emit(state.copyWith(items: CartSessionController.cartItems));
+      emit(
+        state.copyWith(
+          items: List.from(CartSessionController.cartItems),
+          restaurantId: CartSessionController.currentRestaurantId,
+        ),
+      );
     });
 
     on<ClearCart>((event, emit) async {
       await _cartSessionController.clearCart();
-      emit(state.copyWith(items: []));
+      emit(state.copyWith(items: [], restaurantId: null));
     });
   }
 }

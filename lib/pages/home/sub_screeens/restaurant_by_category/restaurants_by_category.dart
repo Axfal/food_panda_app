@@ -2,7 +2,6 @@ import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/my_app_bar.dart
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
 import 'package:excellent_trade_app/pages/home/sub_screeens/restaurant_by_category/widgets/restaurant_card.dart';
 import '../../../../bloc/restaurant_by_category/restaurant_by_category_bloc.dart';
-import '../../../../model/restaurant_by_category/restaurant_by_category_model.dart';
 
 class RestaurantsByCategory extends StatefulWidget {
   final String categoryId;
@@ -160,14 +159,14 @@ class _RestaurantsByCategoryState extends State<RestaurantsByCategory> {
                                   4.5, // Replace with real rating if available
                               reviewsCount: 120, // Replace with API reviews
                               duration:
-                                  "30 min", // Replace with API time if available
+                                  "30 min",
                               priceLevel:
-                                  "\$\$", // Replace with API pricing info
+                                  "\$\$",
                               cuisine:
-                                  "Italian, Pizza", // Replace with API cuisines
-                              deliveryFee: 150, // Replace with API delivery fee
+                                  "Italian, Pizza",
+                              deliveryFee: 150,
                               discountLabel:
-                                  "30% OFF", // Replace with API discount info
+                                  "30% OFF",
                             ),
                           ),
                         );
