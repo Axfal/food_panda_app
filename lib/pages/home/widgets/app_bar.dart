@@ -1,9 +1,12 @@
-import 'package:excellent_trade_app/config/routes/route_export.dart';
+import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../../../service/location/location_storage.dart';
 import 'package:marquee/marquee.dart';
+import 'package:badges/badges.dart' as badges;
+import '../../../bloc/cart/cart_bloc.dart';
+import '../../../service/location/location_storage.dart';
+import '../../../service/cart/cart_service.dart'; // <-- for CartSessionController
 
 class HCustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   const HCustomAppBar({super.key});
@@ -17,6 +20,15 @@ class HCustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _HCustomAppBarState extends State<HCustomAppBar> {
   final locationSession = LocationSessionController();
+  final cartSessionController = CartSessionController();
+
+  @override
+  void initState() {
+    super.initState();
+    cartSessionController.loadCart().then((_) {
+      setState(() {}); // refresh badge when cart loads
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,43 +52,16 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
                   // Location Name
                   SizedBox(
                     height: 20,
-                    child:
-                        // locationSession.hasLocation &&
-                        //     (locationSession.currentPlace?.name ?? "Unknown")
-                        //             .length >
-                        //         20
-                        // ? Marquee(
-                        //     text: locationSession.hasLocation
-                        //         ? locationSession.currentPlace?.name ??
-                        //               "Unknown"
-                        //         : "Unknown",
-                        //     style: GoogleFonts.poppins(
-                        //       fontSize: 16,
-                        //       fontWeight: FontWeight.w700,
-                        //       color: Colors.white,
-                        //     ),
-                        //     scrollAxis: Axis.horizontal,
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     blankSpace: 20,
-                        //     velocity: 30.0,
-                        //     pauseAfterRound: const Duration(seconds: 1),
-                        //     startPadding: 10,
-                        //     accelerationDuration: const Duration(seconds: 1),
-                        //     accelerationCurve: Curves.linear,
-                        //     decelerationDuration: const Duration(seconds: 1),
-                        //     decelerationCurve: Curves.easeOut,
-                        //   )
-                        // :
-                        Text(
-                            locationSession.currentPlace?.name ?? "Unknown",
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
+                    child: Text(
+                      locationSession.currentPlace?.name ?? "Unknown",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 2),
                   // Scrolling Address
@@ -133,12 +118,36 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
           color: Colors.white,
           iconSize: 25,
         ),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(CupertinoIcons.bag),
-          color: Colors.white,
-          iconSize: 25,
+
+        BlocBuilder<CartBloc, CartState>(
+          buildWhen: (previous, current) => previous.items != current.items,
+          builder: (context, state) {
+            return badges.Badge(
+              showBadge: cartSessionController.hasItems,
+              badgeContent: Text(
+                cartSessionController.cartCount.toString(),
+                style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w600),
+              ),
+              position: badges.BadgePosition.topEnd(top: -2, end: 2),
+              badgeStyle: const badges.BadgeStyle(
+                badgeColor: Colors.white,
+                padding: EdgeInsets.all(6),
+              ),
+              child: IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CartSection()),
+                  );
+                },
+                icon: const Icon(CupertinoIcons.bag),
+                color: Colors.white,
+                iconSize: 25,
+              ),
+            );
+          },
         ),
+
         const SizedBox(width: 6),
       ],
     );

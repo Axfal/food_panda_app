@@ -249,7 +249,6 @@ class _MenuScreenState extends State<MenuScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  /// Item Image
                                   Expanded(
                                     child: ClipRRect(
                                       borderRadius: const BorderRadius.vertical(
@@ -262,26 +261,22 @@ class _MenuScreenState extends State<MenuScreen> {
                                             width: double.infinity,
                                             fit: BoxFit.cover,
                                             errorBuilder:
-                                                (
-                                                  context,
-                                                  error,
-                                                  stackTrace,
-                                                ) => Container(
-                                                  width: double.infinity,
-                                                  height: double.infinity,
-                                                  color: Colors.grey.shade200,
-                                                  child: const Center(
-                                                    child: Icon(
-                                                      Icons.fastfood,
-                                                      color: Colors.grey,
-                                                      size:
-                                                          50, // keep icon prominent but not stretched
+                                                (context, error, stackTrace) =>
+                                                    Container(
+                                                      width: double.infinity,
+                                                      height: double.infinity,
+                                                      color:
+                                                          Colors.grey.shade200,
+                                                      child: const Center(
+                                                        child: Icon(
+                                                          Icons.fastfood,
+                                                          color: Colors.grey,
+                                                          size: 50,
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
-                                                ),
                                           ),
 
-                                          /// Add to cart button
                                           BlocBuilder<CartBloc, CartState>(
                                             builder: (context, cartState) {
                                               final isInCart = cartState.items
@@ -357,7 +352,6 @@ class _MenuScreenState extends State<MenuScreen> {
                                     ),
                                   ),
 
-                                  /// Item Details
                                   Padding(
                                     padding: const EdgeInsets.all(10.0),
                                     child: Column(
@@ -448,7 +442,6 @@ class _MenuScreenState extends State<MenuScreen> {
 
               SizedBox(height: 12.h),
 
-              /// Add to Cart Button
               SizedBox(
                 width: double.infinity,
                 height: 48.h,

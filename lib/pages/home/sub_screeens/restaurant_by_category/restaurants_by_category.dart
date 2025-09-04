@@ -138,7 +138,8 @@ class _RestaurantsByCategoryState extends State<RestaurantsByCategory> {
                     // Restaurant list
                     SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
-                        final RestaurantData restaurantData = restaurants[index];
+                        final RestaurantData restaurantData =
+                            restaurants[index];
                         return Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,
@@ -156,17 +157,13 @@ class _RestaurantsByCategoryState extends State<RestaurantsByCategory> {
                               imagePath: restaurantData.restaurantLogo ?? "",
                               title: restaurantData.restaurantName,
                               rating:
-                                  4.5, // Replace with real rating if available
-                              reviewsCount: 120, // Replace with API reviews
-                              duration:
-                                  "30 min",
-                              priceLevel:
-                                  "\$\$",
-                              cuisine:
-                                  "Italian, Pizza",
+                                  4.5,
+                              reviewsCount: 120,
+                              duration: "30 min",
+                              priceLevel: "\$\$",
+                              cuisine: "Italian, Pizza",
                               deliveryFee: 150,
-                              discountLabel:
-                                  "30% OFF",
+                              discountLabel: "30% OFF",
                             ),
                           ),
                         );

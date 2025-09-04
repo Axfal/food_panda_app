@@ -31,7 +31,9 @@ class SessionController {
   Future<void> getUserFromPreference() async {
     try {
       final String userData = await sharedPreferenceClass.readValue('token');
-      final String? isLoginStr = await sharedPreferenceClass.readValue('isLogin');
+      final String? isLoginStr = await sharedPreferenceClass.readValue(
+        'isLogin',
+      );
       final String? role = await sharedPreferenceClass.readValue('role');
 
       if (userData.isNotEmpty) {
@@ -60,7 +62,11 @@ class SessionController {
       SessionController.user = UserModel();
       SessionController.userRole = '';
 
-      Navigator.pushNamedAndRemoveUntil(context, RoutesName.login, (route) => false);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        RoutesName.login,
+        (route) => false,
+      );
     } catch (e) {
       debugPrint("Logout error: $e");
     }
