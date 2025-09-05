@@ -65,16 +65,20 @@ class CartSessionController {
 
   Future<void> _loadCartOnStart() async {
     try {
-      final storedData = await _localStorage.readValue('cart_items');
-      if (storedData.isNotEmpty) {
+      final String? storedData = await _localStorage.readValue('cart_items');
+      if (storedData != null && storedData.isNotEmpty) {
         final List decoded = jsonDecode(storedData);
         cartItems = decoded.map((e) => CartItemModel.fromJson(e)).toList();
       } else {
         cartItems = [];
       }
 
-      final restaurant = await _localStorage.readValue('current_restaurant');
-      currentRestaurantId = restaurant.isNotEmpty ? restaurant : null;
+      final String? restaurant = await _localStorage.readValue(
+        'current_restaurant',
+      );
+      currentRestaurantId = (restaurant != null && restaurant.isNotEmpty)
+          ? restaurant
+          : null;
     } catch (e) {
       debugPrint('Error loading cart: $e');
       cartItems = [];

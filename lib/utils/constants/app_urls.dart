@@ -53,4 +53,7 @@ class AppUrl {
 
   /// Wish List
   static const String wishList = '$baseUrl/wishlist.php';
+
+  /// CheckOut
+  static const String checkout = '$baseUrl/add_orders.php';
 }

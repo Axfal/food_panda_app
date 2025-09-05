@@ -1,0 +1,12 @@
+import 'package:excellent_trade_app/data/network/network.dart';
+import 'package:excellent_trade_app/utils/constants/app_urls.dart';
+import 'order_api_repository.dart';
+
+class OrderHttpApiRepository extends OrderApiRepository {
+  final BaseApiServices _apiServices = NetworkApiService();
+  @override
+  Future checkout(dynamic data) async {
+    final response = await _apiServices.postApi(AppUrl.checkout, data);
+    return response;
+  }
+}

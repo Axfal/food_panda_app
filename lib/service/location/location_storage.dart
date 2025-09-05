@@ -30,8 +30,8 @@ class LocationSessionController {
 
   Future<void> _loadLocationOnStart() async {
     try {
-      final String storedData = await _localStorage.readValue('location');
-      if (storedData.isNotEmpty) {
+      final String? storedData = await _localStorage.readValue('location');
+      if (storedData != null && storedData.isNotEmpty) {
         locationDetails = LocationDetailsModel.fromJson(jsonDecode(storedData));
       } else {
         locationDetails = const LocationDetailsModel();

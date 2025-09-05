@@ -24,60 +24,52 @@ import 'config/themes/dark_theme.dart';
 import 'config/themes/light_theme.dart';
 import 'l10n/app_localizations.dart';
 import 'dependency_injection/locator.dart';
+import 'package:excellent_trade_app/service/permission_handler/permission_service.dart';
 
 ServiceLocator dependencyInjector = ServiceLocator();
 
 /// Static flag to ensure single initialization across hot reload/restart
 bool _isMapRendererInitialized = false;
 
-/// Initialize map renderer once
 Future<void> initializeMapRenderer() async {
-  if (_isMapRendererInitialized) {
-    // Already initialized, skip
-    debugPrint('Map renderer already initialized, skipping...');
-    return;
-  }
-
   final mapsImplementation = GoogleMapsFlutterPlatform.instance;
 
   if (mapsImplementation is GoogleMapsFlutterAndroid) {
     try {
-      await mapsImplementation.initializeWithRenderer(
-        AndroidMapRenderer.latest,
-      );
-      debugPrint('Initialized latest Android Map renderer');
+      await mapsImplementation.initializeWithRenderer(AndroidMapRenderer.latest);
+      debugPrint('✅ Latest Android Map renderer initialized');
     } on PlatformException catch (e) {
       if (e.message != null &&
           e.message!.contains('Renderer already initialized')) {
-        debugPrint('Renderer already initialized error caught, continuing...');
+        debugPrint('⚠️ Renderer already initialized — ignoring');
       } else {
-        debugPrint(
-          'Failed to initialize latest renderer, falling back legacy: $e',
-        );
+        debugPrint('⚠️ Renderer init failed, trying legacy: $e');
         try {
-          await mapsImplementation.initializeWithRenderer(
-            AndroidMapRenderer.legacy,
-          );
-          debugPrint('Initialized legacy Android Map renderer');
+          await mapsImplementation.initializeWithRenderer(AndroidMapRenderer.legacy);
+          debugPrint('✅ Legacy Android Map renderer initialized');
         } catch (legacyError) {
-          debugPrint('Legacy renderer initialization failed: $legacyError');
-          rethrow;
+          debugPrint('❌ Legacy renderer initialization failed: $legacyError');
         }
       }
+    } catch (e) {
+      debugPrint('⚠️ Unknown error initializing map renderer: $e');
     }
   }
-
-  _isMapRendererInitialized = true;
 }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   dependencyInjector.servicesLocator();
+
   await LocationSessionController().loadLocation();
   await CartSessionController().loadCart();
-  // Await this once before runApp()
-  // await initializeMapRenderer();
+
+  await initializeMapRenderer();
+  bool granted = await PermissionsService.requestPermissions();
+  if (!granted) {
+    print("Permissions denied! Some features may not work.");
+  }
 
   runApp(const MyApp());
 }

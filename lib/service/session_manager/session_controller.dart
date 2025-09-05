@@ -30,13 +30,13 @@ class SessionController {
 
   Future<void> getUserFromPreference() async {
     try {
-      final String userData = await sharedPreferenceClass.readValue('token');
+      final String? userData = await sharedPreferenceClass.readValue('token');
       final String? isLoginStr = await sharedPreferenceClass.readValue(
         'isLogin',
       );
       final String? role = await sharedPreferenceClass.readValue('role');
 
-      if (userData.isNotEmpty) {
+      if (userData != null && userData.isNotEmpty) {
         SessionController.user = UserModel.fromJson(jsonDecode(userData));
       } else {
         SessionController.user = UserModel();

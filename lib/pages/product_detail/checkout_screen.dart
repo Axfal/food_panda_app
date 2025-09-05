@@ -1,10 +1,12 @@
 import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/my_app_bar.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '../../Utils/constants/app_colors.dart';
-import '../../config/routes/routes_name.dart';
+import '../../bloc/location/location_bloc.dart';
+import 'package:flutter/gestures.dart';
+import '../../model/location/location_details/locations_details_model.dart';
+import '../../service/location/location_storage.dart';
+import '../auth/signup/signup_exports.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -14,20 +16,20 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
-  GoogleMapController? mapController;
-
-  // Initial location (Example: Lahore)
+  GoogleMapController? _mapController;
+  // final TextEditingController _controller = TextEditingController();
+  bool showSuggestions = false;
   LatLng selectedLocation = LatLng(31.5204, 74.3587);
 
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-  }
-
-  void _onCameraMove(CameraPosition position) {
-    setState(() {
-      selectedLocation = position.target;
-    });
-  }
+  // void _onMapCreated(GoogleMapController controller) {
+  //   _mapController = controller;
+  // }
+  //
+  // void _onCameraMove(CameraPosition position) {
+  //   setState(() {
+  //     selectedLocation = position.target;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +62,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
               ),
             ),
-            locationWidget(),
+            locationWidget(context),
             DeliveryOptionWidget(
               options: [
                 DeliveryOption(title: "Saver Delivery", time: "50 minutes"),
@@ -69,7 +71,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ],
               onOptionSelected: (option) {
                 print("Selected: ${option.title}");
-                // Do whatever you want on selection change
               },
             ),
             paymentMethodWidget(),
@@ -93,17 +94,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              /// Total Summary
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.05),
+                  color: AppColors.primary.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    /// Left
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -117,9 +116,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ),
                         SizedBox(height: 4.h),
                         GestureDetector(
-                          onTap: () {
-                            // TODO: Implement summary view
-                          },
+                          onTap: () {},
                           child: Text(
                             "See summary",
                             style: GoogleFonts.poppins(
@@ -132,8 +129,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ),
                       ],
                     ),
-
-                    /// Right
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
@@ -159,16 +154,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   ],
                 ),
               ),
-
               SizedBox(height: 14.h),
-
-              /// Confirm Button
               SizedBox(
                 width: double.infinity,
                 height: 48.h,
                 child: ElevatedButton.icon(
-                  onPressed: () => {},
-                  // Navigator.pushNamed(context, RoutesName.checkoutPayment),
+                  onPressed: () {},
                   icon: Icon(Icons.payment, size: 18.sp),
                   label: Text(
                     "Select payment method",
@@ -189,6 +180,256 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget locationWidget(BuildContext context) {
+    final TextEditingController _searchController = TextEditingController();
+    bool showSuggestions = false;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Container(
+        padding: EdgeInsets.all(16.r),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: [
+            BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 4)),
+          ],
+        ),
+        child: BlocConsumer<LocationBloc, LocationState>(
+          listener: (context, state) {
+            if (state.locationDetailsModel.place != null) {
+              final place = state.locationDetailsModel.place!;
+              selectedLocation = LatLng(place.lat, place.lng);
+              _mapController?.animateCamera(
+                CameraUpdate.newLatLng(selectedLocation),
+              );
+            }
+          },
+          builder: (context, state) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// Title Row
+                Row(
+                  children: [
+                    Icon(Icons.location_on_outlined, color: Colors.redAccent),
+                    SizedBox(width: 8.w),
+                    Text(
+                      'Delivery Address',
+                      style: GoogleFonts.poppins(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12.h),
+
+                /// 🔍 Search Field
+                TextField(
+                  controller: _searchController,
+                  style: GoogleFonts.poppins(color: Colors.black87, fontSize: 14.sp),
+                  cursorColor: Colors.black54,
+                  decoration: InputDecoration(
+                    hintText: "Search location...",
+                    hintStyle: GoogleFonts.poppins(color: Colors.black54),
+                    prefixIcon: const Icon(Icons.search, color: Colors.black54),
+                    filled: true,
+                    fillColor: Colors.grey.shade100,
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 14.h,
+                      horizontal: 12.w,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14.r),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14.r),
+                      borderSide: const BorderSide(color: Colors.black54, width: 1.2),
+                    ),
+                  ),
+                  onChanged: (query) {
+                    if (query.isNotEmpty) {
+                      showSuggestions = true;
+                      context.read<LocationBloc>().add(
+                        FetchLocationSuggestionEvent(query: query),
+                      );
+                    } else {
+                      showSuggestions = false;
+                    }
+                  },
+                ),
+                SizedBox(height: 10.h),
+
+                /// 📍 Suggestions List
+                if (showSuggestions &&
+                    state.locationSuggestionModel.suggestions.isNotEmpty)
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12.r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 6,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    constraints: BoxConstraints(maxHeight: 180.h),
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      itemCount: state.locationSuggestionModel.suggestions.length,
+                      separatorBuilder: (_, __) => Divider(
+                        color: Colors.grey.shade300,
+                        height: 1,
+                        thickness: 0.8,
+                      ),
+                      itemBuilder: (context, index) {
+                        final suggestion =
+                        state.locationSuggestionModel.suggestions[index];
+                        return ListTile(
+                          leading: const Icon(Icons.location_on_outlined,
+                              color: Colors.black54),
+                          title: Text(
+                            suggestion.description,
+                            style: GoogleFonts.poppins(
+                              fontSize: 13.sp,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          onTap: () {
+                            showSuggestions = false;
+                            _searchController.text = suggestion.description;
+
+                            FocusScope.of(context).unfocus(); // 👈 Hide keyboard
+
+                            context.read<LocationBloc>().add(
+                              FetchLocationDetailsEvent(
+                                placeId: suggestion.placeId,
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+
+                SizedBox(height: 12.h),
+
+                /// 🗺️ Google Map
+                SizedBox(
+                  height: 300.h,
+                  child: Stack(
+                    children: [
+                      GoogleMap(
+                        initialCameraPosition: CameraPosition(
+                          target: selectedLocation,
+                          zoom: 15,
+                        ),
+                        onMapCreated: (controller) => _mapController = controller,
+                        onCameraMove: (position) {
+                          selectedLocation = position.target;
+                        },
+                        myLocationEnabled: true,
+                        myLocationButtonEnabled: true,
+                        zoomControlsEnabled: false,
+                        zoomGesturesEnabled: true,
+                        scrollGesturesEnabled: true,
+                        rotateGesturesEnabled: true,
+                        tiltGesturesEnabled: false,
+                        gestureRecognizers: {
+                          Factory<OneSequenceGestureRecognizer>(
+                                () => EagerGestureRecognizer(),
+                          ),
+                        },
+                      ),
+                      /// Fixed pointer marker
+                      Center(
+                        child: Icon(
+                          Icons.location_on,
+                          color: Colors.redAccent,
+                          size: 40.sp,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: 16.h),
+
+                /// Selected Address Display
+                Text(
+                  "Selected Address",
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14.sp,
+                    color: Colors.black87,
+                  ),
+                ),
+                SizedBox(height: 6.h),
+                Text(
+                  "Lat: ${selectedLocation.latitude.toStringAsFixed(5)}, "
+                      "Lng: ${selectedLocation.longitude.toStringAsFixed(5)}",
+                  style: GoogleFonts.poppins(
+                    fontSize: 13.sp,
+                    color: Colors.grey[700],
+                  ),
+                ),
+
+                SizedBox(height: 12.h),
+
+                /// Confirm Button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final place = Place(
+                        placeId: "manual-selected",
+                        name: "Pinned Location",
+                        address: "",
+                        lat: selectedLocation.latitude,
+                        lng: selectedLocation.longitude,
+                      );
+                      final location = LocationDetailsModel(
+                        success: true,
+                        place: place,
+                      );
+
+                      await LocationSessionController().saveLocation(location);
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            "Location saved: ${selectedLocation.latitude}, ${selectedLocation.longitude}",
+                          ),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                    ),
+                    child: Text(
+                      "Confirm Location",
+                      style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -300,7 +541,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     ),
   );
 
-  /// Reusable row widget
   Widget _summaryRow(String title, String amount) => Padding(
     padding: EdgeInsets.symmetric(vertical: 4.h),
     child: Row(
@@ -383,114 +623,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     ),
   );
 
-  Widget locationWidget() => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-    child: Container(
-      padding: EdgeInsets.all(16.r),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12.r),
-        boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 4)),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          /// Header Row with title and edit icon
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.location_on_outlined, color: Colors.redAccent),
-                  SizedBox(width: 8.w),
-                  Text(
-                    'Delivery Address',
-                    style: GoogleFonts.poppins(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ],
-              ),
-              IconButton(
-                onPressed: () {
-                  // TODO: Navigate to detailed address edit screen
-                },
-                icon: Icon(Icons.edit_outlined, color: Colors.grey[700]),
-              ),
-            ],
-          ),
-          SizedBox(height: 12.h),
 
-          /// Map preview with movable camera and marker
-          SizedBox(
-            height: 200.h,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12.r),
-              child: GoogleMap(
-                initialCameraPosition: CameraPosition(
-                  target: selectedLocation,
-                  zoom: 15,
-                ),
-                onMapCreated: _onMapCreated,
-                onCameraMove: _onCameraMove,
-                markers: {
-                  Marker(
-                    markerId: MarkerId('selected-location'),
-                    position: selectedLocation,
-                    draggable: true,
-                    onDragEnd: (newPosition) {
-                      setState(() {
-                        selectedLocation = newPosition;
-                      });
-                    },
-                    icon: BitmapDescriptor.defaultMarkerWithHue(
-                      BitmapDescriptor.hueRed,
-                    ),
-                  ),
-                },
-                myLocationEnabled: true,
-                myLocationButtonEnabled: true,
-                zoomControlsEnabled: false,
-              ),
-            ),
-          ),
-          SizedBox(height: 16.h),
-
-          /// Display selected location info (update this with reverse geocode in future)
-          Text(
-            "Selected Address",
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w600,
-              fontSize: 14.sp,
-              color: Colors.black87,
-            ),
-          ),
-          SizedBox(height: 6.h),
-          Text(
-            "Approximate location: ${selectedLocation.latitude.toStringAsFixed(5)}, ${selectedLocation.longitude.toStringAsFixed(5)}",
-            style: GoogleFonts.poppins(
-              fontSize: 13.sp,
-              color: Colors.grey[700],
-            ),
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            "City, State, Country",
-            style: GoogleFonts.poppins(
-              fontSize: 13.sp,
-              color: Colors.grey[700],
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-
-  /// Step Item widget for step indicator
   Widget stepItem(
     String number,
     String label, {
