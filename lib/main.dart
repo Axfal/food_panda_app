@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'package:excellent_trade_app/bloc/account/profile/profile_bloc.dart';
 import 'package:excellent_trade_app/bloc/location/location_bloc.dart';
@@ -28,31 +30,32 @@ import 'package:excellent_trade_app/service/permission_handler/permission_servic
 
 ServiceLocator dependencyInjector = ServiceLocator();
 
-/// Static flag to ensure single initialization across hot reload/restart
-bool _isMapRendererInitialized = false;
-
 Future<void> initializeMapRenderer() async {
   final mapsImplementation = GoogleMapsFlutterPlatform.instance;
 
   if (mapsImplementation is GoogleMapsFlutterAndroid) {
     try {
-      await mapsImplementation.initializeWithRenderer(AndroidMapRenderer.latest);
-      debugPrint('✅ Latest Android Map renderer initialized');
+      await mapsImplementation.initializeWithRenderer(
+        AndroidMapRenderer.latest,
+      );
+      debugPrint('Latest Android Map renderer initialized');
     } on PlatformException catch (e) {
       if (e.message != null &&
           e.message!.contains('Renderer already initialized')) {
-        debugPrint('⚠️ Renderer already initialized — ignoring');
+        debugPrint('Renderer already initialized — ignoring');
       } else {
-        debugPrint('⚠️ Renderer init failed, trying legacy: $e');
+        debugPrint('Renderer init failed, trying legacy: $e');
         try {
-          await mapsImplementation.initializeWithRenderer(AndroidMapRenderer.legacy);
-          debugPrint('✅ Legacy Android Map renderer initialized');
+          await mapsImplementation.initializeWithRenderer(
+            AndroidMapRenderer.legacy,
+          );
+          debugPrint('Legacy Android Map renderer initialized');
         } catch (legacyError) {
-          debugPrint('❌ Legacy renderer initialization failed: $legacyError');
+          debugPrint('Legacy renderer initialization failed: $legacyError');
         }
       }
     } catch (e) {
-      debugPrint('⚠️ Unknown error initializing map renderer: $e');
+      debugPrint('Unknown error initializing map renderer: $e');
     }
   }
 }

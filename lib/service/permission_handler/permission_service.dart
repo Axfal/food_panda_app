@@ -1,13 +1,13 @@
 import 'package:permission_handler/permission_handler.dart';
 
 class PermissionsService {
-  /// Request all required permissions: Location, Storage / Media
   static Future<bool> requestPermissions() async {
     final statuses = await [
       Permission.location,
       Permission.locationWhenInUse,
-      Permission.photos, // for iOS / Android 33+
-      Permission.storage, // for Android <= 32
+      Permission.photos,
+      Permission.storage,
+      Permission.contacts,
     ].request();
 
     bool allGranted = statuses.values.every((status) => status.isGranted);
@@ -15,21 +15,23 @@ class PermissionsService {
     return allGranted;
   }
 
-  /// Check if all permissions are already granted
   static Future<bool> checkPermissions() async {
-    bool locationGranted = await Permission.location.isGranted ||
+    bool locationGranted =
+        await Permission.location.isGranted ||
         await Permission.locationWhenInUse.isGranted;
-    bool storageGranted = await Permission.storage.isGranted ||
-        await Permission.photos.isGranted;
+    bool storageGranted =
+        await Permission.storage.isGranted || await Permission.photos.isGranted;
+    bool contactsGranted = await Permission.contacts.isGranted;
 
-    return locationGranted && storageGranted;
+    return locationGranted && storageGranted && contactsGranted;
   }
 
-  /// Open app settings if user denied permissions permanently
   static Future<void> openAppSettingsIfNeeded() async {
-    bool canOpen = await Permission.location.isPermanentlyDenied ||
+    bool canOpen =
+        await Permission.location.isPermanentlyDenied ||
         await Permission.storage.isPermanentlyDenied ||
-        await Permission.photos.isPermanentlyDenied;
+        await Permission.photos.isPermanentlyDenied ||
+        await Permission.contacts.isPermanentlyDenied;
 
     if (canOpen) {
       openAppSettings();
