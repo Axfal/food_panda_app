@@ -2,6 +2,7 @@ import 'package:badges/badges.dart' as badges;
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/featured_card.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/logout_dialog_box.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/summary_itme.dart';
+import '../../service/web_socket_service/web_socket_service.dart';
 import 'restaurant_owner_exports.dart';
 
 class RestaurantOwnerScreen extends StatefulWidget {
@@ -14,13 +15,18 @@ class RestaurantOwnerScreen extends StatefulWidget {
 class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
   late String userId;
   late List<Map<String, dynamic>> features;
-
+  late WebSocketService _webSocketService;
   int unreadNotifications = 3;
 
   @override
   void initState() {
     super.initState();
     userId = SessionController.user.id.toString();
+
+    // Connect WebSocket for vendor
+    _webSocketService = WebSocketService(url: "wss://itgenesis.space/ws/");
+    _webSocketService.connect();
+
     features = [
       {"title": "Profile", "icon": Icons.person, "route": RoutesName.profile},
       {

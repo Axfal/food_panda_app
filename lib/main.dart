@@ -9,8 +9,10 @@ import 'package:excellent_trade_app/bloc/vendor/menu_management/menu_management_
 import 'package:excellent_trade_app/bloc/vendor/restaurant/restaurant_bloc.dart';
 import 'package:excellent_trade_app/bloc/wish_list/wish_list_bloc.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
+import 'package:excellent_trade_app/repository/order/order_api_repository.dart';
 import 'package:excellent_trade_app/service/cart/cart_service.dart';
 import 'package:excellent_trade_app/service/location/location_storage.dart';
+import 'package:excellent_trade_app/service/web_socket_service/web_socket_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
@@ -142,9 +144,12 @@ class MyApp extends StatelessWidget {
                       ),
                     ),
                     BlocProvider<OrderBloc>(
-                      create: (context) =>
-                          OrderBloc(orderApiRepository: getIt()),
+                      create: (context) => OrderBloc(
+                        orderApiRepository: getIt<OrderApiRepository>(),
+                        webSocketService: getIt<WebSocketService>(),
+                      ),
                     ),
+
                   ],
                   child: MaterialApp(
                     debugShowCheckedModeBanner: false,

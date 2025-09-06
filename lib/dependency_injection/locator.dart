@@ -6,6 +6,7 @@ import 'package:excellent_trade_app/repository/search/search_http_api_response.d
 import 'package:excellent_trade_app/repository/wish_list/wish_list_api_repository.dart';
 import 'package:excellent_trade_app/repository/wish_list/wish_list_http_api_repository.dart';
 import '../repository/location/location_https_api_response.dart';
+import '../service/web_socket_service/web_socket_service.dart';
 import 'dependency_injection.dart';
 
 GetIt getIt = GetIt.instance;
@@ -38,6 +39,9 @@ class ServiceLocator {
     );
     getIt.registerLazySingleton<OrderApiRepository>(
       () => OrderHttpApiRepository(),
+    );
+    getIt.registerLazySingleton<WebSocketService>(
+          () => WebSocketService(url: "wss://itgenesis.space/ws/")..connect(),
     );
   }
 }
