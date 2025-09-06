@@ -58,4 +58,6 @@ class RoutesName {
   static const String searchScreen = 'search_screen';
 
   static const String wishList = 'wish_list';
+
+  static const String googleMap = 'google_map';
 }

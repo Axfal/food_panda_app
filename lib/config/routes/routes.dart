@@ -1,3 +1,4 @@
+import 'package:excellent_trade_app/pages/checkout/widgets/google_map.dart';
 import 'package:excellent_trade_app/pages/order_now.dart';
 import 'package:excellent_trade_app/pages/restuarant_item_screen.dart';
 import '../../pages/auth/forgot_password/forget_password_export.dart';
@@ -170,7 +171,8 @@ class Routes {
 
       case RoutesName.locationScreen:
         return MaterialPageRoute(builder: (context) => LocationScreen());
-
+      case RoutesName.googleMap:
+        return MaterialPageRoute(builder: (context) => GoogleMapScreen());
       case RoutesName.orderScreen:
         return MaterialPageRoute(builder: (context) => OrderScreen());
 

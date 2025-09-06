@@ -18,6 +18,7 @@ import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platf
 import 'package:flutter/services.dart';
 import 'bloc/cart/cart_bloc.dart';
 import 'bloc/category/category_bloc.dart';
+import 'bloc/order/order_bloc.dart';
 import 'bloc/restaurant_by_category/restaurant_by_category_bloc.dart';
 import 'bloc/restaurant_menu/restaurant_menu_bloc.dart';
 import 'bloc/search/search_bloc.dart';
@@ -139,6 +140,10 @@ class MyApp extends StatelessWidget {
                       create: (context) => NearByRestaurantBloc(
                         restaurantApiRepository: getIt(),
                       ),
+                    ),
+                    BlocProvider<OrderBloc>(
+                      create: (context) =>
+                          OrderBloc(orderApiRepository: getIt()),
                     ),
                   ],
                   child: MaterialApp(

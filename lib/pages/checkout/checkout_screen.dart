@@ -1,9 +1,14 @@
 // ignore_for_file: avoid_print
-
+import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
 import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/my_app_bar.dart';
-import 'package:excellent_trade_app/pages/checkout/widgets/google_map.dart';
+import 'package:excellent_trade_app/pages/checkout/widgets/address_card_widget.dart';
+import 'package:excellent_trade_app/pages/checkout/widgets/payment_method_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../bloc/order/order_bloc.dart';
+import '../../model/delivery_address/delievery_address_model.dart';
+import '../../model/delivery_address/order_request_model.dart';
+import '../../service/cart/cart_service.dart';
 import '../auth/signup/signup_exports.dart';
 
 class CheckoutScreen extends StatefulWidget {
@@ -14,8 +19,14 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
+  final houseNoController = TextEditingController();
+  final streetController = TextEditingController();
+  final cityController = TextEditingController();
+  DeliveryAddress? deliveryAddress;
   @override
   Widget build(BuildContext context) {
+    final cartController = CartSessionController();
+    final subtotal = cartController.cartTotal;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: MyAppBar(
@@ -45,19 +56,32 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
               ),
             ),
-            GoogleMapWidget(),
-            DeliveryOptionWidget(
-              options: [
-                DeliveryOption(title: "Saver Delivery", time: "50 minutes"),
-                DeliveryOption(title: "Standard Delivery", time: "30 minutes"),
-                DeliveryOption(title: "Priority Delivery", time: "15 minutes"),
-              ],
-              onOptionSelected: (option) {
-                print("Selected: ${option.title}");
+            AddressCardWidget(
+              houseNoController: houseNoController,
+              streetController: streetController,
+              cityController: cityController,
+              initialLocation: deliveryAddress,
+              onConfirm: () async {
+                final result = await Navigator.pushNamed(
+                  context,
+                  RoutesName.googleMap,
+                );
+                if (result != null && result is DeliveryAddress) {
+                  setState(() {
+                    deliveryAddress = result;
+                  });
+                }
               },
             ),
-            paymentMethodWidget(),
-            orderSummaryWidget(),
+
+            PaymentMethodWidget(
+              options: ["Cash on Delivery", "Pay Online (Currently disable)"],
+              onOptionSelected: (option) {
+                print("Selected Payment Method: $option");
+              },
+            ),
+
+            orderSummaryWidget(context),
           ],
         ),
       ),
@@ -116,7 +140,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          'Rs. 220.50',
+                          "Rs. $subtotal",
                           style: GoogleFonts.poppins(
                             color: AppColors.primary,
                             fontWeight: FontWeight.w600,
@@ -125,7 +149,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ),
                         SizedBox(height: 4.h),
                         Text(
-                          "Rs. 440.50",
+                          "Rs. ${subtotal + 150}",
                           style: GoogleFonts.poppins(
                             fontSize: 11.sp,
                             color: Colors.grey,
@@ -138,29 +162,107 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
               ),
               SizedBox(height: 14.h),
-              SizedBox(
-                width: double.infinity,
-                height: 48.h,
-                child: ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: Icon(Icons.payment, size: 18.sp),
-                  label: Text(
-                    "Select payment method",
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14.sp,
+              BlocConsumer<OrderBloc, OrderState>(
+                listenWhen: (current, previous) =>
+                current.apiResponse.status != previous.apiResponse.status,
+                listener: (context, state) {
+                  if (state.apiResponse.status == Status.error) {
+                    context.flushBarErrorMessage(
+                      message: state.apiResponse.message.toString(),
+                    );
+                  }
+
+                  if (state.apiResponse.status == Status.completed) {
+                    cartController.clearCart();
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      RoutesName.home,
+                          (routes) => false,
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  final isLoading = state.apiResponse.status == Status.loading;
+
+                  return SizedBox(
+                    width: double.infinity,
+                    height: 54.h,
+                    child: ElevatedButton.icon(
+                      onPressed: isLoading
+                          ? null // disable button while loading
+                          : () {
+                        if (deliveryAddress != null) {
+                          deliveryAddress!
+                            ..houseNo = houseNoController.text
+                            ..street = streetController.text
+                            ..city = cityController.text;
+
+                          context.read<OrderBloc>().add(
+                            CheckOutEvent(
+                              customerId: SessionController.user.id,
+                              restaurantId: int.parse(
+                                  CartSessionController.currentRestaurantId ?? '0'),
+                              totalAmount: subtotal + 150,
+                              discountAmount: 150,
+                              finalAmount: subtotal,
+                              paymentMethod: "COD",
+                              specialInstructions: "specialInstructions",
+                              lat: deliveryAddress!.lat,
+                              lng: deliveryAddress!.lng,
+                              houseNo: deliveryAddress!.houseNo,
+                              street: deliveryAddress!.street,
+                              city: deliveryAddress!.city,
+                              items: CartSessionController.cartItems
+                                  .map(
+                                    (e) => OrderItem(
+                                  itemId: int.parse(e.id),
+                                  itemName: e.name,
+                                  quantity: e.quantity,
+                                  price: e.price,
+                                  discountAmount: 150,
+                                  finalPrice: (e.price * e.quantity),
+                                  totalPrice: (e.price * e.quantity + 150),
+                                ),
+                              )
+                                  .toList(),
+                            ),
+                          );
+                        } else {
+                          context.flushBarErrorMessage(
+                            message: "Please select a location first",
+                          );
+                        }
+                      },
+                      icon: isLoading
+                          ? SizedBox(
+                        width: 20.sp,
+                        height: 20.sp,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2.5,
+                        ),
+                      )
+                          : Icon(Icons.check_circle_outline, size: 25.sp),
+                      label: Text(
+                        isLoading ? "Processing..." : "Confirm Order",
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18.sp,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6.r),
+                        ),
+                        elevation: 4,
+                      ),
                     ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6.r),
-                    ),
-                    elevation: 4,
-                  ),
-                ),
+                  );
+                },
               ),
+
             ],
           ),
         ),
@@ -168,111 +270,133 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  Widget orderSummaryWidget() => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
-    child: Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          /// Header Row
-          Row(
-            children: [
-              Icon(Icons.list_alt_outlined, color: Colors.black87),
-              SizedBox(width: 8.w),
-              Text(
-                'Order Summary',
-                style: GoogleFonts.poppins(
-                  fontSize: 16.sp,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 12.h),
+  Widget orderSummaryWidget(BuildContext context) {
+    final cartController = CartSessionController();
+    final cartItems = CartSessionController.cartItems;
+    final subtotal = cartController.cartTotal;
 
-          /// Order Item
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Text(
-                  "1x Beef Pulao 1KG with Podina Raita",
+    // Example: You can replace with your logic
+    const double deliveryFee = 0.0;
+    const double platformFee = 0.0;
+
+    final total = subtotal + deliveryFee + platformFee;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// Header Row
+            Row(
+              children: [
+                Icon(Icons.list_alt_outlined, color: Colors.black87),
+                SizedBox(width: 8.w),
+                Text(
+                  'Order Summary',
                   style: GoogleFonts.poppins(
-                    fontSize: 14.sp,
+                    fontSize: 16.sp,
                     color: Colors.black,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-              ),
-              Text(
-                'Rs. 1499.40',
-                style: GoogleFonts.poppins(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 12.h),
-          Divider(),
+              ],
+            ),
+            SizedBox(height: 12.h),
 
-          /// Charges Breakdown
-          SizedBox(height: 8.h),
-          _summaryRow('Subtotal', 'Rs. 1499.40'),
-          _summaryRow('Standard Delivery', 'Rs. 149.50'),
-          _summaryRow('Platform Fee', 'Rs. 50.00'),
-          Divider(),
-
-          /// Voucher CTA
-          SizedBox(height: 8.h),
-          InkWell(
-            onTap: () {
-              Navigator.pushNamed(context, RoutesName.applyForVoucher);
-            },
-            borderRadius: BorderRadius.circular(8.r),
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 12.w),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(8.r),
-                border: Border.all(
-                  color: AppColors.primary.withValues(alpha: .089),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.card_giftcard, color: AppColors.primary),
-                  SizedBox(width: 10.w),
-                  Text(
-                    "Apply a voucher",
-                    style: GoogleFonts.poppins(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.primary,
+            /// Dynamic Order Items
+            ...cartItems.map(
+              (item) => Padding(
+                padding: EdgeInsets.symmetric(vertical: 6.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "${item.quantity}x ${item.name}",
+                        style: GoogleFonts.poppins(
+                          fontSize: 14.sp,
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                    Text(
+                      "Rs. ${(item.price * item.quantity).toStringAsFixed(2)}",
+                      style: GoogleFonts.poppins(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+            Divider(),
+
+            /// Charges Breakdown
+            _summaryRow('Subtotal', "Rs. ${subtotal.toStringAsFixed(2)}"),
+            _summaryRow(
+              'Standard Delivery',
+              "Rs. ${deliveryFee.toStringAsFixed(2)}",
+            ),
+            _summaryRow(
+              'Platform Fee',
+              "Rs. ${platformFee.toStringAsFixed(2)}",
+            ),
+            Divider(),
+            _summaryRow('Total', "Rs. ${total.toStringAsFixed(2)}"),
+
+            /// Voucher CTA
+            SizedBox(height: 12.h),
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, RoutesName.applyForVoucher);
+              },
+              borderRadius: BorderRadius.circular(8.r),
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 12.w),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(8.r),
+                  border: Border.all(
+                    color: AppColors.primary.withValues(alpha: .089),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.card_giftcard, color: AppColors.primary),
+                    SizedBox(width: 10.w),
+                    Text(
+                      "Apply a voucher",
+                      style: GoogleFonts.poppins(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 
   Widget _summaryRow(String title, String amount) => Padding(
     padding: EdgeInsets.symmetric(vertical: 4.h),
@@ -288,7 +412,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           style: GoogleFonts.poppins(
             fontSize: 14.sp,
             fontWeight: FontWeight.w500,
-            color: Colors.black45,
+            color: Colors.black87,
           ),
         ),
       ],
@@ -329,9 +453,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           ),
           Divider(height: 24.h, thickness: 1, color: Colors.grey.shade200),
           InkWell(
-            onTap: () {
-              // Handle add payment method action
-            },
+            onTap: () {},
             borderRadius: BorderRadius.circular(12.r),
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 8.h),
@@ -395,150 +517,4 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       ),
     );
   }
-}
-
-class DeliveryOptionWidget extends StatefulWidget {
-  final List<DeliveryOption> options;
-  final Function(DeliveryOption) onOptionSelected;
-
-  const DeliveryOptionWidget({
-    super.key,
-    required this.options,
-    required this.onOptionSelected,
-  });
-
-  @override
-  State<DeliveryOptionWidget> createState() => _DeliveryOptionWidgetState();
-}
-
-class _DeliveryOptionWidgetState extends State<DeliveryOptionWidget> {
-  DeliveryOption? selectedOption;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.options.isNotEmpty) {
-      selectedOption = widget.options.first;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 8,
-              offset: Offset(0, 4),
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Delivery Option',
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 10),
-            ...widget.options.map((option) {
-              final isActive = option == selectedOption;
-
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  curve: Curves.easeInOut,
-                  decoration: BoxDecoration(
-                    color: isActive
-                        ? AppColors.primary.withValues(alpha: .098)
-                        : Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: isActive ? AppColors.primary : Colors.transparent,
-                      width: 1.5,
-                    ),
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(10),
-                      onTap: () {
-                        setState(() {
-                          selectedOption = option;
-                        });
-                        widget.onOptionSelected(option);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 10,
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 8,
-                              height: 8,
-                              margin: const EdgeInsets.only(right: 12),
-                              decoration: BoxDecoration(
-                                color: isActive
-                                    ? AppColors.primary
-                                    : Colors.grey,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                option.title,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 14,
-                                  fontWeight: isActive
-                                      ? FontWeight.w600
-                                      : FontWeight.w500,
-                                  color: isActive
-                                      ? AppColors.primary
-                                      : Colors.black87,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              option.time,
-                              style: GoogleFonts.poppins(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: isActive
-                                    ? AppColors.primary
-                                    : Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class DeliveryOption {
-  final String title;
-  final String time;
-
-  DeliveryOption({required this.title, required this.time});
 }

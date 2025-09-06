@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 import 'package:excellent_trade_app/repository/order/order_api_repository.dart';
 import '../../config/routes/route_export.dart';
-import '../../model/delivery_address/delivery_address_model.dart';
+import '../../model/delivery_address/order_request_model.dart';
 
 part 'order_event.dart';
 part 'order_state.dart';
@@ -45,7 +45,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         if (response['success'] == true &&
             response['order_id'] != null &&
             response['order_number'] != null) {
-          emit(state.copyWith(apiResponse: ApiResponse.completed(response)));
+          emit(state.copyWith(apiResponse: ApiResponse.completed('Order Placed Successfully.')));
         } else {
           emit(
             state.copyWith(

@@ -1,41 +1,38 @@
+import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/my_app_bar.dart';
 import 'package:excellent_trade_app/pages/home/home_exports.dart';
 import 'package:flutter/gestures.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../bloc/location/location_bloc.dart';
 import '../../../bloc/order/order_bloc.dart';
+import '../../../model/delivery_address/delievery_address_model.dart';
 import '../../../model/location/location_details/locations_details_model.dart';
 import '../../auth/signup/signup_exports.dart';
 
-class GoogleMapWidget extends StatefulWidget {
-  const GoogleMapWidget({super.key});
+class GoogleMapScreen extends StatefulWidget {
+  const GoogleMapScreen({super.key});
 
   @override
-  State<GoogleMapWidget> createState() => _GoogleMapWidgetState();
+  State<GoogleMapScreen> createState() => _GoogleMapScreenState();
 }
 
-class _GoogleMapWidgetState extends State<GoogleMapWidget> {
+class _GoogleMapScreenState extends State<GoogleMapScreen> {
   final TextEditingController searchController = TextEditingController();
   bool showSuggestions = false;
   GoogleMapController? _mapController;
-  // final TextEditingController _controller = TextEditingController();
   LatLng selectedLocation = LatLng(31.5204, 74.3587);
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Container(
-        padding: EdgeInsets.all(16.r),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 8,
-              offset: Offset(0, 4),
-            ),
-          ],
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: MyAppBar(
+        title: 'Select Location',
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
+      ),
+      body: SafeArea(
         child: BlocConsumer<LocationBloc, LocationState>(
           listener: (context, state) {
             if (state.locationDetailsModel.place != null) {
@@ -47,189 +44,181 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
             }
           },
           builder: (context, state) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            return Stack(
               children: [
-                Row(
-                  children: [
-                    Icon(Icons.location_on_outlined, color: Colors.redAccent),
-                    SizedBox(width: 8.w),
-                    Text(
-                      'Delivery Address',
-                      style: GoogleFonts.poppins(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 12.h),
-
-                TextField(
-                  controller: searchController,
-                  style: GoogleFonts.poppins(
-                    color: Colors.black87,
-                    fontSize: 14.sp,
+                /// Fullscreen Google Map
+                GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: selectedLocation,
+                    zoom: 15,
                   ),
-                  cursorColor: Colors.black54,
-                  decoration: InputDecoration(
-                    hintText: "Search location...",
-                    hintStyle: GoogleFonts.poppins(color: Colors.black54),
-                    prefixIcon: const Icon(Icons.search, color: Colors.black54),
-                    filled: true,
-                    fillColor: Colors.grey.shade100,
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 14.h,
-                      horizontal: 12.w,
+                  onMapCreated: (controller) => _mapController = controller,
+                  onCameraMove: (position) {
+                    selectedLocation = position.target;
+                  },
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: true,
+                  zoomControlsEnabled: false,
+                  zoomGesturesEnabled: true,
+                  scrollGesturesEnabled: true,
+                  rotateGesturesEnabled: true,
+                  tiltGesturesEnabled: false,
+                  gestureRecognizers: {
+                    Factory<OneSequenceGestureRecognizer>(
+                      () => EagerGestureRecognizer(),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14.r),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14.r),
-                      borderSide: const BorderSide(
-                        color: Colors.black54,
-                        width: 1.2,
-                      ),
-                    ),
-                  ),
-                  onChanged: (query) {
-                    if (query.isNotEmpty) {
-                      showSuggestions = true;
-                      context.read<LocationBloc>().add(
-                        FetchLocationSuggestionEvent(query: query),
-                      );
-                    } else {
-                      showSuggestions = false;
-                    }
                   },
                 ),
-                SizedBox(height: 10.h),
 
-                if (showSuggestions &&
-                    state.locationSuggestionModel.suggestions.isNotEmpty)
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12.r),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 6,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    constraints: BoxConstraints(maxHeight: 180.h),
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.zero,
-                      itemCount:
-                          state.locationSuggestionModel.suggestions.length,
-                      separatorBuilder: (_, _) => Divider(
-                        color: Colors.grey.shade300,
-                        height: 1,
-                        thickness: 0.8,
-                      ),
-                      itemBuilder: (context, index) {
-                        final suggestion =
-                            state.locationSuggestionModel.suggestions[index];
-                        return ListTile(
-                          leading: const Icon(
-                            Icons.location_on_outlined,
-                            color: Colors.black54,
+                /// Centered Pin Marker
+                Center(
+                  child: Icon(
+                    Icons.location_on,
+                    color: Colors.redAccent,
+                    size: 40.sp,
+                  ),
+                ),
+
+                /// Floating Search Bar at Top
+                Positioned(
+                  top: 16.h,
+                  left: 16.w,
+                  right: 16.w,
+                  child: Column(
+                    children: [
+                      Material(
+                        elevation: 6,
+                        borderRadius: BorderRadius.circular(12.r),
+                        child: TextField(
+                          controller: searchController,
+                          style: GoogleFonts.poppins(
+                            color: Colors.black87,
+                            fontSize: 14.sp,
                           ),
-                          title: Text(
-                            suggestion.description,
-                            style: GoogleFonts.poppins(
-                              fontSize: 13.sp,
-                              color: Colors.black87,
+                          cursorColor: Colors.black54,
+                          decoration: InputDecoration(
+                            hintText: "Search location...",
+                            hintStyle: GoogleFonts.poppins(
+                              color: Colors.black54,
+                            ),
+                            prefixIcon: const Icon(
+                              Icons.search,
+                              color: Colors.black54,
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 14.h,
+                              horizontal: 12.w,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.r),
+                              borderSide: BorderSide.none,
                             ),
                           ),
-                          onTap: () {
-                            showSuggestions = false;
-                            searchController.text = suggestion.description;
-
-                            FocusScope.of(context).unfocus();
-
-                            context.read<LocationBloc>().add(
-                              FetchLocationDetailsEvent(
-                                placeId: suggestion.placeId,
-                              ),
-                            );
+                          onChanged: (query) {
+                            if (query.isNotEmpty) {
+                              showSuggestions = true;
+                              context.read<LocationBloc>().add(
+                                FetchLocationSuggestionEvent(query: query),
+                              );
+                            } else {
+                              showSuggestions = false;
+                            }
+                            setState(() {});
                           },
-                        );
-                      },
-                    ),
-                  ),
-
-                SizedBox(height: 12.h),
-
-                SizedBox(
-                  height: 300.h,
-                  child: Stack(
-                    children: [
-                      GoogleMap(
-                        initialCameraPosition: CameraPosition(
-                          target: selectedLocation,
-                          zoom: 15,
                         ),
-                        onMapCreated: (controller) =>
-                            _mapController = controller,
-                        onCameraMove: (position) {
-                          selectedLocation = position.target;
-                        },
-                        myLocationEnabled: true,
-                        myLocationButtonEnabled: true,
-                        zoomControlsEnabled: false,
-                        zoomGesturesEnabled: true,
-                        scrollGesturesEnabled: true,
-                        rotateGesturesEnabled: true,
-                        tiltGesturesEnabled: false,
-                        gestureRecognizers: {
-                          Factory<OneSequenceGestureRecognizer>(
-                            () => EagerGestureRecognizer(),
+                      ),
+
+                      /// Suggestions dropdown
+                      if (showSuggestions &&
+                          state.locationSuggestionModel.suggestions.isNotEmpty)
+                        Container(
+                          margin: EdgeInsets.only(top: 8.h),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(14.r),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.08),
+                                blurRadius: 12,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
                           ),
-                        },
-                      ),
+                          constraints: BoxConstraints(maxHeight: 240.h),
+                          child: ListView.separated(
+                            shrinkWrap: true,
+                            padding: EdgeInsets.symmetric(vertical: 4.h),
+                            itemCount: state.locationSuggestionModel.suggestions.length,
+                            separatorBuilder: (_, _) => Divider(
+                              color: Colors.grey.shade200,
+                              height: 1,
+                              thickness: 0.7,
+                              indent: 50,
+                            ),
+                            itemBuilder: (context, index) {
+                              final suggestion =
+                              state.locationSuggestionModel.suggestions[index];
 
-                      Center(
-                        child: Icon(
-                          Icons.location_on,
-                          color: Colors.redAccent,
-                          size: 40.sp,
+                              return InkWell(
+                                borderRadius: BorderRadius.circular(12.r),
+                                onTap: () {
+                                  showSuggestions = false;
+                                  searchController.text = suggestion.description;
+                                  FocusScope.of(context).unfocus();
+                                  context.read<LocationBloc>().add(
+                                    FetchLocationDetailsEvent(placeId: suggestion.placeId),
+                                  );
+                                  setState(() {});
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(6.r),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade100,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: const Icon(
+                                          Icons.location_on_outlined,
+                                          color: Colors.redAccent,
+                                          size: 20,
+                                        ),
+                                      ),
+                                      SizedBox(width: 12.w),
+                                      Expanded(
+                                        child: Text(
+                                          suggestion.description,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 13.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black87,
+                                            height: 1.3,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
+
                     ],
                   ),
                 ),
 
-                SizedBox(height: 16.h),
-
-                Text(
-                  "Selected Address",
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14.sp,
-                    color: Colors.black87,
-                  ),
-                ),
-                SizedBox(height: 6.h),
-                Text(
-                  "Lat: ${selectedLocation.latitude.toStringAsFixed(5)}, "
-                  "Lng: ${selectedLocation.longitude.toStringAsFixed(5)}",
-                  style: GoogleFonts.poppins(
-                    fontSize: 13.sp,
-                    color: Colors.grey[700],
-                  ),
-                ),
-
-                SizedBox(height: 12.h),
-
-                SizedBox(
-                  width: double.infinity,
+                /// Confirm Location Button at Bottom
+                Positioned(
+                  left: 16.w,
+                  right: 16.w,
+                  bottom: 30.h,
                   child: BlocConsumer<OrderBloc, OrderState>(
                     listener: (context, state) {
                       if (state.apiResponse.status == Status.error) {
@@ -237,41 +226,34 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
                           message: state.apiResponse.message.toString(),
                         );
                       }
-                      if(state.apiResponse.status == Status.completed){
-
+                      if (state.apiResponse.status == Status.completed) {
+                        // You can add success handling if needed
                       }
                     },
                     builder: (context, state) {
                       return ElevatedButton(
-                        onPressed: () async {
-                          final place = Place(
-                            placeId: "manual-selected",
-                            name: "Pinned Location",
-                            address: "",
+                        onPressed: () {
+                          final deliveryAddress = DeliveryAddress(
                             lat: selectedLocation.latitude,
                             lng: selectedLocation.longitude,
                           );
-                          final location = LocationDetailsModel(
-                            success: true,
-                            place: place,
-                          );
-
-                          setState(() {});
-                          await LocationSessionController().saveLocation(
-                            location,
-                          );
+                          Navigator.pop(context, deliveryAddress);
                         },
+
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
                           foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(vertical: 14.h),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.r),
+                            borderRadius: BorderRadius.circular(12.r),
                           ),
+                          elevation: 6,
                         ),
                         child: Text(
                           "Confirm Location",
                           style: GoogleFonts.poppins(
                             fontWeight: FontWeight.w600,
+                            fontSize: 16.sp,
                           ),
                         ),
                       );

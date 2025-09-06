@@ -20,74 +20,88 @@ class _ApplyVoucherState extends State<ApplyVoucher> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _buildAppBar(context),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-          child: Column(
-            children: [
-              CustomTextField(
-                label: 'Enter a voucher code',
-                hintText: 'Enter a voucher code',
-                controller: voucherController,
-                focusNode: focusNode,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
+      body: 1 < 2
+          ? Center(
+              child: Text(
+                'Coming Soon',
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black54,
+                  fontSize: 22,
+                ),
               ),
-              SizedBox(height: 16),
-              RoundButton(title: 'Apply', onPress: () {}),
-
-              Container(
-                decoration: BoxDecoration(),
+            )
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8,
+                ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 20.h),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        'Select a voucher',
-                        style: GoogleFonts.poppins(
-                          fontSize: 18,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.bold,
-                          height: 1.4,
-                        ),
+                    CustomTextField(
+                      label: 'Enter a voucher code',
+                      hintText: 'Enter a voucher code',
+                      controller: voucherController,
+                      focusNode: focusNode,
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                    ),
+                    SizedBox(height: 16),
+                    RoundButton(title: 'Apply', onPress: () {}),
+
+                    Container(
+                      decoration: BoxDecoration(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 20.h),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'Select a voucher',
+                              style: GoogleFonts.poppins(
+                                fontSize: 18,
+                                color: Colors.black54,
+                                fontWeight: FontWeight.bold,
+                                height: 1.4,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+                    ),
+                    voucherWidget(
+                      icon: Icons.attach_money,
+                      title: 'Get Rs. 500 cashback via Food Bazaar',
+                      discount: '10',
+                      code: 'GIFTCARD500',
+                      rupees: '1200',
+                      date: '31 Jul 2025',
+                      apply: () {},
+                    ),
+                    voucherWidget(
+                      icon: Icons.attach_money,
+                      title: 'Get Rs. 500 cashback via Food Bazaar',
+                      discount: '10',
+                      code: 'GIFTCARD501',
+                      rupees: '1200',
+                      date: '01 Aug 2025',
+                      apply: () {},
+                    ),
+                    voucherWidget(
+                      icon: Icons.attach_money,
+                      title: 'Get Rs. 500 cashback via Food Bazaar',
+                      discount: '12',
+                      code: 'GIFTCARD502',
+                      rupees: '900',
+                      date: '02 Aug 2025',
+                      apply: () {},
                     ),
                   ],
                 ),
               ),
-              voucherWidget(
-                icon: Icons.attach_money,
-                title: 'Get Rs. 500 cashback via Food Bazaar',
-                discount: '10',
-                code: 'GIFTCARD500',
-                rupees: '1200',
-                date: '31 Jul 2025',
-                apply: () {},
-              ),
-              voucherWidget(
-                icon: Icons.attach_money,
-                title: 'Get Rs. 500 cashback via Food Bazaar',
-                discount: '10',
-                code: 'GIFTCARD501',
-                rupees: '1200',
-                date: '01 Aug 2025',
-                apply: () {},
-              ),
-              voucherWidget(
-                icon: Icons.attach_money,
-                title: 'Get Rs. 500 cashback via Food Bazaar',
-                discount: '12',
-                code: 'GIFTCARD502',
-                rupees: '900',
-                date: '02 Aug 2025',
-                apply: () {},
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 
