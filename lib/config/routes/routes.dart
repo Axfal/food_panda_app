@@ -1,8 +1,8 @@
 import 'package:excellent_trade_app/pages/checkout/widgets/google_map.dart';
 import 'package:excellent_trade_app/pages/order_now.dart';
+import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/order_notifications_screen/order_notification_screen.dart';
 import 'package:excellent_trade_app/pages/restuarant_item_screen.dart';
 import '../../pages/auth/forgot_password/forget_password_export.dart';
-import 'route_export.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -154,7 +154,7 @@ class Routes {
 
       case RoutesName.registerRestaurant:
         final args = settings.arguments;
-        final userIdSession = SessionController.user.id ?? '';
+        final userIdSession = SessionController.user.id;
 
         String userId = userIdSession.toString();
         Restaurant? restaurant;
@@ -175,6 +175,11 @@ class Routes {
         return MaterialPageRoute(builder: (context) => GoogleMapScreen());
       case RoutesName.orderScreen:
         return MaterialPageRoute(builder: (context) => OrderScreen());
+
+      case RoutesName.orderNotification:
+        return MaterialPageRoute(
+          builder: (context) => OrderNotificationScreen(),
+        );
 
       case RoutesName.orderHistory:
         return MaterialPageRoute(builder: (context) => OrderHistory());

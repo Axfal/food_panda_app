@@ -2,12 +2,41 @@ part of 'order_bloc.dart';
 
 class OrderState extends Equatable {
   final ApiResponse<String> apiResponse;
-  const OrderState({this.apiResponse = const ApiResponse.completed('')});
+  final WebSocketOrder webSocketOrder;
+  final List<OrderData> orders;
+  final List<WebSocketOrder> vendorOrders;
+  final int unreadOrders;
 
-  OrderState copyWith({final ApiResponse<String>? apiResponse}) {
-    return OrderState(apiResponse: apiResponse ?? this.apiResponse);
+  OrderState({
+    this.orders = const [],
+    this.apiResponse = const ApiResponse.completed(''),
+    WebSocketOrder? webSocketOrder,
+    this.vendorOrders = const [],
+    this.unreadOrders = 0,
+  }) : webSocketOrder = webSocketOrder ?? WebSocketOrder.empty();
+
+  OrderState copyWith({
+    List<OrderData>? orders,
+    ApiResponse<String>? apiResponse,
+    WebSocketOrder? webSocketOrder,
+    List<WebSocketOrder>? vendorOrders,
+    int? unreadOrders,
+  }) {
+    return OrderState(
+      orders: orders ?? this.orders,
+      apiResponse: apiResponse ?? this.apiResponse,
+      webSocketOrder: webSocketOrder ?? this.webSocketOrder,
+      vendorOrders: vendorOrders ?? this.vendorOrders,
+      unreadOrders: unreadOrders ?? this.unreadOrders,
+    );
   }
 
   @override
-  List<Object?> get props => [apiResponse];
+  List<Object?> get props => [
+    apiResponse,
+    webSocketOrder,
+    vendorOrders,
+    unreadOrders,
+    orders,
+  ];
 }

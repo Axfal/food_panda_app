@@ -70,7 +70,7 @@ void main() async {
 
   await LocationSessionController().loadLocation();
   await CartSessionController().loadCart();
-
+  await getIt<WebSocketService>().connect();
   await initializeMapRenderer();
   bool granted = await PermissionsService.requestPermissions();
   if (!granted) {

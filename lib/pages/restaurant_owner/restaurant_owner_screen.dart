@@ -2,7 +2,9 @@ import 'package:badges/badges.dart' as badges;
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/featured_card.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/logout_dialog_box.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/summary_itme.dart';
+import '../../bloc/order/order_bloc.dart';
 import '../../service/web_socket_service/web_socket_service.dart';
+import '../auth/forgot_password/forget_password_export.dart';
 import 'restaurant_owner_exports.dart';
 
 class RestaurantOwnerScreen extends StatefulWidget {
@@ -70,36 +72,46 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 12),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(50),
-              onTap: () => Navigator.pushNamed(context, "/notifications"),
-              child: badges.Badge(
-                position: badges.BadgePosition.topEnd(top: -5, end: -4),
-                badgeContent: Text(
-                  unreadNotifications.toString(),
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
+            child: BlocBuilder<OrderBloc, OrderState>(
+              builder: (context, state) {
+                return InkWell(
+                  borderRadius: BorderRadius.circular(50),
+                  onTap: () {
+                    context.read<OrderBloc>().emit(
+                      state.copyWith(unreadOrders: 0),
+                    );
+                    Navigator.pushNamed(context, RoutesName.orderNotification);
+                  },
+                  child: badges.Badge(
+                    position: badges.BadgePosition.topEnd(top: -5, end: -4),
+                    badgeContent: Text(
+                      state.unreadOrders.toString(),
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    showBadge: state.unreadOrders > 0,
+                    badgeStyle: badges.BadgeStyle(
+                      badgeColor: Colors.redAccent,
+                      padding: const EdgeInsets.all(5),
+                      elevation: 0,
+                      borderSide: const BorderSide(color: Colors.white, width: 1),
+                    ),
+                    child: const Icon(
+                      Icons.notifications_rounded,
+                      size: 30,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                showBadge: unreadNotifications > 0,
-                badgeStyle: badges.BadgeStyle(
-                  badgeColor: Colors.redAccent,
-                  padding: const EdgeInsets.all(5),
-                  elevation: 0,
-                  borderSide: const BorderSide(color: Colors.white, width: 1),
-                ),
-                child: const Icon(
-                  Icons.notifications_rounded,
-                  size: 30,
-                  color: Colors.white,
-                ),
-              ),
+                );
+              },
             ),
           ),
         ],
       ),
+
       body: SafeArea(
         child: Column(
           children: [

@@ -223,8 +223,8 @@ return $default(_that.success,_that.message,_that.user,_that.error);case _:
 /// @nodoc
 @JsonSerializable()
 
-class _LoginModel extends LoginModel {
-  const _LoginModel({@JsonKey(name: "success") this.success = false, @JsonKey(name: "message") this.message = '', @JsonKey(name: "user") this.user, this.error = ''}): super._();
+class _LoginModel implements LoginModel {
+  const _LoginModel({@JsonKey(name: "success") this.success = false, @JsonKey(name: "message") this.message = '', @JsonKey(name: "user") this.user, this.error = ''});
   factory _LoginModel.fromJson(Map<String, dynamic> json) => _$LoginModelFromJson(json);
 
 @override@JsonKey(name: "success") final  bool success;
@@ -311,7 +311,7 @@ $UserModelCopyWith<$Res>? get user {
 /// @nodoc
 mixin _$UserModel {
 
-@JsonKey(name: "id") int get id;@JsonKey(name: "name") String get name;@JsonKey(name: "email") String get email;@JsonKey(name: "role") String get role;@JsonKey(name: "token") String get token;
+@JsonKey(name: "id") int get id;@JsonKey(name: "name") String get name;@JsonKey(name: "email") String get email;@JsonKey(name: "role") String get role;@JsonKey(name: "restaurant_id") int get restaurantId;@JsonKey(name: "token") String get token;
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -324,16 +324,16 @@ $UserModelCopyWith<UserModel> get copyWith => _$UserModelCopyWithImpl<UserModel>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.email, email) || other.email == email)&&(identical(other.role, role) || other.role == role)&&(identical(other.token, token) || other.token == token));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.email, email) || other.email == email)&&(identical(other.role, role) || other.role == role)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.token, token) || other.token == token));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,email,role,token);
+int get hashCode => Object.hash(runtimeType,id,name,email,role,restaurantId,token);
 
 @override
 String toString() {
-  return 'UserModel(id: $id, name: $name, email: $email, role: $role, token: $token)';
+  return 'UserModel(id: $id, name: $name, email: $email, role: $role, restaurantId: $restaurantId, token: $token)';
 }
 
 
@@ -344,7 +344,7 @@ abstract mixin class $UserModelCopyWith<$Res>  {
   factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) _then) = _$UserModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "id") int id,@JsonKey(name: "name") String name,@JsonKey(name: "email") String email,@JsonKey(name: "role") String role,@JsonKey(name: "token") String token
+@JsonKey(name: "id") int id,@JsonKey(name: "name") String name,@JsonKey(name: "email") String email,@JsonKey(name: "role") String role,@JsonKey(name: "restaurant_id") int restaurantId,@JsonKey(name: "token") String token
 });
 
 
@@ -361,13 +361,14 @@ class _$UserModelCopyWithImpl<$Res>
 
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? email = null,Object? role = null,Object? token = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? email = null,Object? role = null,Object? restaurantId = null,Object? token = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as String,token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+as String,restaurantId: null == restaurantId ? _self.restaurantId : restaurantId // ignore: cast_nullable_to_non_nullable
+as int,token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -453,10 +454,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  int id, @JsonKey(name: "name")  String name, @JsonKey(name: "email")  String email, @JsonKey(name: "role")  String role, @JsonKey(name: "token")  String token)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  int id, @JsonKey(name: "name")  String name, @JsonKey(name: "email")  String email, @JsonKey(name: "role")  String role, @JsonKey(name: "restaurant_id")  int restaurantId, @JsonKey(name: "token")  String token)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserModel() when $default != null:
-return $default(_that.id,_that.name,_that.email,_that.role,_that.token);case _:
+return $default(_that.id,_that.name,_that.email,_that.role,_that.restaurantId,_that.token);case _:
   return orElse();
 
 }
@@ -474,10 +475,10 @@ return $default(_that.id,_that.name,_that.email,_that.role,_that.token);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  int id, @JsonKey(name: "name")  String name, @JsonKey(name: "email")  String email, @JsonKey(name: "role")  String role, @JsonKey(name: "token")  String token)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  int id, @JsonKey(name: "name")  String name, @JsonKey(name: "email")  String email, @JsonKey(name: "role")  String role, @JsonKey(name: "restaurant_id")  int restaurantId, @JsonKey(name: "token")  String token)  $default,) {final _that = this;
 switch (_that) {
 case _UserModel():
-return $default(_that.id,_that.name,_that.email,_that.role,_that.token);case _:
+return $default(_that.id,_that.name,_that.email,_that.role,_that.restaurantId,_that.token);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -494,10 +495,10 @@ return $default(_that.id,_that.name,_that.email,_that.role,_that.token);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "id")  int id, @JsonKey(name: "name")  String name, @JsonKey(name: "email")  String email, @JsonKey(name: "role")  String role, @JsonKey(name: "token")  String token)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "id")  int id, @JsonKey(name: "name")  String name, @JsonKey(name: "email")  String email, @JsonKey(name: "role")  String role, @JsonKey(name: "restaurant_id")  int restaurantId, @JsonKey(name: "token")  String token)?  $default,) {final _that = this;
 switch (_that) {
 case _UserModel() when $default != null:
-return $default(_that.id,_that.name,_that.email,_that.role,_that.token);case _:
+return $default(_that.id,_that.name,_that.email,_that.role,_that.restaurantId,_that.token);case _:
   return null;
 
 }
@@ -508,14 +509,15 @@ return $default(_that.id,_that.name,_that.email,_that.role,_that.token);case _:
 /// @nodoc
 @JsonSerializable()
 
-class _UserModel extends UserModel {
-  const _UserModel({@JsonKey(name: "id") this.id = 0, @JsonKey(name: "name") this.name = '', @JsonKey(name: "email") this.email = '', @JsonKey(name: "role") this.role = '', @JsonKey(name: "token") this.token = ''}): super._();
+class _UserModel implements UserModel {
+  const _UserModel({@JsonKey(name: "id") this.id = 0, @JsonKey(name: "name") this.name = '', @JsonKey(name: "email") this.email = '', @JsonKey(name: "role") this.role = '', @JsonKey(name: "restaurant_id") this.restaurantId = 0, @JsonKey(name: "token") this.token = ''});
   factory _UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
 
 @override@JsonKey(name: "id") final  int id;
 @override@JsonKey(name: "name") final  String name;
 @override@JsonKey(name: "email") final  String email;
 @override@JsonKey(name: "role") final  String role;
+@override@JsonKey(name: "restaurant_id") final  int restaurantId;
 @override@JsonKey(name: "token") final  String token;
 
 /// Create a copy of UserModel
@@ -531,16 +533,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.email, email) || other.email == email)&&(identical(other.role, role) || other.role == role)&&(identical(other.token, token) || other.token == token));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.email, email) || other.email == email)&&(identical(other.role, role) || other.role == role)&&(identical(other.restaurantId, restaurantId) || other.restaurantId == restaurantId)&&(identical(other.token, token) || other.token == token));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,email,role,token);
+int get hashCode => Object.hash(runtimeType,id,name,email,role,restaurantId,token);
 
 @override
 String toString() {
-  return 'UserModel(id: $id, name: $name, email: $email, role: $role, token: $token)';
+  return 'UserModel(id: $id, name: $name, email: $email, role: $role, restaurantId: $restaurantId, token: $token)';
 }
 
 
@@ -551,7 +553,7 @@ abstract mixin class _$UserModelCopyWith<$Res> implements $UserModelCopyWith<$Re
   factory _$UserModelCopyWith(_UserModel value, $Res Function(_UserModel) _then) = __$UserModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "id") int id,@JsonKey(name: "name") String name,@JsonKey(name: "email") String email,@JsonKey(name: "role") String role,@JsonKey(name: "token") String token
+@JsonKey(name: "id") int id,@JsonKey(name: "name") String name,@JsonKey(name: "email") String email,@JsonKey(name: "role") String role,@JsonKey(name: "restaurant_id") int restaurantId,@JsonKey(name: "token") String token
 });
 
 
@@ -568,13 +570,14 @@ class __$UserModelCopyWithImpl<$Res>
 
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? email = null,Object? role = null,Object? token = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? email = null,Object? role = null,Object? restaurantId = null,Object? token = null,}) {
   return _then(_UserModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as String,token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+as String,restaurantId: null == restaurantId ? _self.restaurantId : restaurantId // ignore: cast_nullable_to_non_nullable
+as int,token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

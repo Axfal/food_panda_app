@@ -59,5 +59,7 @@ class RoutesName {
 
   static const String wishList = 'wish_list';
 
+  static const String orderNotification = 'order_notification';
+
   static const String googleMap = 'google_map';
 }

@@ -5,8 +5,6 @@ part 'login_model.g.dart';
 
 @freezed
 class LoginModel with _$LoginModel {
-  const LoginModel._();
-
   const factory LoginModel({
     @Default(false) @JsonKey(name: "success") bool success,
     @Default('') @JsonKey(name: "message") String message,
@@ -38,17 +36,17 @@ class LoginModel with _$LoginModel {
   @override
   // TODO: implement user
   UserModel? get user => throw UnimplementedError();
+
 }
 
 @freezed
 class UserModel with _$UserModel {
-  const UserModel._();  // Add this private constructor
-
   const factory UserModel({
     @Default(0) @JsonKey(name: "id") int id,
     @Default('') @JsonKey(name: "name") String name,
     @Default('') @JsonKey(name: "email") String email,
     @Default('') @JsonKey(name: "role") String role,
+    @Default(0) @JsonKey(name: "restaurant_id") int restaurantId,
     @Default('') @JsonKey(name: "token") String token,
   }) = _UserModel;
 
@@ -68,6 +66,10 @@ class UserModel with _$UserModel {
   String get name => throw UnimplementedError();
 
   @override
+  // TODO: implement restaurantId
+  int get restaurantId => throw UnimplementedError();
+
+  @override
   // TODO: implement role
   String get role => throw UnimplementedError();
 
@@ -80,4 +82,5 @@ class UserModel with _$UserModel {
   @override
   // TODO: implement token
   String get token => throw UnimplementedError();
+
 }

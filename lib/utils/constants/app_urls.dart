@@ -56,4 +56,7 @@ class AppUrl {
 
   /// CheckOut
   static const String checkout = '$baseUrl/add_orders.php';
+
+  /// Order
+  static const String getOrders = '$baseUrl/get_orders.php';
 }

@@ -9,4 +9,11 @@ class OrderHttpApiRepository extends OrderApiRepository {
     final response = await _apiServices.postApi(AppUrl.checkout, data);
     return response;
   }
+
+  @override
+  Future getOrders(dynamic data) async {
+    final uri = Uri.parse(AppUrl.getOrders).replace(queryParameters: data);
+    final response = await _apiServices.getApi(uri.toString());
+    return response;
+  }
 }

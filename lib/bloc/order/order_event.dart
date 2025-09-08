@@ -1,8 +1,25 @@
 part of 'order_bloc.dart';
 
 sealed class OrderEvent extends Equatable {
+  const OrderEvent();
+
   @override
   List<Object?> get props => [];
+}
+
+class FetchOrderEvent extends OrderEvent {
+  final String restaurantId;
+  final String limit;
+  final String offset;
+
+  const FetchOrderEvent({
+    required this.restaurantId,
+    required this.limit,
+    required this.offset,
+  });
+
+  @override
+  List<Object?> get props => [restaurantId, limit, offset];
 }
 
 class CheckOutEvent extends OrderEvent {
@@ -52,4 +69,13 @@ class CheckOutEvent extends OrderEvent {
     city,
     items,
   ];
+}
+
+class NewOrderReceivedEvent extends OrderEvent {
+  final WebSocketOrder orderData;
+
+  NewOrderReceivedEvent(this.orderData);
+
+  @override
+  List<Object?> get props => [orderData];
 }

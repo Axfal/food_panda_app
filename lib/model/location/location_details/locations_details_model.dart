@@ -32,7 +32,6 @@ class LocationDetailsModel with _$LocationDetailsModel {
     throw UnimplementedError();
   }
 
-
 }
 
 @freezed

@@ -41,7 +41,7 @@ class ServiceLocator {
       () => OrderHttpApiRepository(),
     );
     getIt.registerLazySingleton<WebSocketService>(
-          () => WebSocketService(url: "wss://itgenesis.space/ws/")..connect(),
+          () => WebSocketService(url: "wss://itgenesis.space/ws/"),
     );
   }
 }
