@@ -36,20 +36,28 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
         "icon": Icons.store,
         "route": RoutesName.myRestaurant,
       },
-      {
-        "title": "New Restaurant",
-        "icon": Icons.store_mall_directory,
-        "route": RoutesName.registerRestaurant,
-        'arg': {'user_id': userId},
-      },
+      // {
+      //   "title": "New Restaurant",
+      //   "icon": Icons.store_mall_directory,
+      //   "route": RoutesName.registerRestaurant,
+      //   'arg': {'user_id': userId},
+      // },
       {
         "title": "Menu Items",
         "icon": Icons.fastfood,
         "route": RoutesName.selectRestaurant,
         // 'arg': {'restaurant_id': "6"},
       },
-      {"title": "Orders", "icon": Icons.shopping_bag, "route": RoutesName.orderScreen},
-      {"title": "Order History", "icon": Icons.history, "route": RoutesName.orderHistory},
+      {
+        "title": "Orders",
+        "icon": Icons.shopping_bag,
+        "route": RoutesName.orderScreen,
+      },
+      // {
+      //   "title": "Order History",
+      //   "icon": Icons.history,
+      //   "route": RoutesName.orderHistory,
+      // },
       {
         "title": "Performance",
         "icon": Icons.bar_chart,
@@ -97,7 +105,10 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
                       badgeColor: Colors.redAccent,
                       padding: const EdgeInsets.all(5),
                       elevation: 0,
-                      borderSide: const BorderSide(color: Colors.white, width: 1),
+                      borderSide: const BorderSide(
+                        color: Colors.white,
+                        width: 1,
+                      ),
                     ),
                     child: const Icon(
                       Icons.notifications_rounded,

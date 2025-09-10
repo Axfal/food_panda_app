@@ -74,8 +74,22 @@ class CheckOutEvent extends OrderEvent {
 class NewOrderReceivedEvent extends OrderEvent {
   final WebSocketOrder orderData;
 
-  NewOrderReceivedEvent(this.orderData);
+  const NewOrderReceivedEvent(this.orderData);
 
   @override
   List<Object?> get props => [orderData];
+}
+
+class StatusUpdateEvent extends OrderEvent {
+  final String orderNumber;
+  final String restaurantId;
+  final String status;
+  const StatusUpdateEvent({
+    required this.orderNumber,
+    required this.restaurantId,
+    required this.status,
+  });
+  @override
+  // TODO: implement props
+  List<Object?> get props => [orderNumber, restaurantId, status];
 }

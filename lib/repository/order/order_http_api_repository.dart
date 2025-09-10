@@ -16,4 +16,10 @@ class OrderHttpApiRepository extends OrderApiRepository {
     final response = await _apiServices.getApi(uri.toString());
     return response;
   }
+
+  @override
+  Future updateStatus(dynamic data) async {
+    final response = await _apiServices.postApi(AppUrl.updateStatus, data);
+    return response;
+  }
 }

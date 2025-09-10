@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_print
+
 import 'package:excellent_trade_app/repository/order/order_api_repository.dart';
 import '../../config/routes/route_export.dart';
 import '../../model/delivery_address/order_request_model.dart';
@@ -21,7 +22,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
     on<FetchOrderEvent>(_onGetOrders);
 
-    // WebSocket messages
+    on<StatusUpdateEvent>(_onUpdateStatus);
+
     webSocketService.onMessage = (data) {
       print(data);
 
@@ -39,10 +41,87 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     };
   }
 
+  Future<void> _onUpdateStatus(
+    StatusUpdateEvent event,
+    Emitter<OrderState> emit,
+  ) async {
+    // emit(state.copyWith(apiResponse: ApiResponse.loading()));
+
+    final data = {
+      "order_number": event.orderNumber,
+      "restaurant_id": event.restaurantId,
+      "status": event.status,
+    };
+
+    try {
+      final response = await orderApiRepository.updateStatus(data);
+
+      if (response != null &&
+          response['success'] == true &&
+          response['order'] != null) {
+        final updatedOrder = OrderData.fromJson(response['order']);
+
+        final updatedOrders = state.orders.map((order) {
+          if (order.orderNumber == updatedOrder.orderNumber) {
+            return order.copyWith(status: updatedOrder.status);
+          }
+          return order;
+        }).toList();
+
+        final updatedVendorOrders = state.vendorOrders.map((order) {
+          if (order.orderNumber == updatedOrder.orderNumber) {
+            return WebSocketOrder(
+              orderId: order.orderId,
+              orderNumber: order.orderNumber,
+              customerId: order.customerId,
+              restaurantId: order.restaurantId,
+              items: order.items,
+              totalAmount: order.totalAmount,
+              finalAmount: order.finalAmount,
+              lat: order.lat,
+              lng: order.lng,
+              houseNo: order.houseNo,
+              street: order.street,
+              city: order.city,
+            );
+          }
+          return order;
+        }).toList();
+
+        webSocketService.sendMessage({
+          "type": "order_status_update",
+          "order_number": updatedOrder.orderNumber,
+          "restaurant_id": updatedOrder.restaurantId,
+          "status": updatedOrder.status,
+        });
+
+        emit(
+          state.copyWith(
+            orders: updatedOrders,
+            vendorOrders: updatedVendorOrders,
+            apiResponse: const ApiResponse.completed(
+              "Order status updated successfully.",
+            ),
+          ),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            apiResponse: ApiResponse.error(
+              response?['message'] ?? 'Failed to update status',
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      emit(state.copyWith(apiResponse: ApiResponse.error("Error: $e")));
+    }
+  }
+
   Future<void> _onGetOrders(
-      FetchOrderEvent event,
-      Emitter<OrderState> emit,
-      ) async {
+    FetchOrderEvent event,
+    Emitter<OrderState> emit,
+  ) async {
     emit(state.copyWith(apiResponse: ApiResponse.loading()));
 
     final data = {
@@ -61,14 +140,14 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           emit(
             state.copyWith(
               orders: orderModel.orders,
-              apiResponse: const ApiResponse.completed("Orders fetched successfully"),
+              apiResponse: const ApiResponse.completed(
+                "Orders fetched successfully",
+              ),
             ),
           );
         } else {
           emit(
-            state.copyWith(
-              apiResponse: ApiResponse.error('No orders found'),
-            ),
+            state.copyWith(apiResponse: ApiResponse.error('No orders found')),
           );
         }
       } else {
@@ -79,11 +158,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         );
       }
     } catch (e) {
-      emit(
-        state.copyWith(
-          apiResponse: ApiResponse.error('Error: $e'),
-        ),
-      );
+      emit(state.copyWith(apiResponse: ApiResponse.error('Error: $e')));
     }
   }
 
@@ -104,12 +179,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       ),
     );
 
-    // Debug
     print("Total orders: ${updatedOrders.length}");
     print("Latest order number: ${order.orderNumber}");
   }
 
-  // Handle checkout
   Future<void> _onCheckout(
     CheckOutEvent event,
     Emitter<OrderState> emit,

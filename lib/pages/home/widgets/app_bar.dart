@@ -26,7 +26,7 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
   void initState() {
     super.initState();
     cartSessionController.loadCart().then((_) {
-      setState(() {}); // refresh badge when cart loads
+      setState(() {});
     });
   }
 
@@ -49,7 +49,6 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Location Name
                   SizedBox(
                     height: 20,
                     child: Text(
@@ -64,7 +63,6 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
                     ),
                   ),
                   const SizedBox(height: 2),
-                  // Scrolling Address
                   SizedBox(
                     height: 18,
                     child:

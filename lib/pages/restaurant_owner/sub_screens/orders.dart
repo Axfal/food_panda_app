@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../globalWidgets/PrimeryWidgets/my_app_bar.dart';
 
 class OrderProgressScreen extends StatelessWidget {

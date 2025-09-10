@@ -38,11 +38,11 @@ class _CategoriesInputWidgetState extends State<CategoriesInputWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                height: _itemSize + 60, // image + text + spacing
+                height: _itemSize + 60,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: categories.length,
-                  separatorBuilder: (_, _) => const SizedBox(width: _spacing),
+                  separatorBuilder: (_, _) => const SizedBox(width: 0),
                   itemBuilder: (context, index) {
                     final category = categories[index];
                     return GestureDetector(
