@@ -15,10 +15,32 @@ class _PerformanceScreenState extends State<PerformanceScreen>
   // Example performance data
   final List<double> weeklyData = [1200, 1800, 1500, 2000, 2200, 1700, 2500];
   final List<double> monthlyData = [
-    12000, 15000, 17000, 20000, 18000, 22000, 25000, 24000, 26000, 23000, 27000, 30000
+    12000,
+    15000,
+    17000,
+    20000,
+    18000,
+    22000,
+    25000,
+    24000,
+    26000,
+    23000,
+    27000,
+    30000,
   ];
   final List<double> yearlyData = [
-    12000, 15000, 17000, 20000, 18000, 22000, 25000, 24000, 26000, 23000, 27000, 30000
+    12000,
+    15000,
+    17000,
+    20000,
+    18000,
+    22000,
+    25000,
+    24000,
+    26000,
+    23000,
+    27000,
+    30000,
   ];
 
   @override
@@ -34,7 +56,12 @@ class _PerformanceScreenState extends State<PerformanceScreen>
   }
 
   // --- Metric Card ---
-  Widget buildMetricCard(String title, String value, Color color, IconData icon) {
+  Widget buildMetricCard(
+    String title,
+    String value,
+    Color color,
+    IconData icon,
+  ) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -64,10 +91,7 @@ class _PerformanceScreenState extends State<PerformanceScreen>
             const SizedBox(height: 4),
             Text(
               title,
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                color: Colors.grey[600],
-              ),
+              style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey[600]),
             ),
           ],
         ),
@@ -75,7 +99,6 @@ class _PerformanceScreenState extends State<PerformanceScreen>
     );
   }
 
-  // --- Line Chart Builder ---
   Widget buildPerformanceChart(List<double> data, String title) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -123,7 +146,10 @@ class _PerformanceScreenState extends State<PerformanceScreen>
                       getTitlesWidget: (value, meta) {
                         return Text(
                           "\$${value ~/ 1000}k",
-                          style: GoogleFonts.poppins(fontSize: 11, color: Colors.grey[600]),
+                          style: GoogleFonts.poppins(
+                            fontSize: 11,
+                            color: Colors.grey[600],
+                          ),
                         );
                       },
                     ),
@@ -134,7 +160,10 @@ class _PerformanceScreenState extends State<PerformanceScreen>
                       getTitlesWidget: (value, meta) {
                         return Text(
                           value.toInt().toString(),
-                          style: GoogleFonts.poppins(fontSize: 11, color: Colors.grey[600]),
+                          style: GoogleFonts.poppins(
+                            fontSize: 11,
+                            color: Colors.grey[600],
+                          ),
                         );
                       },
                       interval: (data.length / 6).floorToDouble(),
@@ -154,7 +183,7 @@ class _PerformanceScreenState extends State<PerformanceScreen>
                     ),
                     spots: List.generate(
                       data.length,
-                          (index) => FlSpot(index.toDouble(), data[index]),
+                      (index) => FlSpot(index.toDouble(), data[index]),
                     ),
                   ),
                 ],
@@ -174,13 +203,26 @@ class _PerformanceScreenState extends State<PerformanceScreen>
           // Top Metrics Row
           Row(
             children: [
-              buildMetricCard("Total Sales", "\$${data.reduce((a, b) => a + b).toStringAsFixed(0)}",
-                  Colors.green, Icons.attach_money_rounded),
+              buildMetricCard(
+                "Total Sales",
+                "\$${data.reduce((a, b) => a + b).toStringAsFixed(0)}",
+                Colors.green,
+                Icons.attach_money_rounded,
+              ),
               const SizedBox(width: 12),
-              buildMetricCard("Orders", "${(data.length * 40)}", Colors.blue, Icons.receipt_long),
+              buildMetricCard(
+                "Orders",
+                "${(data.length * 40)}",
+                Colors.blue,
+                Icons.receipt_long,
+              ),
               const SizedBox(width: 12),
-              buildMetricCard("Avg. Order", "\$${(data.reduce((a, b) => a + b) / (data.length * 40)).toStringAsFixed(2)}",
-                  Colors.orange, Icons.bar_chart),
+              buildMetricCard(
+                "Avg. Order",
+                "\$${(data.reduce((a, b) => a + b) / (data.length * 40)).toStringAsFixed(2)}",
+                Colors.orange,
+                Icons.bar_chart,
+              ),
             ],
           ),
           // Graph

@@ -5,7 +5,7 @@ class FeatureCard extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
-  const FeatureCard({
+  const FeatureCard({super.key,
     required this.title,
     required this.icon,
     required this.onTap,
@@ -22,13 +22,14 @@ class FeatureCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 10,
-              offset: const Offset(0, 6),
-            ),
-          ],
+          border: Border.all(color: AppColors.primary)
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: Colors.black.withValues(alpha: 0.08),
+          //     blurRadius: 10,
+          //     offset: const Offset(0, 6),
+          //   ),
+          // ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

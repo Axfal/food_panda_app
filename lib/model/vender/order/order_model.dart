@@ -48,7 +48,7 @@ class OrderData with _$OrderData {
     @Default('') @JsonKey(name: 'ready_at') String readyAt,
     @Default('') @JsonKey(name: 'preparing_at') String preparingAt,
     @Default('') @JsonKey(name: 'picked_up_at') String pickedUpAt,
-    String? deliveredAt,
+    @JsonKey(name: 'delivered_at') String? deliveredAt,
     @Default('') @JsonKey(name: 'canceled_at') String canceledAt,
     @Default('') @JsonKey(name: 'failed_at') String failedAt,
     @Default('0.0') @JsonKey(name: 'lat') String lat,
@@ -176,25 +176,36 @@ class OrderData with _$OrderData {
 @freezed
 class OrderItem with _$OrderItem {
   const factory OrderItem({
+    @Default(0) @JsonKey(name: 'id') int id,
+    @Default(0) @JsonKey(name: 'order_id') int orderId,
     @Default(0) @JsonKey(name: 'item_id') int itemId,
     @Default('') @JsonKey(name: 'item_name') String itemName,
     @Default(0) @JsonKey(name: 'quantity') int quantity,
-    @Default(0) @JsonKey(name: 'price') int price,
-    @Default(0) @JsonKey(name: 'discount_amount') int discountAmount,
-    @Default(0) @JsonKey(name: 'final_price') int finalPrice,
-    @Default(0) @JsonKey(name: 'total_price') int totalPrice,
+    @Default('0.00') @JsonKey(name: 'price') String price,
+    @Default('0.00') @JsonKey(name: 'discount_amount') String discountAmount,
+    @Default('0.00') @JsonKey(name: 'final_price') String finalPrice,
+    @Default('0.00') @JsonKey(name: 'total_price') String totalPrice,
+    @Default('') @JsonKey(name: 'created_at') String createdAt,
   }) = _OrderItem;
 
   factory OrderItem.fromJson(Map<String, dynamic> json) =>
       _$OrderItemFromJson(json);
 
   @override
+  // TODO: implement createdAt
+  String get createdAt => throw UnimplementedError();
+
+  @override
   // TODO: implement discountAmount
-  int get discountAmount => throw UnimplementedError();
+  String get discountAmount => throw UnimplementedError();
 
   @override
   // TODO: implement finalPrice
-  int get finalPrice => throw UnimplementedError();
+  String get finalPrice => throw UnimplementedError();
+
+  @override
+  // TODO: implement id
+  int get id => throw UnimplementedError();
 
   @override
   // TODO: implement itemId
@@ -205,8 +216,12 @@ class OrderItem with _$OrderItem {
   String get itemName => throw UnimplementedError();
 
   @override
+  // TODO: implement orderId
+  int get orderId => throw UnimplementedError();
+
+  @override
   // TODO: implement price
-  int get price => throw UnimplementedError();
+  String get price => throw UnimplementedError();
 
   @override
   // TODO: implement quantity
@@ -220,5 +235,5 @@ class OrderItem with _$OrderItem {
 
   @override
   // TODO: implement totalPrice
-  int get totalPrice => throw UnimplementedError();
+  String get totalPrice => throw UnimplementedError();
 }

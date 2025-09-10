@@ -47,6 +47,7 @@ class NearByRestaurant with _$NearByRestaurant {
     throw UnimplementedError();
   }
 
+
 }
 
 @freezed

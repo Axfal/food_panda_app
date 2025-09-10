@@ -287,7 +287,7 @@ as List<OrderData>,
 /// @nodoc
 mixin _$OrderData {
 
-@JsonKey(name: 'id') int get id;@JsonKey(name: 'order_number') String get orderNumber;@JsonKey(name: 'customer_id') int get customerId;@JsonKey(name: 'restaurant_id') int get restaurantId;@JsonKey(name: 'status') String get status;@JsonKey(name: 'total_amount') String get totalAmount;@JsonKey(name: 'discount_amount') String get discountAmount;@JsonKey(name: 'final_amount') String get finalAmount;@JsonKey(name: 'payment_method') String get paymentMethod;@JsonKey(name: 'payment_status') String get paymentStatus;@JsonKey(name: 'special_instructions') String get specialInstructions;@JsonKey(name: 'created_at') String get createdAt;@JsonKey(name: 'updated_at') String get updatedAt;@JsonKey(name: 'accepted_at') String get acceptedAt;@JsonKey(name: 'ready_at') String get readyAt;@JsonKey(name: 'preparing_at') String get preparingAt;@JsonKey(name: 'picked_up_at') String get pickedUpAt; String? get deliveredAt;@JsonKey(name: 'canceled_at') String get canceledAt;@JsonKey(name: 'failed_at') String get failedAt;@JsonKey(name: 'lat') String get lat;@JsonKey(name: 'lng') String get lng;@JsonKey(name: 'house_no') String get houseNo;@JsonKey(name: 'street') String get street;@JsonKey(name: 'city') String get city;@JsonKey(name: 'items') List<OrderItem> get items;
+@JsonKey(name: 'id') int get id;@JsonKey(name: 'order_number') String get orderNumber;@JsonKey(name: 'customer_id') int get customerId;@JsonKey(name: 'restaurant_id') int get restaurantId;@JsonKey(name: 'status') String get status;@JsonKey(name: 'total_amount') String get totalAmount;@JsonKey(name: 'discount_amount') String get discountAmount;@JsonKey(name: 'final_amount') String get finalAmount;@JsonKey(name: 'payment_method') String get paymentMethod;@JsonKey(name: 'payment_status') String get paymentStatus;@JsonKey(name: 'special_instructions') String get specialInstructions;@JsonKey(name: 'created_at') String get createdAt;@JsonKey(name: 'updated_at') String get updatedAt;@JsonKey(name: 'accepted_at') String get acceptedAt;@JsonKey(name: 'ready_at') String get readyAt;@JsonKey(name: 'preparing_at') String get preparingAt;@JsonKey(name: 'picked_up_at') String get pickedUpAt;@JsonKey(name: 'delivered_at') String? get deliveredAt;@JsonKey(name: 'canceled_at') String get canceledAt;@JsonKey(name: 'failed_at') String get failedAt;@JsonKey(name: 'lat') String get lat;@JsonKey(name: 'lng') String get lng;@JsonKey(name: 'house_no') String get houseNo;@JsonKey(name: 'street') String get street;@JsonKey(name: 'city') String get city;@JsonKey(name: 'items') List<OrderItem> get items;
 /// Create a copy of OrderData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -320,7 +320,7 @@ abstract mixin class $OrderDataCopyWith<$Res>  {
   factory $OrderDataCopyWith(OrderData value, $Res Function(OrderData) _then) = _$OrderDataCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id') int id,@JsonKey(name: 'order_number') String orderNumber,@JsonKey(name: 'customer_id') int customerId,@JsonKey(name: 'restaurant_id') int restaurantId,@JsonKey(name: 'status') String status,@JsonKey(name: 'total_amount') String totalAmount,@JsonKey(name: 'discount_amount') String discountAmount,@JsonKey(name: 'final_amount') String finalAmount,@JsonKey(name: 'payment_method') String paymentMethod,@JsonKey(name: 'payment_status') String paymentStatus,@JsonKey(name: 'special_instructions') String specialInstructions,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt,@JsonKey(name: 'accepted_at') String acceptedAt,@JsonKey(name: 'ready_at') String readyAt,@JsonKey(name: 'preparing_at') String preparingAt,@JsonKey(name: 'picked_up_at') String pickedUpAt, String? deliveredAt,@JsonKey(name: 'canceled_at') String canceledAt,@JsonKey(name: 'failed_at') String failedAt,@JsonKey(name: 'lat') String lat,@JsonKey(name: 'lng') String lng,@JsonKey(name: 'house_no') String houseNo,@JsonKey(name: 'street') String street,@JsonKey(name: 'city') String city,@JsonKey(name: 'items') List<OrderItem> items
+@JsonKey(name: 'id') int id,@JsonKey(name: 'order_number') String orderNumber,@JsonKey(name: 'customer_id') int customerId,@JsonKey(name: 'restaurant_id') int restaurantId,@JsonKey(name: 'status') String status,@JsonKey(name: 'total_amount') String totalAmount,@JsonKey(name: 'discount_amount') String discountAmount,@JsonKey(name: 'final_amount') String finalAmount,@JsonKey(name: 'payment_method') String paymentMethod,@JsonKey(name: 'payment_status') String paymentStatus,@JsonKey(name: 'special_instructions') String specialInstructions,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt,@JsonKey(name: 'accepted_at') String acceptedAt,@JsonKey(name: 'ready_at') String readyAt,@JsonKey(name: 'preparing_at') String preparingAt,@JsonKey(name: 'picked_up_at') String pickedUpAt,@JsonKey(name: 'delivered_at') String? deliveredAt,@JsonKey(name: 'canceled_at') String canceledAt,@JsonKey(name: 'failed_at') String failedAt,@JsonKey(name: 'lat') String lat,@JsonKey(name: 'lng') String lng,@JsonKey(name: 'house_no') String houseNo,@JsonKey(name: 'street') String street,@JsonKey(name: 'city') String city,@JsonKey(name: 'items') List<OrderItem> items
 });
 
 
@@ -450,7 +450,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'order_number')  String orderNumber, @JsonKey(name: 'customer_id')  int customerId, @JsonKey(name: 'restaurant_id')  int restaurantId, @JsonKey(name: 'status')  String status, @JsonKey(name: 'total_amount')  String totalAmount, @JsonKey(name: 'discount_amount')  String discountAmount, @JsonKey(name: 'final_amount')  String finalAmount, @JsonKey(name: 'payment_method')  String paymentMethod, @JsonKey(name: 'payment_status')  String paymentStatus, @JsonKey(name: 'special_instructions')  String specialInstructions, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt, @JsonKey(name: 'accepted_at')  String acceptedAt, @JsonKey(name: 'ready_at')  String readyAt, @JsonKey(name: 'preparing_at')  String preparingAt, @JsonKey(name: 'picked_up_at')  String pickedUpAt,  String? deliveredAt, @JsonKey(name: 'canceled_at')  String canceledAt, @JsonKey(name: 'failed_at')  String failedAt, @JsonKey(name: 'lat')  String lat, @JsonKey(name: 'lng')  String lng, @JsonKey(name: 'house_no')  String houseNo, @JsonKey(name: 'street')  String street, @JsonKey(name: 'city')  String city, @JsonKey(name: 'items')  List<OrderItem> items)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'order_number')  String orderNumber, @JsonKey(name: 'customer_id')  int customerId, @JsonKey(name: 'restaurant_id')  int restaurantId, @JsonKey(name: 'status')  String status, @JsonKey(name: 'total_amount')  String totalAmount, @JsonKey(name: 'discount_amount')  String discountAmount, @JsonKey(name: 'final_amount')  String finalAmount, @JsonKey(name: 'payment_method')  String paymentMethod, @JsonKey(name: 'payment_status')  String paymentStatus, @JsonKey(name: 'special_instructions')  String specialInstructions, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt, @JsonKey(name: 'accepted_at')  String acceptedAt, @JsonKey(name: 'ready_at')  String readyAt, @JsonKey(name: 'preparing_at')  String preparingAt, @JsonKey(name: 'picked_up_at')  String pickedUpAt, @JsonKey(name: 'delivered_at')  String? deliveredAt, @JsonKey(name: 'canceled_at')  String canceledAt, @JsonKey(name: 'failed_at')  String failedAt, @JsonKey(name: 'lat')  String lat, @JsonKey(name: 'lng')  String lng, @JsonKey(name: 'house_no')  String houseNo, @JsonKey(name: 'street')  String street, @JsonKey(name: 'city')  String city, @JsonKey(name: 'items')  List<OrderItem> items)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _OrderData() when $default != null:
 return $default(_that.id,_that.orderNumber,_that.customerId,_that.restaurantId,_that.status,_that.totalAmount,_that.discountAmount,_that.finalAmount,_that.paymentMethod,_that.paymentStatus,_that.specialInstructions,_that.createdAt,_that.updatedAt,_that.acceptedAt,_that.readyAt,_that.preparingAt,_that.pickedUpAt,_that.deliveredAt,_that.canceledAt,_that.failedAt,_that.lat,_that.lng,_that.houseNo,_that.street,_that.city,_that.items);case _:
@@ -471,7 +471,7 @@ return $default(_that.id,_that.orderNumber,_that.customerId,_that.restaurantId,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'order_number')  String orderNumber, @JsonKey(name: 'customer_id')  int customerId, @JsonKey(name: 'restaurant_id')  int restaurantId, @JsonKey(name: 'status')  String status, @JsonKey(name: 'total_amount')  String totalAmount, @JsonKey(name: 'discount_amount')  String discountAmount, @JsonKey(name: 'final_amount')  String finalAmount, @JsonKey(name: 'payment_method')  String paymentMethod, @JsonKey(name: 'payment_status')  String paymentStatus, @JsonKey(name: 'special_instructions')  String specialInstructions, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt, @JsonKey(name: 'accepted_at')  String acceptedAt, @JsonKey(name: 'ready_at')  String readyAt, @JsonKey(name: 'preparing_at')  String preparingAt, @JsonKey(name: 'picked_up_at')  String pickedUpAt,  String? deliveredAt, @JsonKey(name: 'canceled_at')  String canceledAt, @JsonKey(name: 'failed_at')  String failedAt, @JsonKey(name: 'lat')  String lat, @JsonKey(name: 'lng')  String lng, @JsonKey(name: 'house_no')  String houseNo, @JsonKey(name: 'street')  String street, @JsonKey(name: 'city')  String city, @JsonKey(name: 'items')  List<OrderItem> items)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'order_number')  String orderNumber, @JsonKey(name: 'customer_id')  int customerId, @JsonKey(name: 'restaurant_id')  int restaurantId, @JsonKey(name: 'status')  String status, @JsonKey(name: 'total_amount')  String totalAmount, @JsonKey(name: 'discount_amount')  String discountAmount, @JsonKey(name: 'final_amount')  String finalAmount, @JsonKey(name: 'payment_method')  String paymentMethod, @JsonKey(name: 'payment_status')  String paymentStatus, @JsonKey(name: 'special_instructions')  String specialInstructions, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt, @JsonKey(name: 'accepted_at')  String acceptedAt, @JsonKey(name: 'ready_at')  String readyAt, @JsonKey(name: 'preparing_at')  String preparingAt, @JsonKey(name: 'picked_up_at')  String pickedUpAt, @JsonKey(name: 'delivered_at')  String? deliveredAt, @JsonKey(name: 'canceled_at')  String canceledAt, @JsonKey(name: 'failed_at')  String failedAt, @JsonKey(name: 'lat')  String lat, @JsonKey(name: 'lng')  String lng, @JsonKey(name: 'house_no')  String houseNo, @JsonKey(name: 'street')  String street, @JsonKey(name: 'city')  String city, @JsonKey(name: 'items')  List<OrderItem> items)  $default,) {final _that = this;
 switch (_that) {
 case _OrderData():
 return $default(_that.id,_that.orderNumber,_that.customerId,_that.restaurantId,_that.status,_that.totalAmount,_that.discountAmount,_that.finalAmount,_that.paymentMethod,_that.paymentStatus,_that.specialInstructions,_that.createdAt,_that.updatedAt,_that.acceptedAt,_that.readyAt,_that.preparingAt,_that.pickedUpAt,_that.deliveredAt,_that.canceledAt,_that.failedAt,_that.lat,_that.lng,_that.houseNo,_that.street,_that.city,_that.items);case _:
@@ -491,7 +491,7 @@ return $default(_that.id,_that.orderNumber,_that.customerId,_that.restaurantId,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'order_number')  String orderNumber, @JsonKey(name: 'customer_id')  int customerId, @JsonKey(name: 'restaurant_id')  int restaurantId, @JsonKey(name: 'status')  String status, @JsonKey(name: 'total_amount')  String totalAmount, @JsonKey(name: 'discount_amount')  String discountAmount, @JsonKey(name: 'final_amount')  String finalAmount, @JsonKey(name: 'payment_method')  String paymentMethod, @JsonKey(name: 'payment_status')  String paymentStatus, @JsonKey(name: 'special_instructions')  String specialInstructions, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt, @JsonKey(name: 'accepted_at')  String acceptedAt, @JsonKey(name: 'ready_at')  String readyAt, @JsonKey(name: 'preparing_at')  String preparingAt, @JsonKey(name: 'picked_up_at')  String pickedUpAt,  String? deliveredAt, @JsonKey(name: 'canceled_at')  String canceledAt, @JsonKey(name: 'failed_at')  String failedAt, @JsonKey(name: 'lat')  String lat, @JsonKey(name: 'lng')  String lng, @JsonKey(name: 'house_no')  String houseNo, @JsonKey(name: 'street')  String street, @JsonKey(name: 'city')  String city, @JsonKey(name: 'items')  List<OrderItem> items)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'order_number')  String orderNumber, @JsonKey(name: 'customer_id')  int customerId, @JsonKey(name: 'restaurant_id')  int restaurantId, @JsonKey(name: 'status')  String status, @JsonKey(name: 'total_amount')  String totalAmount, @JsonKey(name: 'discount_amount')  String discountAmount, @JsonKey(name: 'final_amount')  String finalAmount, @JsonKey(name: 'payment_method')  String paymentMethod, @JsonKey(name: 'payment_status')  String paymentStatus, @JsonKey(name: 'special_instructions')  String specialInstructions, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'updated_at')  String updatedAt, @JsonKey(name: 'accepted_at')  String acceptedAt, @JsonKey(name: 'ready_at')  String readyAt, @JsonKey(name: 'preparing_at')  String preparingAt, @JsonKey(name: 'picked_up_at')  String pickedUpAt, @JsonKey(name: 'delivered_at')  String? deliveredAt, @JsonKey(name: 'canceled_at')  String canceledAt, @JsonKey(name: 'failed_at')  String failedAt, @JsonKey(name: 'lat')  String lat, @JsonKey(name: 'lng')  String lng, @JsonKey(name: 'house_no')  String houseNo, @JsonKey(name: 'street')  String street, @JsonKey(name: 'city')  String city, @JsonKey(name: 'items')  List<OrderItem> items)?  $default,) {final _that = this;
 switch (_that) {
 case _OrderData() when $default != null:
 return $default(_that.id,_that.orderNumber,_that.customerId,_that.restaurantId,_that.status,_that.totalAmount,_that.discountAmount,_that.finalAmount,_that.paymentMethod,_that.paymentStatus,_that.specialInstructions,_that.createdAt,_that.updatedAt,_that.acceptedAt,_that.readyAt,_that.preparingAt,_that.pickedUpAt,_that.deliveredAt,_that.canceledAt,_that.failedAt,_that.lat,_that.lng,_that.houseNo,_that.street,_that.city,_that.items);case _:
@@ -506,7 +506,7 @@ return $default(_that.id,_that.orderNumber,_that.customerId,_that.restaurantId,_
 @JsonSerializable()
 
 class _OrderData implements OrderData {
-  const _OrderData({@JsonKey(name: 'id') this.id = 0, @JsonKey(name: 'order_number') this.orderNumber = '', @JsonKey(name: 'customer_id') this.customerId = 0, @JsonKey(name: 'restaurant_id') this.restaurantId = 0, @JsonKey(name: 'status') this.status = '', @JsonKey(name: 'total_amount') this.totalAmount = '0.00', @JsonKey(name: 'discount_amount') this.discountAmount = '0.00', @JsonKey(name: 'final_amount') this.finalAmount = '0.00', @JsonKey(name: 'payment_method') this.paymentMethod = '', @JsonKey(name: 'payment_status') this.paymentStatus = '', @JsonKey(name: 'special_instructions') this.specialInstructions = '', @JsonKey(name: 'created_at') this.createdAt = '', @JsonKey(name: 'updated_at') this.updatedAt = '', @JsonKey(name: 'accepted_at') this.acceptedAt = '', @JsonKey(name: 'ready_at') this.readyAt = '', @JsonKey(name: 'preparing_at') this.preparingAt = '', @JsonKey(name: 'picked_up_at') this.pickedUpAt = '', this.deliveredAt, @JsonKey(name: 'canceled_at') this.canceledAt = '', @JsonKey(name: 'failed_at') this.failedAt = '', @JsonKey(name: 'lat') this.lat = '0.0', @JsonKey(name: 'lng') this.lng = '0.0', @JsonKey(name: 'house_no') this.houseNo = '', @JsonKey(name: 'street') this.street = '', @JsonKey(name: 'city') this.city = '', @JsonKey(name: 'items') final  List<OrderItem> items = const []}): _items = items;
+  const _OrderData({@JsonKey(name: 'id') this.id = 0, @JsonKey(name: 'order_number') this.orderNumber = '', @JsonKey(name: 'customer_id') this.customerId = 0, @JsonKey(name: 'restaurant_id') this.restaurantId = 0, @JsonKey(name: 'status') this.status = '', @JsonKey(name: 'total_amount') this.totalAmount = '0.00', @JsonKey(name: 'discount_amount') this.discountAmount = '0.00', @JsonKey(name: 'final_amount') this.finalAmount = '0.00', @JsonKey(name: 'payment_method') this.paymentMethod = '', @JsonKey(name: 'payment_status') this.paymentStatus = '', @JsonKey(name: 'special_instructions') this.specialInstructions = '', @JsonKey(name: 'created_at') this.createdAt = '', @JsonKey(name: 'updated_at') this.updatedAt = '', @JsonKey(name: 'accepted_at') this.acceptedAt = '', @JsonKey(name: 'ready_at') this.readyAt = '', @JsonKey(name: 'preparing_at') this.preparingAt = '', @JsonKey(name: 'picked_up_at') this.pickedUpAt = '', @JsonKey(name: 'delivered_at') this.deliveredAt, @JsonKey(name: 'canceled_at') this.canceledAt = '', @JsonKey(name: 'failed_at') this.failedAt = '', @JsonKey(name: 'lat') this.lat = '0.0', @JsonKey(name: 'lng') this.lng = '0.0', @JsonKey(name: 'house_no') this.houseNo = '', @JsonKey(name: 'street') this.street = '', @JsonKey(name: 'city') this.city = '', @JsonKey(name: 'items') final  List<OrderItem> items = const []}): _items = items;
   factory _OrderData.fromJson(Map<String, dynamic> json) => _$OrderDataFromJson(json);
 
 @override@JsonKey(name: 'id') final  int id;
@@ -526,7 +526,7 @@ class _OrderData implements OrderData {
 @override@JsonKey(name: 'ready_at') final  String readyAt;
 @override@JsonKey(name: 'preparing_at') final  String preparingAt;
 @override@JsonKey(name: 'picked_up_at') final  String pickedUpAt;
-@override final  String? deliveredAt;
+@override@JsonKey(name: 'delivered_at') final  String? deliveredAt;
 @override@JsonKey(name: 'canceled_at') final  String canceledAt;
 @override@JsonKey(name: 'failed_at') final  String failedAt;
 @override@JsonKey(name: 'lat') final  String lat;
@@ -575,7 +575,7 @@ abstract mixin class _$OrderDataCopyWith<$Res> implements $OrderDataCopyWith<$Re
   factory _$OrderDataCopyWith(_OrderData value, $Res Function(_OrderData) _then) = __$OrderDataCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id') int id,@JsonKey(name: 'order_number') String orderNumber,@JsonKey(name: 'customer_id') int customerId,@JsonKey(name: 'restaurant_id') int restaurantId,@JsonKey(name: 'status') String status,@JsonKey(name: 'total_amount') String totalAmount,@JsonKey(name: 'discount_amount') String discountAmount,@JsonKey(name: 'final_amount') String finalAmount,@JsonKey(name: 'payment_method') String paymentMethod,@JsonKey(name: 'payment_status') String paymentStatus,@JsonKey(name: 'special_instructions') String specialInstructions,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt,@JsonKey(name: 'accepted_at') String acceptedAt,@JsonKey(name: 'ready_at') String readyAt,@JsonKey(name: 'preparing_at') String preparingAt,@JsonKey(name: 'picked_up_at') String pickedUpAt, String? deliveredAt,@JsonKey(name: 'canceled_at') String canceledAt,@JsonKey(name: 'failed_at') String failedAt,@JsonKey(name: 'lat') String lat,@JsonKey(name: 'lng') String lng,@JsonKey(name: 'house_no') String houseNo,@JsonKey(name: 'street') String street,@JsonKey(name: 'city') String city,@JsonKey(name: 'items') List<OrderItem> items
+@JsonKey(name: 'id') int id,@JsonKey(name: 'order_number') String orderNumber,@JsonKey(name: 'customer_id') int customerId,@JsonKey(name: 'restaurant_id') int restaurantId,@JsonKey(name: 'status') String status,@JsonKey(name: 'total_amount') String totalAmount,@JsonKey(name: 'discount_amount') String discountAmount,@JsonKey(name: 'final_amount') String finalAmount,@JsonKey(name: 'payment_method') String paymentMethod,@JsonKey(name: 'payment_status') String paymentStatus,@JsonKey(name: 'special_instructions') String specialInstructions,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'updated_at') String updatedAt,@JsonKey(name: 'accepted_at') String acceptedAt,@JsonKey(name: 'ready_at') String readyAt,@JsonKey(name: 'preparing_at') String preparingAt,@JsonKey(name: 'picked_up_at') String pickedUpAt,@JsonKey(name: 'delivered_at') String? deliveredAt,@JsonKey(name: 'canceled_at') String canceledAt,@JsonKey(name: 'failed_at') String failedAt,@JsonKey(name: 'lat') String lat,@JsonKey(name: 'lng') String lng,@JsonKey(name: 'house_no') String houseNo,@JsonKey(name: 'street') String street,@JsonKey(name: 'city') String city,@JsonKey(name: 'items') List<OrderItem> items
 });
 
 
@@ -631,7 +631,7 @@ as List<OrderItem>,
 /// @nodoc
 mixin _$OrderItem {
 
-@JsonKey(name: 'item_id') int get itemId;@JsonKey(name: 'item_name') String get itemName;@JsonKey(name: 'quantity') int get quantity;@JsonKey(name: 'price') int get price;@JsonKey(name: 'discount_amount') int get discountAmount;@JsonKey(name: 'final_price') int get finalPrice;@JsonKey(name: 'total_price') int get totalPrice;
+@JsonKey(name: 'id') int get id;@JsonKey(name: 'order_id') int get orderId;@JsonKey(name: 'item_id') int get itemId;@JsonKey(name: 'item_name') String get itemName;@JsonKey(name: 'quantity') int get quantity;@JsonKey(name: 'price') String get price;@JsonKey(name: 'discount_amount') String get discountAmount;@JsonKey(name: 'final_price') String get finalPrice;@JsonKey(name: 'total_price') String get totalPrice;@JsonKey(name: 'created_at') String get createdAt;
 /// Create a copy of OrderItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -644,16 +644,16 @@ $OrderItemCopyWith<OrderItem> get copyWith => _$OrderItemCopyWithImpl<OrderItem>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is OrderItem&&(identical(other.itemId, itemId) || other.itemId == itemId)&&(identical(other.itemName, itemName) || other.itemName == itemName)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.price, price) || other.price == price)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.finalPrice, finalPrice) || other.finalPrice == finalPrice)&&(identical(other.totalPrice, totalPrice) || other.totalPrice == totalPrice));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is OrderItem&&(identical(other.id, id) || other.id == id)&&(identical(other.orderId, orderId) || other.orderId == orderId)&&(identical(other.itemId, itemId) || other.itemId == itemId)&&(identical(other.itemName, itemName) || other.itemName == itemName)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.price, price) || other.price == price)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.finalPrice, finalPrice) || other.finalPrice == finalPrice)&&(identical(other.totalPrice, totalPrice) || other.totalPrice == totalPrice)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,itemId,itemName,quantity,price,discountAmount,finalPrice,totalPrice);
+int get hashCode => Object.hash(runtimeType,id,orderId,itemId,itemName,quantity,price,discountAmount,finalPrice,totalPrice,createdAt);
 
 @override
 String toString() {
-  return 'OrderItem(itemId: $itemId, itemName: $itemName, quantity: $quantity, price: $price, discountAmount: $discountAmount, finalPrice: $finalPrice, totalPrice: $totalPrice)';
+  return 'OrderItem(id: $id, orderId: $orderId, itemId: $itemId, itemName: $itemName, quantity: $quantity, price: $price, discountAmount: $discountAmount, finalPrice: $finalPrice, totalPrice: $totalPrice, createdAt: $createdAt)';
 }
 
 
@@ -664,7 +664,7 @@ abstract mixin class $OrderItemCopyWith<$Res>  {
   factory $OrderItemCopyWith(OrderItem value, $Res Function(OrderItem) _then) = _$OrderItemCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'item_id') int itemId,@JsonKey(name: 'item_name') String itemName,@JsonKey(name: 'quantity') int quantity,@JsonKey(name: 'price') int price,@JsonKey(name: 'discount_amount') int discountAmount,@JsonKey(name: 'final_price') int finalPrice,@JsonKey(name: 'total_price') int totalPrice
+@JsonKey(name: 'id') int id,@JsonKey(name: 'order_id') int orderId,@JsonKey(name: 'item_id') int itemId,@JsonKey(name: 'item_name') String itemName,@JsonKey(name: 'quantity') int quantity,@JsonKey(name: 'price') String price,@JsonKey(name: 'discount_amount') String discountAmount,@JsonKey(name: 'final_price') String finalPrice,@JsonKey(name: 'total_price') String totalPrice,@JsonKey(name: 'created_at') String createdAt
 });
 
 
@@ -681,16 +681,19 @@ class _$OrderItemCopyWithImpl<$Res>
 
 /// Create a copy of OrderItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? itemId = null,Object? itemName = null,Object? quantity = null,Object? price = null,Object? discountAmount = null,Object? finalPrice = null,Object? totalPrice = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? orderId = null,Object? itemId = null,Object? itemName = null,Object? quantity = null,Object? price = null,Object? discountAmount = null,Object? finalPrice = null,Object? totalPrice = null,Object? createdAt = null,}) {
   return _then(_self.copyWith(
-itemId: null == itemId ? _self.itemId : itemId // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,orderId: null == orderId ? _self.orderId : orderId // ignore: cast_nullable_to_non_nullable
+as int,itemId: null == itemId ? _self.itemId : itemId // ignore: cast_nullable_to_non_nullable
 as int,itemName: null == itemName ? _self.itemName : itemName // ignore: cast_nullable_to_non_nullable
 as String,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
 as int,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
-as int,discountAmount: null == discountAmount ? _self.discountAmount : discountAmount // ignore: cast_nullable_to_non_nullable
-as int,finalPrice: null == finalPrice ? _self.finalPrice : finalPrice // ignore: cast_nullable_to_non_nullable
-as int,totalPrice: null == totalPrice ? _self.totalPrice : totalPrice // ignore: cast_nullable_to_non_nullable
-as int,
+as String,discountAmount: null == discountAmount ? _self.discountAmount : discountAmount // ignore: cast_nullable_to_non_nullable
+as String,finalPrice: null == finalPrice ? _self.finalPrice : finalPrice // ignore: cast_nullable_to_non_nullable
+as String,totalPrice: null == totalPrice ? _self.totalPrice : totalPrice // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -775,10 +778,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'item_id')  int itemId, @JsonKey(name: 'item_name')  String itemName, @JsonKey(name: 'quantity')  int quantity, @JsonKey(name: 'price')  int price, @JsonKey(name: 'discount_amount')  int discountAmount, @JsonKey(name: 'final_price')  int finalPrice, @JsonKey(name: 'total_price')  int totalPrice)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'order_id')  int orderId, @JsonKey(name: 'item_id')  int itemId, @JsonKey(name: 'item_name')  String itemName, @JsonKey(name: 'quantity')  int quantity, @JsonKey(name: 'price')  String price, @JsonKey(name: 'discount_amount')  String discountAmount, @JsonKey(name: 'final_price')  String finalPrice, @JsonKey(name: 'total_price')  String totalPrice, @JsonKey(name: 'created_at')  String createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _OrderItem() when $default != null:
-return $default(_that.itemId,_that.itemName,_that.quantity,_that.price,_that.discountAmount,_that.finalPrice,_that.totalPrice);case _:
+return $default(_that.id,_that.orderId,_that.itemId,_that.itemName,_that.quantity,_that.price,_that.discountAmount,_that.finalPrice,_that.totalPrice,_that.createdAt);case _:
   return orElse();
 
 }
@@ -796,10 +799,10 @@ return $default(_that.itemId,_that.itemName,_that.quantity,_that.price,_that.dis
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'item_id')  int itemId, @JsonKey(name: 'item_name')  String itemName, @JsonKey(name: 'quantity')  int quantity, @JsonKey(name: 'price')  int price, @JsonKey(name: 'discount_amount')  int discountAmount, @JsonKey(name: 'final_price')  int finalPrice, @JsonKey(name: 'total_price')  int totalPrice)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'order_id')  int orderId, @JsonKey(name: 'item_id')  int itemId, @JsonKey(name: 'item_name')  String itemName, @JsonKey(name: 'quantity')  int quantity, @JsonKey(name: 'price')  String price, @JsonKey(name: 'discount_amount')  String discountAmount, @JsonKey(name: 'final_price')  String finalPrice, @JsonKey(name: 'total_price')  String totalPrice, @JsonKey(name: 'created_at')  String createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _OrderItem():
-return $default(_that.itemId,_that.itemName,_that.quantity,_that.price,_that.discountAmount,_that.finalPrice,_that.totalPrice);case _:
+return $default(_that.id,_that.orderId,_that.itemId,_that.itemName,_that.quantity,_that.price,_that.discountAmount,_that.finalPrice,_that.totalPrice,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -816,10 +819,10 @@ return $default(_that.itemId,_that.itemName,_that.quantity,_that.price,_that.dis
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'item_id')  int itemId, @JsonKey(name: 'item_name')  String itemName, @JsonKey(name: 'quantity')  int quantity, @JsonKey(name: 'price')  int price, @JsonKey(name: 'discount_amount')  int discountAmount, @JsonKey(name: 'final_price')  int finalPrice, @JsonKey(name: 'total_price')  int totalPrice)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'order_id')  int orderId, @JsonKey(name: 'item_id')  int itemId, @JsonKey(name: 'item_name')  String itemName, @JsonKey(name: 'quantity')  int quantity, @JsonKey(name: 'price')  String price, @JsonKey(name: 'discount_amount')  String discountAmount, @JsonKey(name: 'final_price')  String finalPrice, @JsonKey(name: 'total_price')  String totalPrice, @JsonKey(name: 'created_at')  String createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _OrderItem() when $default != null:
-return $default(_that.itemId,_that.itemName,_that.quantity,_that.price,_that.discountAmount,_that.finalPrice,_that.totalPrice);case _:
+return $default(_that.id,_that.orderId,_that.itemId,_that.itemName,_that.quantity,_that.price,_that.discountAmount,_that.finalPrice,_that.totalPrice,_that.createdAt);case _:
   return null;
 
 }
@@ -831,16 +834,19 @@ return $default(_that.itemId,_that.itemName,_that.quantity,_that.price,_that.dis
 @JsonSerializable()
 
 class _OrderItem implements OrderItem {
-  const _OrderItem({@JsonKey(name: 'item_id') this.itemId = 0, @JsonKey(name: 'item_name') this.itemName = '', @JsonKey(name: 'quantity') this.quantity = 0, @JsonKey(name: 'price') this.price = 0, @JsonKey(name: 'discount_amount') this.discountAmount = 0, @JsonKey(name: 'final_price') this.finalPrice = 0, @JsonKey(name: 'total_price') this.totalPrice = 0});
+  const _OrderItem({@JsonKey(name: 'id') this.id = 0, @JsonKey(name: 'order_id') this.orderId = 0, @JsonKey(name: 'item_id') this.itemId = 0, @JsonKey(name: 'item_name') this.itemName = '', @JsonKey(name: 'quantity') this.quantity = 0, @JsonKey(name: 'price') this.price = '0.00', @JsonKey(name: 'discount_amount') this.discountAmount = '0.00', @JsonKey(name: 'final_price') this.finalPrice = '0.00', @JsonKey(name: 'total_price') this.totalPrice = '0.00', @JsonKey(name: 'created_at') this.createdAt = ''});
   factory _OrderItem.fromJson(Map<String, dynamic> json) => _$OrderItemFromJson(json);
 
+@override@JsonKey(name: 'id') final  int id;
+@override@JsonKey(name: 'order_id') final  int orderId;
 @override@JsonKey(name: 'item_id') final  int itemId;
 @override@JsonKey(name: 'item_name') final  String itemName;
 @override@JsonKey(name: 'quantity') final  int quantity;
-@override@JsonKey(name: 'price') final  int price;
-@override@JsonKey(name: 'discount_amount') final  int discountAmount;
-@override@JsonKey(name: 'final_price') final  int finalPrice;
-@override@JsonKey(name: 'total_price') final  int totalPrice;
+@override@JsonKey(name: 'price') final  String price;
+@override@JsonKey(name: 'discount_amount') final  String discountAmount;
+@override@JsonKey(name: 'final_price') final  String finalPrice;
+@override@JsonKey(name: 'total_price') final  String totalPrice;
+@override@JsonKey(name: 'created_at') final  String createdAt;
 
 /// Create a copy of OrderItem
 /// with the given fields replaced by the non-null parameter values.
@@ -855,16 +861,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _OrderItem&&(identical(other.itemId, itemId) || other.itemId == itemId)&&(identical(other.itemName, itemName) || other.itemName == itemName)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.price, price) || other.price == price)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.finalPrice, finalPrice) || other.finalPrice == finalPrice)&&(identical(other.totalPrice, totalPrice) || other.totalPrice == totalPrice));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _OrderItem&&(identical(other.id, id) || other.id == id)&&(identical(other.orderId, orderId) || other.orderId == orderId)&&(identical(other.itemId, itemId) || other.itemId == itemId)&&(identical(other.itemName, itemName) || other.itemName == itemName)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.price, price) || other.price == price)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.finalPrice, finalPrice) || other.finalPrice == finalPrice)&&(identical(other.totalPrice, totalPrice) || other.totalPrice == totalPrice)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,itemId,itemName,quantity,price,discountAmount,finalPrice,totalPrice);
+int get hashCode => Object.hash(runtimeType,id,orderId,itemId,itemName,quantity,price,discountAmount,finalPrice,totalPrice,createdAt);
 
 @override
 String toString() {
-  return 'OrderItem(itemId: $itemId, itemName: $itemName, quantity: $quantity, price: $price, discountAmount: $discountAmount, finalPrice: $finalPrice, totalPrice: $totalPrice)';
+  return 'OrderItem(id: $id, orderId: $orderId, itemId: $itemId, itemName: $itemName, quantity: $quantity, price: $price, discountAmount: $discountAmount, finalPrice: $finalPrice, totalPrice: $totalPrice, createdAt: $createdAt)';
 }
 
 
@@ -875,7 +881,7 @@ abstract mixin class _$OrderItemCopyWith<$Res> implements $OrderItemCopyWith<$Re
   factory _$OrderItemCopyWith(_OrderItem value, $Res Function(_OrderItem) _then) = __$OrderItemCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'item_id') int itemId,@JsonKey(name: 'item_name') String itemName,@JsonKey(name: 'quantity') int quantity,@JsonKey(name: 'price') int price,@JsonKey(name: 'discount_amount') int discountAmount,@JsonKey(name: 'final_price') int finalPrice,@JsonKey(name: 'total_price') int totalPrice
+@JsonKey(name: 'id') int id,@JsonKey(name: 'order_id') int orderId,@JsonKey(name: 'item_id') int itemId,@JsonKey(name: 'item_name') String itemName,@JsonKey(name: 'quantity') int quantity,@JsonKey(name: 'price') String price,@JsonKey(name: 'discount_amount') String discountAmount,@JsonKey(name: 'final_price') String finalPrice,@JsonKey(name: 'total_price') String totalPrice,@JsonKey(name: 'created_at') String createdAt
 });
 
 
@@ -892,16 +898,19 @@ class __$OrderItemCopyWithImpl<$Res>
 
 /// Create a copy of OrderItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? itemId = null,Object? itemName = null,Object? quantity = null,Object? price = null,Object? discountAmount = null,Object? finalPrice = null,Object? totalPrice = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? orderId = null,Object? itemId = null,Object? itemName = null,Object? quantity = null,Object? price = null,Object? discountAmount = null,Object? finalPrice = null,Object? totalPrice = null,Object? createdAt = null,}) {
   return _then(_OrderItem(
-itemId: null == itemId ? _self.itemId : itemId // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,orderId: null == orderId ? _self.orderId : orderId // ignore: cast_nullable_to_non_nullable
+as int,itemId: null == itemId ? _self.itemId : itemId // ignore: cast_nullable_to_non_nullable
 as int,itemName: null == itemName ? _self.itemName : itemName // ignore: cast_nullable_to_non_nullable
 as String,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
 as int,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
-as int,discountAmount: null == discountAmount ? _self.discountAmount : discountAmount // ignore: cast_nullable_to_non_nullable
-as int,finalPrice: null == finalPrice ? _self.finalPrice : finalPrice // ignore: cast_nullable_to_non_nullable
-as int,totalPrice: null == totalPrice ? _self.totalPrice : totalPrice // ignore: cast_nullable_to_non_nullable
-as int,
+as String,discountAmount: null == discountAmount ? _self.discountAmount : discountAmount // ignore: cast_nullable_to_non_nullable
+as String,finalPrice: null == finalPrice ? _self.finalPrice : finalPrice // ignore: cast_nullable_to_non_nullable
+as String,totalPrice: null == totalPrice ? _self.totalPrice : totalPrice // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

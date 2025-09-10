@@ -158,6 +158,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         );
       }
     } catch (e) {
+      print('error: $e');
       emit(state.copyWith(apiResponse: ApiResponse.error('Error: $e')));
     }
   }

@@ -162,8 +162,10 @@ class _OrderScreenState extends State<OrderScreen>
                                   ),
                                 ),
                               ),
-                              Text("x${item.quantity}",
-                                  style: GoogleFonts.poppins(fontSize: 14)),
+                              Text(
+                                "x${item.quantity}",
+                                style: GoogleFonts.poppins(fontSize: 14),
+                              ),
                               const SizedBox(width: 10),
                               Text(
                                 "Rs.${item.totalPrice}",
@@ -176,10 +178,7 @@ class _OrderScreenState extends State<OrderScreen>
                           ),
                         );
                       }),
-
                       const Divider(height: 24),
-
-                      // Payment
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -197,8 +196,6 @@ class _OrderScreenState extends State<OrderScreen>
                         ],
                       ),
                       const SizedBox(height: 8),
-
-                      // Total
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -220,8 +217,6 @@ class _OrderScreenState extends State<OrderScreen>
                         ],
                       ),
                       const SizedBox(height: 12),
-
-                      // Special Instructions
                       if (order.specialInstructions.isNotEmpty)
                         Text(
                           "Note: ${order.specialInstructions}",
@@ -253,8 +248,9 @@ class _OrderScreenState extends State<OrderScreen>
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                padding:
-                                const EdgeInsets.symmetric(vertical: 12),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
                               ),
                               child: Text(
                                 "Canceled",
@@ -292,8 +288,9 @@ class _OrderScreenState extends State<OrderScreen>
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                padding:
-                                const EdgeInsets.symmetric(vertical: 12),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
                               ),
                               child: Text(
                                 order.status == 'pending'
@@ -321,9 +318,9 @@ class _OrderScreenState extends State<OrderScreen>
   }
 
   Widget buildOrderList(
-      List<OrderData> orders,
-      Function(OrderData) showOrderDetails,
-      ) {
+    List<OrderData> orders,
+    Function(OrderData) showOrderDetails,
+  ) {
     if (orders.isEmpty) {
       return Center(
         child: Column(
@@ -428,12 +425,15 @@ class _OrderScreenState extends State<OrderScreen>
                         SizedBox(height: 10.h),
                         Row(
                           children: [
-                            Icon(Icons.payment,
-                                size: 14.sp, color: Colors.black45),
+                            Icon(
+                              Icons.payment,
+                              size: 14.sp,
+                              color: Colors.black45,
+                            ),
                             SizedBox(width: 6.w),
                             Expanded(
                               child: Text(
-                              'Cash on Delivery',//  "${order.paymentMethod} (${order.paymentStatus})",
+                                /* 'Cash on Delivery',*/ "${order.paymentMethod} (${order.paymentStatus})",
                                 style: GoogleFonts.poppins(
                                   fontSize: 13.sp,
                                   color: Colors.black54,
@@ -446,8 +446,11 @@ class _OrderScreenState extends State<OrderScreen>
                         SizedBox(height: 4.h),
                         Row(
                           children: [
-                            Icon(Icons.calendar_today,
-                                size: 14.sp, color: Colors.black38),
+                            Icon(
+                              Icons.calendar_today,
+                              size: 14.sp,
+                              color: Colors.black38,
+                            ),
                             SizedBox(width: 6.w),
                             Expanded(
                               child: Text(
@@ -530,16 +533,23 @@ class _OrderScreenState extends State<OrderScreen>
 
             if (state.apiResponse.status == Status.error) {
               return Center(
-                  child: Text(state.apiResponse.message ?? "Error"));
+                child: Text(
+                  state.apiResponse.message ?? "Error",
+                  style: TextStyle(color: Colors.black),
+                ),
+              );
             }
 
             final allOrders = state.orders;
-            final pending =
-            allOrders.where((o) => o.status == "pending").toList();
-            final preparing =
-            allOrders.where((o) => o.status == "preparing").toList();
-            final ready =
-            allOrders.where((o) => o.status == "ready_for_pickup").toList();
+            final pending = allOrders
+                .where((o) => o.status == "pending")
+                .toList();
+            final preparing = allOrders
+                .where((o) => o.status == "preparing")
+                .toList();
+            final ready = allOrders
+                .where((o) => o.status == "ready_for_pickup")
+                .toList();
 
             return TabBarView(
               controller: _tabController,

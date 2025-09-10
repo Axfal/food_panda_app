@@ -62,7 +62,6 @@ class CategoryData with _$CategoryData {
     // TODO: implement toJson
     throw UnimplementedError();
   }
-
 }
 
 @freezed

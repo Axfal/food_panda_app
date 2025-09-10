@@ -140,13 +140,14 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.black54.withValues(alpha: 0.3),
-                    blurRadius: 6,
-                    offset: const Offset(2, 4),
-                  ),
-                ],
+                  // border: Border.all(color: AppColors.primary)
+                // boxShadow: [
+                //   BoxShadow(
+                //     color: AppColors.black54.withValues(alpha: 0.3),
+                //     blurRadius: 6,
+                //     offset: const Offset(2, 4),
+                //   ),
+                // ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -164,7 +165,7 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
+                  mainAxisSpacing: 14,
                 ),
                 itemCount: features.length,
                 itemBuilder: (context, index) {
