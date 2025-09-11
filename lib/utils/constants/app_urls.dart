@@ -60,4 +60,9 @@ class AppUrl {
   /// Order
   static const String getOrders = '$baseUrl/get_orders.php';
   static const String updateStatus = '$baseUrl/update_order.php';
+
+
+  /// Income
+  static const String getIncome = '$baseUrl/get_income.php';
+
 }
