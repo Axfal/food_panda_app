@@ -1,45 +1,46 @@
 class WeeklyPerformanceModel {
-  bool? success;
-  List<WeeklyPerformance>? weeklyPerformance;
+  final bool? success;
+  final List<WeeklyPerformance>? weeklyPerformance;
 
-  WeeklyPerformanceModel({this.success, this.weeklyPerformance});
+  const WeeklyPerformanceModel({
+    this.success,
+    this.weeklyPerformance,
+  });
 
-  WeeklyPerformanceModel.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    if (json['weekly_performance'] != null) {
-      weeklyPerformance = <WeeklyPerformance>[];
-      json['weekly_performance'].forEach((v) {
-        weeklyPerformance!.add(new WeeklyPerformance.fromJson(v));
-      });
-    }
+  factory WeeklyPerformanceModel.fromJson(Map<String, dynamic> json) {
+    return WeeklyPerformanceModel(
+      success: json['success'] as bool?,
+      weeklyPerformance: (json['weekly_performance'] as List?)
+          ?.map((v) => WeeklyPerformance.fromJson(v))
+          .toList(),
+    );
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['success'] = this.success;
-    if (this.weeklyPerformance != null) {
-      data['weekly_performance'] =
-          this.weeklyPerformance!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+    'success': success,
+    'weekly_performance':
+    weeklyPerformance?.map((v) => v.toJson()).toList(),
+  };
 }
 
 class WeeklyPerformance {
-  String? day;
-  String? income;
+  final String? day;
+  final String? income;
 
-  WeeklyPerformance({this.day, this.income});
+  const WeeklyPerformance({
+    this.day,
+    this.income,
+  });
 
-  WeeklyPerformance.fromJson(Map<String, dynamic> json) {
-    day = json['day'];
-    income = json['income'];
+  factory WeeklyPerformance.fromJson(Map<String, dynamic> json) {
+    return WeeklyPerformance(
+      day: json['day'] as String?,
+      income: json['income'] as String?,
+    );
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['day'] = this.day;
-    data['income'] = this.income;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+    'day': day,
+    'income': income,
+  };
 }

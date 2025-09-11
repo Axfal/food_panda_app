@@ -1,4 +1,5 @@
 import 'package:badges/badges.dart' as badges;
+import 'package:excellent_trade_app/bloc/income/income_bloc.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/featured_card.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/logout_dialog_box.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/summary_itme.dart';
@@ -16,6 +17,7 @@ class RestaurantOwnerScreen extends StatefulWidget {
 
 class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
   late String userId;
+  late String restaurantId;
   late List<Map<String, dynamic>> features;
   late WebSocketService _webSocketService;
   int unreadNotifications = 3;
@@ -24,10 +26,21 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
   void initState() {
     super.initState();
     userId = SessionController.user.id.toString();
-
+    restaurantId = SessionController.user.restaurantId.toString();
     // Connect WebSocket for vendor
     _webSocketService = WebSocketService(url: "wss://itgenesis.space/ws/");
     _webSocketService.connect();
+
+    // fetch incomes
+    context.read<IncomeBloc>().add(
+      FetchTodayIncomeEvent(restaurantId: restaurantId, type: "today"),
+    );
+    context.read<IncomeBloc>().add(
+      FetchWeeklyIncomeEvent(restaurantId: restaurantId, type: "week"),
+    );
+    context.read<IncomeBloc>().add(
+      FetchMonthlyIncomeEvent(restaurantId: restaurantId, type: "month"),
+    );
 
     features = [
       {"title": "Profile", "icon": Icons.person, "route": RoutesName.profile},
@@ -127,36 +140,52 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
         child: Column(
           children: [
             // Sales Summary Card
-            Container(
-              margin: const EdgeInsets.all(16),
-              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    AppColors.primary.withValues(alpha: 0.95),
-                    AppColors.primary.withValues(alpha: 0.75),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(16),
-                  // border: Border.all(color: AppColors.primary)
-                // boxShadow: [
-                //   BoxShadow(
-                //     color: AppColors.black54.withValues(alpha: 0.3),
-                //     blurRadius: 6,
-                //     offset: const Offset(2, 4),
-                //   ),
-                // ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: const [
-                  SummaryItem(title: "Today", value: "\$250"),
-                  SummaryItem(title: "This Week", value: "\$1,250"),
-                  SummaryItem(title: "This Month", value: "\$5,400"),
-                ],
-              ),
+            BlocBuilder<IncomeBloc, IncomeState>(
+              buildWhen: (current, previous) =>
+                  current.todayIncomeModel != previous.todayIncomeModel ||
+                  current.weeklyIncomeModel != previous.weeklyIncomeModel ||
+                  current.monthIncomeModel != previous.monthIncomeModel,
+              builder: (context, incomeState) {
+                // get values from state; fall back to 0 if null
+                final today = incomeState.todayIncomeModel.todayIncome ?? 0;
+                final week = incomeState.weeklyIncomeModel.weekIncome ?? 0;
+                final month = incomeState.monthIncomeModel.monthIncome ?? 0;
+
+                return Container(
+                  margin: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 18,
+                    horizontal: 16,
+                  ),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.primary.withValues(alpha: 0.95),
+                        AppColors.primary.withValues(alpha: 0.75),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                    // border: Border.all(color: AppColors.primary)
+                    // boxShadow: [
+                    //   BoxShadow(
+                    //     color: AppColors.black54.withValues(alpha: 0.3),
+                    //     blurRadius: 6,
+                    //     offset: const Offset(2, 4),
+                    //   ),
+                    // ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      SummaryItem(title: "Today", value: "Rs $today"),
+                      SummaryItem(title: "This Week", value: "Rs $week"),
+                      SummaryItem(title: "This Month", value: "Rs $month"),
+                    ],
+                  ),
+                );
+              },
             ),
 
             Expanded(

@@ -1,3 +1,5 @@
+import 'package:excellent_trade_app/repository/income/income_api_repository.dart';
+import 'package:excellent_trade_app/repository/income/income_http_api_repository.dart';
 import 'package:excellent_trade_app/repository/location/location_api_response.dart';
 import 'package:excellent_trade_app/repository/order/order_api_repository.dart';
 import 'package:excellent_trade_app/repository/order/order_http_api_repository.dart';
@@ -41,7 +43,10 @@ class ServiceLocator {
       () => OrderHttpApiRepository(),
     );
     getIt.registerLazySingleton<WebSocketService>(
-          () => WebSocketService(url: "wss://itgenesis.space/ws/"),
+      () => WebSocketService(url: "wss://itgenesis.space/ws/"),
+    );
+    getIt.registerLazySingleton<IncomeApiRepository>(
+      () => IncomeHttpApiResponse(),
     );
   }
 }

@@ -17,13 +17,12 @@ class IncomeBloc extends Bloc<IncomeEvent, IncomeState> {
   }
 
   Future<void> _onFetchTodayIncome(
-      FetchTodayIncomeEvent event, Emitter<IncomeState> emit) async {
+    FetchTodayIncomeEvent event,
+    Emitter<IncomeState> emit,
+  ) async {
     emit(state.copyWith(apiResponse: const ApiResponse.loading()));
 
-    final data = {
-      "restaurant_id": event.restaurantId,
-      "type": event.type,
-    };
+    final data = {"restaurant_id": event.restaurantId, "type": event.type};
 
     try {
       final response = await incomeApiRepository.getIncome(data);
@@ -32,15 +31,28 @@ class IncomeBloc extends Bloc<IncomeEvent, IncomeState> {
         if (response['success'] == true && response['today_income'] != null) {
           final todayIncomeModel = TodayIncomeModel.fromJson(response);
           emit(state.copyWith(todayIncomeModel: todayIncomeModel));
-          emit(state.copyWith(
-              apiResponse:
-              const ApiResponse.completed('Today income fetched successfully')));
+          emit(
+            state.copyWith(
+              apiResponse: const ApiResponse.completed(
+                'Today income fetched successfully',
+              ),
+            ),
+          );
         } else {
-          emit(state.copyWith(apiResponse: ApiResponse.error(
-              response['error'] ?? 'Error while fetching today income')));
+          emit(
+            state.copyWith(
+              apiResponse: ApiResponse.error(
+                response['error'] ?? 'Error while fetching today income',
+              ),
+            ),
+          );
         }
       } else {
-        emit(state.copyWith(apiResponse: ApiResponse.error('No response from server')));
+        emit(
+          state.copyWith(
+            apiResponse: ApiResponse.error('No response from server'),
+          ),
+        );
       }
     } catch (e) {
       print('error: $e');
@@ -49,13 +61,12 @@ class IncomeBloc extends Bloc<IncomeEvent, IncomeState> {
   }
 
   Future<void> _onFetchWeeklyIncome(
-      FetchWeeklyIncomeEvent event, Emitter<IncomeState> emit) async {
+    FetchWeeklyIncomeEvent event,
+    Emitter<IncomeState> emit,
+  ) async {
     emit(state.copyWith(apiResponse: const ApiResponse.loading()));
 
-    final data = {
-      "restaurant_id": event.restaurantId,
-      "type": event.type,
-    };
+    final data = {"restaurant_id": event.restaurantId, "type": event.type};
 
     try {
       final response = await incomeApiRepository.getIncome(data);
@@ -64,15 +75,28 @@ class IncomeBloc extends Bloc<IncomeEvent, IncomeState> {
         if (response['success'] == true && response['week_income'] != null) {
           final weeklyIncomeModel = WeeklyIncomeModel.fromJson(response);
           emit(state.copyWith(weeklyIncomeModel: weeklyIncomeModel));
-          emit(state.copyWith(
-              apiResponse:
-              const ApiResponse.completed('Weekly income fetched successfully')));
+          emit(
+            state.copyWith(
+              apiResponse: const ApiResponse.completed(
+                'Weekly income fetched successfully',
+              ),
+            ),
+          );
         } else {
-          emit(state.copyWith(apiResponse: ApiResponse.error(
-              response['error'] ?? 'Error while fetching weekly income')));
+          emit(
+            state.copyWith(
+              apiResponse: ApiResponse.error(
+                response['error'] ?? 'Error while fetching weekly income',
+              ),
+            ),
+          );
         }
       } else {
-        emit(state.copyWith(apiResponse: ApiResponse.error('No response from server')));
+        emit(
+          state.copyWith(
+            apiResponse: ApiResponse.error('No response from server'),
+          ),
+        );
       }
     } catch (e) {
       print('error: $e');
@@ -81,13 +105,12 @@ class IncomeBloc extends Bloc<IncomeEvent, IncomeState> {
   }
 
   Future<void> _onFetchMonthlyIncome(
-      FetchMonthlyIncomeEvent event, Emitter<IncomeState> emit) async {
+    FetchMonthlyIncomeEvent event,
+    Emitter<IncomeState> emit,
+  ) async {
     emit(state.copyWith(apiResponse: const ApiResponse.loading()));
 
-    final data = {
-      "restaurant_id": event.restaurantId,
-      "type": event.type,
-    };
+    final data = {"restaurant_id": event.restaurantId, "type": event.type};
 
     try {
       final response = await incomeApiRepository.getIncome(data);
@@ -96,15 +119,28 @@ class IncomeBloc extends Bloc<IncomeEvent, IncomeState> {
         if (response['success'] == true && response['month_income'] != null) {
           final monthlyIncomeModel = MonthIncomeModel.fromJson(response);
           emit(state.copyWith(monthIncomeModel: monthlyIncomeModel));
-          emit(state.copyWith(
-              apiResponse:
-              const ApiResponse.completed('Monthly income fetched successfully')));
+          emit(
+            state.copyWith(
+              apiResponse: const ApiResponse.completed(
+                'Monthly income fetched successfully',
+              ),
+            ),
+          );
         } else {
-          emit(state.copyWith(apiResponse: ApiResponse.error(
-              response['error'] ?? 'Error while fetching monthly income')));
+          emit(
+            state.copyWith(
+              apiResponse: ApiResponse.error(
+                response['error'] ?? 'Error while fetching monthly income',
+              ),
+            ),
+          );
         }
       } else {
-        emit(state.copyWith(apiResponse: ApiResponse.error('No response from server')));
+        emit(
+          state.copyWith(
+            apiResponse: ApiResponse.error('No response from server'),
+          ),
+        );
       }
     } catch (e) {
       print('error: $e');
