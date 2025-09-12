@@ -6,6 +6,7 @@ import 'package:excellent_trade_app/bloc/income/income_bloc.dart';
 import 'package:excellent_trade_app/bloc/location/location_bloc.dart';
 import 'package:excellent_trade_app/bloc/near_by_restaurant/near_by_restaurant_bloc.dart';
 import 'package:excellent_trade_app/bloc/new_restaurant/new_restaurant_bloc.dart';
+import 'package:excellent_trade_app/bloc/performance/performance_bloc.dart';
 import 'package:excellent_trade_app/bloc/vendor/menu_management/menu_management_bloc.dart';
 import 'package:excellent_trade_app/bloc/vendor/restaurant/restaurant_bloc.dart';
 import 'package:excellent_trade_app/bloc/wish_list/wish_list_bloc.dart';
@@ -19,6 +20,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart';
 import 'bloc/cart/cart_bloc.dart';
 import 'bloc/category/category_bloc.dart';
 import 'bloc/order/order_bloc.dart';
@@ -150,6 +152,7 @@ class MyApp extends StatelessWidget {
                         webSocketService: getIt<WebSocketService>(),
                       ),
                     ),
+                    BlocProvider<PerformanceBloc>(create: (context) => PerformanceBloc(performanceApiRepository: getIt())),
                     BlocProvider<IncomeBloc>(
                       create: (context) =>
                           IncomeBloc(incomeApiRepository: getIt()),

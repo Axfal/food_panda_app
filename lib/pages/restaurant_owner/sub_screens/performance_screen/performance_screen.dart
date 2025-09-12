@@ -1,4 +1,6 @@
+import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
 import 'package:fl_chart/fl_chart.dart';
+import '../../../../bloc/performance/performance_bloc.dart';
 import '../../restaurant_owner_exports.dart';
 
 class PerformanceScreen extends StatefulWidget {
@@ -12,41 +14,32 @@ class _PerformanceScreenState extends State<PerformanceScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  // Example performance data
-  final List<double> weeklyData = [1200, 1800, 1500, 2000, 2200, 1700, 2500];
-  final List<double> monthlyData = [
-    12000,
-    15000,
-    17000,
-    20000,
-    18000,
-    22000,
-    25000,
-    24000,
-    26000,
-    23000,
-    27000,
-    30000,
-  ];
-  final List<double> yearlyData = [
-    12000,
-    15000,
-    17000,
-    20000,
-    18000,
-    22000,
-    25000,
-    24000,
-    26000,
-    23000,
-    27000,
-    30000,
-  ];
+  List<String> yearlyLabels = [];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+
+    final bloc = context.read<PerformanceBloc>();
+    bloc.add(
+      const FetchWeeklyPerformanceEvent(
+        restaurantId: "5",
+        type: "weekly_performance",
+      ),
+    );
+    bloc.add(
+      const FetchMonthlyPerformanceEvent(
+        restaurantId: "5",
+        type: "monthly_performance",
+      ),
+    );
+    bloc.add(
+      const FetchYearlyPerformanceEvent(
+        restaurantId: "5",
+        type: "yearly_performance",
+      ),
+    );
   }
 
   @override
@@ -55,13 +48,12 @@ class _PerformanceScreenState extends State<PerformanceScreen>
     super.dispose();
   }
 
-  // --- Metric Card ---
   Widget buildMetricCard(
-    String title,
-    String value,
-    Color color,
-    IconData icon,
-  ) {
+      String title,
+      String value,
+      Color color,
+      IconData icon,
+      ) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -100,6 +92,19 @@ class _PerformanceScreenState extends State<PerformanceScreen>
   }
 
   Widget buildPerformanceChart(List<double> data, String title) {
+    if (data.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.all(20),
+        child: Center(child: Text("No data available")),
+      );
+    }
+
+    final maxY = (data.reduce((a, b) => a > b ? a : b));
+    final buffer = maxY * 0.7;
+    final displayMaxY = (maxY + buffer).ceilToDouble();
+
+    final interval = (displayMaxY / 4).ceilToDouble();
+
     return Container(
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.symmetric(vertical: 16),
@@ -127,11 +132,14 @@ class _PerformanceScreenState extends State<PerformanceScreen>
           ),
           const SizedBox(height: 16),
           SizedBox(
-            height: 220,
+            height: 240,
             child: LineChart(
               LineChartData(
+                minY: 0,
+                maxY: displayMaxY,
                 gridData: FlGridData(
                   show: true,
+                  horizontalInterval: interval,
                   getDrawingHorizontalLine: (value) => FlLine(
                     color: Colors.grey.withValues(alpha: 0.2),
                     strokeWidth: 1,
@@ -141,11 +149,11 @@ class _PerformanceScreenState extends State<PerformanceScreen>
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      reservedSize: 40,
-                      interval: (data.reduce((a, b) => a > b ? a : b) / 5),
+                      reservedSize: 48,
+                      interval: interval,
                       getTitlesWidget: (value, meta) {
                         return Text(
-                          "\$${value ~/ 1000}k",
+                          "${value.toInt()}",
                           style: GoogleFonts.poppins(
                             fontSize: 11,
                             color: Colors.grey[600],
@@ -158,6 +166,16 @@ class _PerformanceScreenState extends State<PerformanceScreen>
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
+                        if (title == "Yearly Performance" &&
+                            value.toInt() < yearlyLabels.length) {
+                          return Text(
+                            yearlyLabels[value.toInt()],
+                            style: GoogleFonts.poppins(
+                              fontSize: 11,
+                              color: Colors.grey[600],
+                            ),
+                          );
+                        }
                         return Text(
                           value.toInt().toString(),
                           style: GoogleFonts.poppins(
@@ -166,7 +184,7 @@ class _PerformanceScreenState extends State<PerformanceScreen>
                           ),
                         );
                       },
-                      interval: (data.length / 6).floorToDouble(),
+                      interval: 1,
                     ),
                   ),
                 ),
@@ -183,10 +201,27 @@ class _PerformanceScreenState extends State<PerformanceScreen>
                     ),
                     spots: List.generate(
                       data.length,
-                      (index) => FlSpot(index.toDouble(), data[index]),
+                          (index) => FlSpot(index.toDouble(), data[index]),
                     ),
                   ),
                 ],
+                lineTouchData: LineTouchData(
+                  enabled: true,
+                  touchTooltipData: LineTouchTooltipData(
+                    getTooltipItems: (touchedSpots) {
+                      return touchedSpots.map((spot) {
+                        return LineTooltipItem(
+                          spot.y.toStringAsFixed(2),
+                          GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        );
+                      }).toList();
+                    },
+                  ),
+                ),
               ),
             ),
           ),
@@ -195,37 +230,49 @@ class _PerformanceScreenState extends State<PerformanceScreen>
     );
   }
 
-  Widget buildTabContent(List<double> data, String title) {
+  Widget buildTabContent(
+      ApiResponse<String> apiResponse,
+      List<double> data,
+      String title,
+      String totalIncome,
+      String totalOrders,
+      String avgOrder,
+      ) {
+    if (apiResponse.status == Status.loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (apiResponse.status == Status.error) {
+      return Center(child: Text(apiResponse.message ?? "Something went wrong"));
+    }
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          // Top Metrics Row
           Row(
             children: [
               buildMetricCard(
                 "Total Sales",
-                "\$${data.reduce((a, b) => a + b).toStringAsFixed(0)}",
+                totalIncome,
                 Colors.green,
                 Icons.attach_money_rounded,
               ),
               const SizedBox(width: 12),
               buildMetricCard(
                 "Orders",
-                "${(data.length * 40)}",
+                totalOrders,
                 Colors.blue,
                 Icons.receipt_long,
               ),
               const SizedBox(width: 12),
               buildMetricCard(
                 "Avg. Order",
-                "\$${(data.reduce((a, b) => a + b) / (data.length * 40)).toStringAsFixed(2)}",
+                avgOrder,
                 Colors.orange,
                 Icons.bar_chart,
               ),
             ],
           ),
-          // Graph
           buildPerformanceChart(data, "$title Performance"),
         ],
       ),
@@ -258,13 +305,74 @@ class _PerformanceScreenState extends State<PerformanceScreen>
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          buildTabContent(weeklyData, "Weekly"),
-          buildTabContent(monthlyData, "Monthly"),
-          buildTabContent(yearlyData, "Yearly"),
-        ],
+      body: BlocBuilder<PerformanceBloc, PerformanceState>(
+        builder: (context, state) {
+          final weeklyData = state.weeklyPerformance.weeklyPerformance?.breakdown
+              ?.map((e) => double.tryParse(e.income ?? "0") ?? 0.0)
+              .toList() ??
+              [];
+
+          final monthlyData =
+              state.monthlyPerformance.monthlyPerformance?.breakdown
+                  ?.map((e) => double.tryParse(e.income ?? "0") ?? 0.0)
+                  .toList() ??
+                  [];
+
+          final yearlyBreakdown =
+              state.yearlyPerformance.yearlyPerformance?.breakdown ?? [];
+          var yearlyData = yearlyBreakdown
+              .map((e) => double.tryParse(e.income ?? "0") ?? 0.0)
+              .toList();
+          yearlyLabels = yearlyBreakdown.map((e) => e.month ?? "").toList();
+
+          if (yearlyData.length == 1) {
+            yearlyData.insert(0, 0);
+            yearlyLabels.insert(0, "");
+          }
+
+          return TabBarView(
+            controller: _tabController,
+            children: [
+              buildTabContent(
+                state.apiResponse,
+                weeklyData,
+                "Weekly",
+                state.weeklyPerformance.weeklyPerformance?.totals?.totalIncome ??
+                    "0",
+                state.weeklyPerformance.weeklyPerformance?.totals?.totalOrders
+                    ?.toString() ??
+                    "0",
+                state.weeklyPerformance.weeklyPerformance?.totals?.avgOrder ??
+                    "0",
+              ),
+              buildTabContent(
+                state.apiResponse,
+                monthlyData,
+                "Monthly",
+                state.monthlyPerformance.monthlyPerformance?.totals
+                    ?.totalIncome ??
+                    "0",
+                state.monthlyPerformance.monthlyPerformance?.totals?.totalOrders
+                    ?.toString() ??
+                    "0",
+                state.monthlyPerformance.monthlyPerformance?.totals?.avgOrder ??
+                    "0",
+              ),
+              buildTabContent(
+                state.apiResponse,
+                yearlyData,
+                "Yearly",
+                state.yearlyPerformance.yearlyPerformance?.totals?.totalIncome ??
+                    "0",
+                state.yearlyPerformance.yearlyPerformance?.totals?.totalOrders
+                    ?.toString() ??
+                    "0",
+                state.yearlyPerformance.yearlyPerformance?.totals?.avgOrder ??
+                    "0",
+              ),
+            ],
+          );
+        },
       ),
     );
   }
