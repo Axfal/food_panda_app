@@ -47,7 +47,8 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
       {
         "title": "My Restaurants",
         "icon": Icons.store,
-        "route": RoutesName.myRestaurant,
+        "route": RoutesName.menuManagement,
+        'arg': {'restaurant_id': "5"},
       },
       // {
       //   "title": "New Restaurant",
@@ -58,8 +59,8 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
       {
         "title": "Menu Items",
         "icon": Icons.fastfood,
-        "route": RoutesName.selectRestaurant,
-        // 'arg': {'restaurant_id': "6"},
+        "route": RoutesName.menuManagement,
+        'arg': {'restaurant_id': "5"},
       },
       {
         "title": "Orders",

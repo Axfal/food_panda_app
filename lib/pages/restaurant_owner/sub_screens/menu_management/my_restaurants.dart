@@ -1,9 +1,6 @@
 import 'package:excellent_trade_app/bloc/vendor/restaurant/restaurant_bloc.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import '../../../../data/response/status.dart';
 import '../../restaurant_owner_exports.dart';
 
@@ -72,9 +69,11 @@ class _SelectRestaurantState extends State<SelectRestaurant> {
                 return InkWell(
                   borderRadius: BorderRadius.circular(16),
                   onTap: () {
-                    Navigator.pushNamed(context, RoutesName.menuManagement, arguments: {
-                      "restaurant_id": r.id.toString()
-                    });
+                    Navigator.pushNamed(
+                      context,
+                      RoutesName.menuManagement,
+                      arguments: {"restaurant_id": r.id.toString()},
+                    );
                   },
                   child: Card(
                     color: Colors.white,
