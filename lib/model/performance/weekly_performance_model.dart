@@ -1,6 +1,6 @@
 class WeeklyPerformanceModel {
   final bool? success;
-  final List<WeeklyPerformance>? weeklyPerformance;
+  final WeeklyPerformanceData? weeklyPerformance;
 
   const WeeklyPerformanceModel({
     this.success,
@@ -10,37 +10,97 @@ class WeeklyPerformanceModel {
   factory WeeklyPerformanceModel.fromJson(Map<String, dynamic> json) {
     return WeeklyPerformanceModel(
       success: json['success'] as bool?,
-      weeklyPerformance: (json['weekly_performance'] as List?)
-          ?.map((v) => WeeklyPerformance.fromJson(v))
-          .toList(),
+      weeklyPerformance: json['weekly_performance'] != null
+          ? WeeklyPerformanceData.fromJson(
+          json['weekly_performance'] as Map<String, dynamic>)
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() => {
     'success': success,
-    'weekly_performance':
-    weeklyPerformance?.map((v) => v.toJson()).toList(),
+    'weekly_performance': weeklyPerformance?.toJson(),
   };
 }
 
-class WeeklyPerformance {
-  final String? day;
-  final String? income;
+class WeeklyPerformanceData {
+  final List<WeeklyBreakdown>? breakdown;
+  final WeeklyTotals? totals;
 
-  const WeeklyPerformance({
-    this.day,
-    this.income,
+  const WeeklyPerformanceData({
+    this.breakdown,
+    this.totals,
   });
 
-  factory WeeklyPerformance.fromJson(Map<String, dynamic> json) {
-    return WeeklyPerformance(
+  factory WeeklyPerformanceData.fromJson(Map<String, dynamic> json) {
+    return WeeklyPerformanceData(
+      breakdown: (json['breakdown'] as List?)
+          ?.map((v) => WeeklyBreakdown.fromJson(v as Map<String, dynamic>))
+          .toList(),
+      totals: json['totals'] != null
+          ? WeeklyTotals.fromJson(json['totals'] as Map<String, dynamic>)
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'breakdown': breakdown?.map((v) => v.toJson()).toList(),
+    'totals': totals?.toJson(),
+  };
+}
+
+class WeeklyBreakdown {
+  final String? day;
+  final String? income;
+  final int? totalOrders;
+  final String? avgOrder;
+
+  const WeeklyBreakdown({
+    this.day,
+    this.income,
+    this.totalOrders,
+    this.avgOrder,
+  });
+
+  factory WeeklyBreakdown.fromJson(Map<String, dynamic> json) {
+    return WeeklyBreakdown(
       day: json['day'] as String?,
       income: json['income'] as String?,
+      totalOrders: json['total_orders'] as int?,
+      avgOrder: json['avg_order'] as String?,
     );
   }
 
   Map<String, dynamic> toJson() => {
     'day': day,
     'income': income,
+    'total_orders': totalOrders,
+    'avg_order': avgOrder,
+  };
+}
+
+class WeeklyTotals {
+  final String? totalIncome;
+  final int? totalOrders;
+  final String? avgOrder;
+
+  const WeeklyTotals({
+    this.totalIncome,
+    this.totalOrders,
+    this.avgOrder,
+  });
+
+  factory WeeklyTotals.fromJson(Map<String, dynamic> json) {
+    return WeeklyTotals(
+      totalIncome: json['total_income'] as String?,
+      totalOrders: json['total_orders'] as int?,
+      avgOrder: json['avg_order'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'total_income': totalIncome,
+    'total_orders': totalOrders,
+    'avg_order': avgOrder,
   };
 }
