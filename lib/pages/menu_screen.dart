@@ -239,7 +239,11 @@ class _MenuScreenState extends State<MenuScreen> {
                                 Navigator.pushNamed(
                                   context,
                                   RoutesName.productDetails,
-                                  arguments: {"menu_item": item},
+                                  arguments: {
+                                    "menu_item": item,
+                                    'restaurant_id':
+                                        widget.restaurantData.restaurantId,
+                                  },
                                 );
                               },
                               child: Container(

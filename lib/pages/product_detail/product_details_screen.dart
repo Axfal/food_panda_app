@@ -1,14 +1,19 @@
-import 'package:excellent_trade_app/config/routes/route_export.dart';
+import 'package:excellent_trade_app/bloc/recommendation/recommendation_bloc.dart';
+import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../../../Utils/constants/app_colors.dart';
 import 'package:excellent_trade_app/model/restaurant_menu/restaurant_menu_model.dart'
     as menu_model;
 
 class ProductDetailsScreen extends StatefulWidget {
   final menu_model.MenuItem menuItem;
-  const ProductDetailsScreen({super.key, required this.menuItem});
+  final int restaurantId;
+  const ProductDetailsScreen({
+    super.key,
+    required this.restaurantId,
+    required this.menuItem,
+  });
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
@@ -17,10 +22,27 @@ class ProductDetailsScreen extends StatefulWidget {
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   String selectedVariation = 'Full';
 
+  final Map<int, bool> _selected = {};
+
+  @override
+  void initState() {
+    super.initState();
+    final String restaurantId = widget.restaurantId.toString();
+
+    context.read<RecommendationBloc>().add(
+      FetchRecommendedItemsEvent(
+        cartItem: [2, 9], //[widget.menuItem.itemId],
+        restaurantId: '6', //restaurantId,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final item = widget.menuItem;
-    final double oldPrice = double.parse(item.itemPrice) * 1.15; /// 15% by default dada kahin ka
+    final double oldPrice = double.parse(item.itemPrice) * 1.15;
+
+    /// 15% by default dada kahin ka
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -72,7 +94,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       ),
                       child: Icon(
                         LucideIcons.x,
-                        color: AppColors.primary,
+                        color: AppColors.black,
                         size: 25.sp,
                       ),
                     ),
@@ -86,7 +108,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                   item.itemName,
+                    item.itemName,
                     style: GoogleFonts.poppins(
                       fontSize: 24.sp,
                       fontWeight: FontWeight.w700,
@@ -183,7 +205,66 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 ],
               ),
             ),
-            optionalItemsWidget("Sada Biryani", '180.20', '220.25'),
+            BlocBuilder<RecommendationBloc, RecommendationState>(
+              buildWhen: (current, previous) =>
+                  current.apiResponse.status != previous.apiResponse.status,
+              builder: (context, state) {
+                if (state.apiResponse.status == Status.loading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state.apiResponse.status == Status.error) {
+                  return Center(
+                    child: Text(state.apiResponse.message ?? "Error"),
+                  );
+                } else if (state.apiResponse.status == Status.completed &&
+                    state.recommendedItemModel.recommendations != null &&
+                    state.recommendedItemModel.recommendations!.isNotEmpty) {
+                  final items = state.recommendedItemModel.recommendations!;
+                  return SingleChildScrollView(
+                    padding: EdgeInsets.all(12.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.menuItem.itemName,
+                          style: GoogleFonts.poppins(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+
+                        /// Render optional items from API
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: items.length,
+                          itemBuilder: (context, index) {
+                            final item = items[index];
+
+                            /// Original price = price + 15%
+                            final double basePrice =
+                                double.tryParse(item.price ?? "0") ?? 0;
+                            final double originalPrice =
+                                basePrice + (basePrice * 0.15);
+
+                            return optionalItemsWidget(
+                              index: index,
+                              title: item.name ?? "Unnamed",
+                              price: "Rs. ${basePrice.toStringAsFixed(0)}",
+                              original:
+                                  "Rs. ${originalPrice.toStringAsFixed(0)}",
+                              photo: item.photo,
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return const Center(child: Text("No recommendations found"));
+                }
+              },
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
@@ -467,83 +548,92 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Widget optionalItemsWidget(String title, String price, String original) {
+  /// Reusable optional items widget (design same, now dynamic)
+  Widget optionalItemsWidget({
+    required int index,
+    required String title,
+    required String price,
+    required String original,
+    String? photo,
+  }) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-      child: Column(
-        children: List.generate(4, (index) {
-          return Padding(
-            padding: EdgeInsets.symmetric(vertical: 6.h),
-            child: ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Checkbox(
-                value: index % 2 == 0 ? true : false,
-                onChanged: (value) {},
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(1.r),
-                ),
-                // fillColor: MaterialStateProperty.all(AppColors.primary),
-                activeColor: AppColors.primary,
-                checkColor: Colors.white,
-                side: BorderSide(color: AppColors.primary, width: 1.5),
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                visualDensity: VisualDensity.compact,
+      child: ListTile(
+        contentPadding: EdgeInsets.zero,
+        leading: Checkbox(
+          value: _selected[index] ?? false,
+          onChanged: (value) {
+            setState(() {
+              _selected[index] = value ?? false;
+            });
+          },
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(1.r),
+          ),
+          activeColor: AppColors.primary,
+          checkColor: Colors.white,
+          side: BorderSide(color: AppColors.primary, width: 1.5),
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          visualDensity: VisualDensity.compact,
+        ),
+        title: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(6.r),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(10.r),
               ),
-
-              title: Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(6.r),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    child: Icon(
+              child: photo != null && photo.isNotEmpty
+                  ? Image.network(
+                      photo,
+                      height: 24.sp,
+                      width: 24.sp,
+                      fit: BoxFit.cover,
+                    )
+                  : Icon(
                       Icons.fastfood,
                       size: 24.sp,
                       color: Colors.deepOrangeAccent,
                     ),
-                  ),
-                  SizedBox(width: 10.w),
-                  Expanded(
-                    child: Text(
-                      title,
-                      style: GoogleFonts.poppins(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black87,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-              trailing: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    price,
-                    style: GoogleFonts.poppins(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13.sp,
-                    ),
-                  ),
-                  SizedBox(height: 2.h),
-                  Text(
-                    original,
-                    style: GoogleFonts.poppins(
-                      fontSize: 11.sp,
-                      color: Colors.grey,
-                      decoration: TextDecoration.lineThrough,
-                    ),
-                  ),
-                ],
+            ),
+            SizedBox(width: 10.w),
+            Expanded(
+              child: Text(
+                title,
+                style: GoogleFonts.poppins(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
-          );
-        }),
+          ],
+        ),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              price,
+              style: GoogleFonts.poppins(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w600,
+                fontSize: 13.sp,
+              ),
+            ),
+            SizedBox(height: 2.h),
+            Text(
+              original,
+              style: GoogleFonts.poppins(
+                fontSize: 11.sp,
+                color: Colors.grey,
+                decoration: TextDecoration.lineThrough,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

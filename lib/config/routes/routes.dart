@@ -48,6 +48,7 @@ class Routes {
         );
       case RoutesName.productDetails:
         final args = settings.arguments as Map<String, dynamic>?;
+        final int restaurantId = args?['restaurant_id'] ?? 0;
         final menu_model.MenuItem menuItem =
             args?['menu_item'] ??
             menu_model.MenuItem(
@@ -58,7 +59,9 @@ class Routes {
               itemStatus: '',
               itemPhoto: '',
             );
-        if (menuItem.itemName == '' && menuItem.itemId == 0) {
+        if (menuItem.itemName == '' &&
+            menuItem.itemId == 0 &&
+            restaurantId == 0) {
           return MaterialPageRoute(
             builder: (context) => Scaffold(
               body: Center(
@@ -71,8 +74,10 @@ class Routes {
           );
         }
         return MaterialPageRoute(
-          builder: (BuildContext context) =>
-              ProductDetailsScreen(menuItem: menuItem),
+          builder: (BuildContext context) => ProductDetailsScreen(
+            menuItem: menuItem,
+            restaurantId: restaurantId,
+          ),
         );
       case RoutesName.cartSection:
         return MaterialPageRoute(
