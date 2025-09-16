@@ -188,16 +188,16 @@ class _MenuScreenState extends State<MenuScreen> {
                                         ? AppColors.primary
                                         : Colors.grey.shade200,
                                     borderRadius: BorderRadius.circular(20),
-                                    boxShadow: isSelected
-                                        ? [
-                                            BoxShadow(
-                                              color: AppColors.primary
-                                                  .withValues(alpha: 0.4),
-                                              blurRadius: 6,
-                                              offset: const Offset(0, 3),
-                                            ),
-                                          ]
-                                        : [],
+                                    // boxShadow: isSelected
+                                    //     ? [
+                                    //         BoxShadow(
+                                    //           color: AppColors.primary
+                                    //               .withValues(alpha: 0.4),
+                                    //           blurRadius: 6,
+                                    //           offset: const Offset(0, 3),
+                                    //         ),
+                                    //       ]
+                                    //     : [],
                                   ),
                                   child: Center(
                                     child: Text(
@@ -225,171 +225,190 @@ class _MenuScreenState extends State<MenuScreen> {
                           padding: const EdgeInsets.all(16),
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2, // Two items per row
+                                crossAxisCount: 2,
                                 mainAxisSpacing: 16,
                                 crossAxisSpacing: 16,
-                                childAspectRatio: 0.75, // Control card height
+                                childAspectRatio: 0.75,
                               ),
                           itemCount: selectedCategory.items.length,
                           itemBuilder: (context, index) {
                             final item = selectedCategory.items[index];
                             final cartController = CartSessionController();
-                            return Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.05),
-                                    blurRadius: 6,
-                                    offset: const Offset(0, 3),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Expanded(
-                                    child: ClipRRect(
-                                      borderRadius: const BorderRadius.vertical(
-                                        top: Radius.circular(16),
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  RoutesName.productDetails,
+                                  arguments: {"menu_item": item},
+                                );
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.05,
                                       ),
-                                      child: Stack(
-                                        children: [
-                                          Image.network(
-                                            item.itemPhoto ?? "",
-                                            width: double.infinity,
-                                            fit: BoxFit.cover,
-                                            errorBuilder:
-                                                (context, error, stackTrace) =>
-                                                    Container(
-                                                      width: double.infinity,
-                                                      height: double.infinity,
-                                                      color:
-                                                          Colors.grey.shade200,
-                                                      child: const Center(
-                                                        child: Icon(
-                                                          Icons.fastfood,
-                                                          color: Colors.grey,
-                                                          size: 50,
-                                                        ),
+                                      blurRadius: 6,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Expanded(
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            const BorderRadius.vertical(
+                                              top: Radius.circular(16),
+                                            ),
+                                        child: Stack(
+                                          children: [
+                                            Image.network(
+                                              item.itemPhoto ?? "",
+                                              width: double.infinity,
+                                              fit: BoxFit.cover,
+                                              errorBuilder:
+                                                  (
+                                                    context,
+                                                    error,
+                                                    stackTrace,
+                                                  ) => Container(
+                                                    width: double.infinity,
+                                                    height: double.infinity,
+                                                    color: Colors.grey.shade200,
+                                                    child: const Center(
+                                                      child: Icon(
+                                                        Icons.fastfood,
+                                                        color: Colors.grey,
+                                                        size: 50,
                                                       ),
                                                     ),
-                                          ),
+                                                  ),
+                                            ),
 
-                                          BlocBuilder<CartBloc, CartState>(
-                                            builder: (context, cartState) {
-                                              final isInCart = cartState.items
-                                                  .any(
-                                                    (i) =>
-                                                        i.id ==
-                                                        item.itemId.toString(),
-                                                  );
-
-                                              return Positioned(
-                                                bottom: 8,
-                                                right: 8,
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    final itemObject =
-                                                        CartItemModel(
-                                                          id: item.itemId
+                                            BlocBuilder<CartBloc, CartState>(
+                                              builder: (context, cartState) {
+                                                final isInCart = cartState.items
+                                                    .any(
+                                                      (i) =>
+                                                          i.id ==
+                                                          item.itemId
                                                               .toString(),
-                                                          name: item.itemName,
-                                                          price: double.parse(
-                                                            item.itemPrice,
+                                                    );
+
+                                                return Positioned(
+                                                  bottom: 8,
+                                                  right: 8,
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      final itemObject =
+                                                          CartItemModel(
+                                                            id: item.itemId
+                                                                .toString(),
+                                                            name: item.itemName,
+                                                            price: double.parse(
+                                                              item.itemPrice,
+                                                            ),
+                                                            quantity: 1,
+                                                            imageUrl:
+                                                                item.itemPhoto ??
+                                                                "",
+                                                            restaurantId: widget
+                                                                .restaurantData
+                                                                .restaurantId
+                                                                .toString(),
+                                                          );
+
+                                                      if (isInCart) {
+                                                        context
+                                                            .read<CartBloc>()
+                                                            .add(
+                                                              RemoveCartItem(
+                                                                item.itemId
+                                                                    .toString(),
+                                                              ),
+                                                            );
+                                                      } else {
+                                                        context
+                                                            .read<CartBloc>()
+                                                            .add(
+                                                              AddOrUpdateCartItem(
+                                                                itemObject,
+                                                              ),
+                                                            );
+                                                      }
+                                                    },
+                                                    child: Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                            6,
                                                           ),
-                                                          quantity: 1,
-                                                          imageUrl:
-                                                              item.itemPhoto ??
-                                                              "",
-                                                          restaurantId: widget
-                                                              .restaurantData
-                                                              .restaurantId
-                                                              .toString(),
-                                                        );
-
-                                                    if (isInCart) {
-                                                      context
-                                                          .read<CartBloc>()
-                                                          .add(
-                                                            RemoveCartItem(
-                                                              item.itemId
-                                                                  .toString(),
-                                                            ),
-                                                          );
-                                                    } else {
-                                                      context
-                                                          .read<CartBloc>()
-                                                          .add(
-                                                            AddOrUpdateCartItem(
-                                                              itemObject,
-                                                            ),
-                                                          );
-                                                    }
-                                                  },
-                                                  child: Container(
-                                                    padding:
-                                                        const EdgeInsets.all(6),
-                                                    decoration: BoxDecoration(
-                                                      color: AppColors.primary,
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: Icon(
-                                                      isInCart
-                                                          ? Icons.check
-                                                          : Icons.add,
-                                                      color: Colors.white,
-                                                      size: 25,
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            AppColors.primary,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: Icon(
+                                                        isInCart
+                                                            ? Icons.check
+                                                            : Icons.add,
+                                                        color: Colors.white,
+                                                        size: 25,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              );
-                                            },
+                                                );
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            item.itemName,
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            item.itemDescription,
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 12,
+                                              color: Colors.black54,
+                                            ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          const SizedBox(height: 6),
+                                          Text(
+                                            "Rs. ${item.itemPrice}",
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.primary,
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                  ),
-
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          item.itemName,
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          item.itemDescription,
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 12,
-                                            color: Colors.black54,
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        const SizedBox(height: 6),
-                                        Text(
-                                          "Rs. ${item.itemPrice}",
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                            color: AppColors.primary,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             );
                           },

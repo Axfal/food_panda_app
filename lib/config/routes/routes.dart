@@ -1,8 +1,11 @@
 import 'package:excellent_trade_app/pages/checkout/widgets/google_map.dart';
+import 'package:excellent_trade_app/pages/home/home_exports.dart';
 import 'package:excellent_trade_app/pages/order_now.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/order_notifications_screen/order_notification_screen.dart';
 import 'package:excellent_trade_app/pages/restuarant_item_screen.dart';
 import '../../pages/auth/forgot_password/forget_password_export.dart';
+import 'package:excellent_trade_app/model/restaurant_menu/restaurant_menu_model.dart'
+    as menu_model;
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -44,8 +47,32 @@ class Routes {
           builder: (BuildContext context) => const HomePage(),
         );
       case RoutesName.productDetails:
+        final args = settings.arguments as Map<String, dynamic>?;
+        final menu_model.MenuItem menuItem =
+            args?['menu_item'] ??
+            menu_model.MenuItem(
+              itemDescription: '',
+              itemId: 0,
+              itemName: '',
+              itemPrice: '0',
+              itemStatus: '',
+              itemPhoto: '',
+            );
+        if (menuItem.itemName == '' && menuItem.itemId == 0) {
+          return MaterialPageRoute(
+            builder: (context) => Scaffold(
+              body: Center(
+                child: Text(
+                  'Menu item not found',
+                  style: GoogleFonts.poppins(fontSize: 22),
+                ),
+              ),
+            ),
+          );
+        }
         return MaterialPageRoute(
-          builder: (BuildContext context) => const ProductDetailsScreen(),
+          builder: (BuildContext context) =>
+              ProductDetailsScreen(menuItem: menuItem),
         );
       case RoutesName.cartSection:
         return MaterialPageRoute(

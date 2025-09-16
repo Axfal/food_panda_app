@@ -66,4 +66,7 @@ class AppUrl {
 
   /// Performance
   static const String getPerformance = '$baseUrl/get_income.php';
+
+  /// Recommended Items
+  static const String recommendedItems = '$baseUrl/item_recommendations.php';
 }

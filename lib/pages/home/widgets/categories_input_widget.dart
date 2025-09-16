@@ -23,7 +23,7 @@ class _CategoriesInputWidgetState extends State<CategoriesInputWidget> {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: BlocBuilder<CategoryBloc, CategoryState>(
         builder: (context, state) {
-          final categories = state.categories ?? [];
+          final categories = state.categories;
 
           if (categories.isEmpty) {
             return const SizedBox(

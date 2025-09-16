@@ -199,7 +199,7 @@ class PerformanceBloc extends Bloc<PerformanceEvent, PerformanceState> {
       } else {
         emit(state.copyWith(
           apiResponse: ApiResponse.error(
-            response['error'] ?? 'Error while fetchinged monthly performance',
+            response['error'] ?? 'Error while fetching monthly performance',
           ),
         ));
       }

@@ -1,12 +1,14 @@
-import 'package:excellent_trade_app/config/components/round_button_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:excellent_trade_app/config/routes/route_export.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../Utils/constants/app_colors.dart';
+import 'package:excellent_trade_app/model/restaurant_menu/restaurant_menu_model.dart'
+    as menu_model;
 
 class ProductDetailsScreen extends StatefulWidget {
-  const ProductDetailsScreen({super.key});
+  final menu_model.MenuItem menuItem;
+  const ProductDetailsScreen({super.key, required this.menuItem});
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
@@ -17,6 +19,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final item = widget.menuItem;
+    final double oldPrice = double.parse(item.itemPrice) * 1.15; /// 15% by default dada kahin ka
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -28,21 +33,23 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 Container(
                   height: 300.h,
                   width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    image: const DecorationImage(
-                      image: AssetImage('assets/images/placeholder.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.broken_image_outlined,
-                      size: 60.sp,
-                      color: Colors.grey[400],
-                    ),
+                  decoration: BoxDecoration(color: Colors.grey[200]),
+                  child: Image.network(
+                    item.itemPhoto ?? '',
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Center(
+                        child: Icon(
+                          Icons.broken_image_outlined,
+                          size: 60.sp,
+                          color: Colors.grey[400],
+                        ),
+                      );
+                    },
                   ),
                 ),
+
                 Positioned(
                   top: 55.h,
                   left: 12.w,
@@ -79,7 +86,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Chicken Biryani",
+                   item.itemName,
                     style: GoogleFonts.poppins(
                       fontSize: 24.sp,
                       fontWeight: FontWeight.w700,
@@ -96,14 +103,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       children: [
                         const TextSpan(text: 'from '),
                         TextSpan(
-                          text: 'Rs. 207.40 ',
+                          text: 'Rs.${item.itemPrice} ',
                           style: GoogleFonts.poppins(
                             color: AppColors.primary,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         TextSpan(
-                          text: 'Rs. 344.09 ',
+                          text: 'Rs. $oldPrice ',
                           style: GoogleFonts.poppins(
                             decoration: TextDecoration.lineThrough,
                             color: Colors.grey,
