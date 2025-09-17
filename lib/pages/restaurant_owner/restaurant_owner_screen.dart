@@ -4,6 +4,8 @@ import 'package:excellent_trade_app/pages/restaurant_owner/widgets/featured_card
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/logout_dialog_box.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/summary_itme.dart';
 import '../../bloc/order/order_bloc.dart';
+import '../../model/web_socket_order/web_socket_order_model.dart';
+import '../../service/sound_service/notification_sound_service.dart';
 import '../../service/web_socket_service/web_socket_service.dart';
 import '../auth/forgot_password/forget_password_export.dart';
 import 'restaurant_owner_exports.dart';
@@ -27,11 +29,9 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
     super.initState();
     userId = SessionController.user.id.toString();
     restaurantId = SessionController.user.restaurantId.toString();
-    // Connect WebSocket for vendor
     _webSocketService = WebSocketService(url: "wss://itgenesis.space/ws/");
     _webSocketService.connect();
 
-    // fetch incomes
     context.read<IncomeBloc>().add(
       FetchTodayIncomeEvent(restaurantId: restaurantId, type: "today"),
     );
@@ -85,144 +85,428 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
     ];
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: MyAppBar(
-        title: 'Vendor Dashboard',
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: BlocBuilder<OrderBloc, OrderState>(
-              builder: (context, state) {
-                return InkWell(
-                  borderRadius: BorderRadius.circular(50),
-                  onTap: () {
-                    context.read<OrderBloc>().emit(
-                      state.copyWith(unreadOrders: 0),
-                    );
-                    Navigator.pushNamed(context, RoutesName.orderNotification);
-                  },
-                  child: badges.Badge(
-                    position: badges.BadgePosition.topEnd(top: -5, end: -4),
-                    badgeContent: Text(
-                      state.unreadOrders.toString(),
-                      style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
+  void _showOrderDialog(BuildContext context, WebSocketOrder order) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return Dialog(
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 20,
+          ),
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.receipt_long,
+                        color: AppColors.primary,
+                        size: 28,
                       ),
-                    ),
-                    showBadge: state.unreadOrders > 0,
-                    badgeStyle: badges.BadgeStyle(
-                      badgeColor: Colors.redAccent,
-                      padding: const EdgeInsets.all(5),
-                      elevation: 0,
-                      borderSide: const BorderSide(
-                        color: Colors.white,
-                        width: 1,
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          "Order #${order.orderNumber}",
+                          style: GoogleFonts.poppins(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.primary,
+                          ),
+                        ),
                       ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Icon(
-                      Icons.notifications_rounded,
-                      size: 30,
-                      color: Colors.white,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.location_on,
+                              color: Colors.green,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 6),
+                            Expanded(
+                              child: Text(
+                                "${order.houseNo}, ${order.street}, ${order.city}",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (order.lat != 0 && order.lng != 0) ...[
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.map,
+                                color: Colors.blue,
+                                size: 16,
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                "Lat: ${order.lat}, Lng: ${order.lng}",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ],
                     ),
                   ),
-                );
-              },
+
+                  const SizedBox(height: 20),
+
+                  Text(
+                    "Items",
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  ...order.items.map(
+                    (item) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              "${item.itemName} ×${item.quantity}",
+                              style: GoogleFonts.poppins(fontSize: 14),
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                "Rs ${item.totalPrice.toStringAsFixed(0)}",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              if (item.discountAmount > 0)
+                                Text(
+                                  "- Rs ${item.discountAmount.toStringAsFixed(0)}",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 12,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  const Divider(height: 28, thickness: 1, color: Colors.black45,),
+
+                  Column(
+                    children: [
+                      _buildAmountRow("Subtotal", order.totalAmount),
+                      if (order.totalAmount != order.finalAmount)
+                        _buildAmountRow(
+                          "Discount",
+                          order.totalAmount - order.finalAmount,
+                          isDiscount: true,
+                        ),
+                      const Divider(height: 28, thickness: 1, color: Colors.black45,),
+                      _buildAmountRow(
+                        "Final Total",
+                        order.finalAmount,
+                        isTotal: true,
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          // icon: const Icon(Icons.close, color: Colors.redAccent),
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(
+                              color: AppColors.primary,
+                              width: 1.3,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                          ),
+                          onPressed: () {
+                            NotificationSound.stopNotification();
+                            Navigator.pop(context);
+                          },
+                          label: Text(
+                            "Cancel",
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          // icon: const Icon(Icons.check_circle, color: Colors.white),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            elevation: 3,
+                          ),
+                          onPressed: () {
+                            NotificationSound.stopNotification();
+                            Navigator.pop(context);
+                            Navigator.pushNamed(
+                              context,
+                              RoutesName.orderScreen,
+                            );
+                          },
+                          label: Text(
+                            "Proceed",
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildAmountRow(
+    String label,
+    double amount, {
+    bool isDiscount = false,
+    bool isTotal = false,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: GoogleFonts.poppins(
+              fontSize: isTotal ? 16 : 14,
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.w500,
+              color: isDiscount ? Colors.red : Colors.black87,
+            ),
+          ),
+          Text(
+            "Rs ${amount.toStringAsFixed(0)}",
+            style: GoogleFonts.poppins(
+              fontSize: isTotal ? 18 : 14,
+              fontWeight: FontWeight.bold,
+              color: isDiscount
+                  ? Colors.red
+                  : isTotal
+                  ? Colors.green.shade700
+                  : Colors.black87,
             ),
           ),
         ],
       ),
+    );
+  }
 
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Sales Summary Card
-            BlocBuilder<IncomeBloc, IncomeState>(
-              buildWhen: (current, previous) =>
-                  current.todayIncomeModel != previous.todayIncomeModel ||
-                  current.weeklyIncomeModel != previous.weeklyIncomeModel ||
-                  current.monthIncomeModel != previous.monthIncomeModel,
-              builder: (context, incomeState) {
-                // get values from state; fall back to 0 if null
-                final today = incomeState.todayIncomeModel.todayIncome ?? 0;
-                final week = incomeState.weeklyIncomeModel.weekIncome ?? 0;
-                final month = incomeState.monthIncomeModel.monthIncome ?? 0;
-
-                return Container(
-                  margin: const EdgeInsets.all(16),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 18,
-                    horizontal: 16,
-                  ),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        AppColors.primary.withValues(alpha: 0.95),
-                        AppColors.primary.withValues(alpha: 0.75),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(16),
-                    // border: Border.all(color: AppColors.primary)
-                    // boxShadow: [
-                    //   BoxShadow(
-                    //     color: AppColors.black54.withValues(alpha: 0.3),
-                    //     blurRadius: 6,
-                    //     offset: const Offset(2, 4),
-                    //   ),
-                    // ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      SummaryItem(title: "Today", value: "Rs $today"),
-                      SummaryItem(title: "This Week", value: "Rs $week"),
-                      SummaryItem(title: "This Month", value: "Rs $month"),
-                    ],
-                  ),
-                );
-              },
-            ),
-
-            Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.all(16),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 14,
-                ),
-                itemCount: features.length,
-                itemBuilder: (context, index) {
-                  final feature = features[index];
-                  return FeatureCard(
-                    title: feature["title"],
-                    icon: feature["icon"],
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<OrderBloc, OrderState>(
+      listenWhen: (previous, current) =>
+          previous.webSocketOrder.orderId != current.webSocketOrder.orderId,
+      listener: (context, state) {
+        if (state.webSocketOrder.orderId.isNotEmpty) {
+          _showOrderDialog(context, state.webSocketOrder);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.grey[50],
+        appBar: MyAppBar(
+          title: 'Vendor Dashboard',
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: BlocBuilder<OrderBloc, OrderState>(
+                builder: (context, state) {
+                  return InkWell(
+                    borderRadius: BorderRadius.circular(50),
                     onTap: () {
-                      if (feature.containsKey("route")) {
-                        if (feature.containsKey('arg')) {
-                          Navigator.pushNamed(
-                            context,
-                            feature["route"],
-                            arguments: feature['arg'],
-                          );
-                        } else {
-                          Navigator.pushNamed(context, feature["route"]);
-                        }
-                      } else if (feature.containsKey("action")) {
-                        feature["action"](context);
-                      }
+                      context.read<OrderBloc>().emit(
+                        state.copyWith(unreadOrders: 0),
+                      );
+                      Navigator.pushNamed(
+                        context,
+                        RoutesName.orderNotification,
+                      );
                     },
+                    child: badges.Badge(
+                      position: badges.BadgePosition.topEnd(top: -5, end: -4),
+                      badgeContent: Text(
+                        state.unreadOrders.toString(),
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      showBadge: state.unreadOrders > 0,
+                      badgeStyle: badges.BadgeStyle(
+                        badgeColor: Colors.redAccent,
+                        padding: const EdgeInsets.all(5),
+                        elevation: 0,
+                        borderSide: const BorderSide(
+                          color: Colors.white,
+                          width: 1,
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.notifications_rounded,
+                        size: 30,
+                        color: Colors.white,
+                      ),
+                    ),
                   );
                 },
               ),
             ),
           ],
+        ),
+
+        body: SafeArea(
+          child: Column(
+            children: [
+              // Sales Summary Card
+              BlocBuilder<IncomeBloc, IncomeState>(
+                buildWhen: (current, previous) =>
+                    current.todayIncomeModel != previous.todayIncomeModel ||
+                    current.weeklyIncomeModel != previous.weeklyIncomeModel ||
+                    current.monthIncomeModel != previous.monthIncomeModel,
+                builder: (context, incomeState) {
+                  // get values from state; fall back to 0 if null
+                  final today = incomeState.todayIncomeModel.todayIncome ?? 0;
+                  final week = incomeState.weeklyIncomeModel.weekIncome ?? 0;
+                  final month = incomeState.monthIncomeModel.monthIncome ?? 0;
+
+                  return Container(
+                    margin: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 18,
+                      horizontal: 16,
+                    ),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          AppColors.primary.withValues(alpha: 0.95),
+                          AppColors.primary.withValues(alpha: 0.75),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      // border: Border.all(color: AppColors.primary)
+                      // boxShadow: [
+                      //   BoxShadow(
+                      //     color: AppColors.black54.withValues(alpha: 0.3),
+                      //     blurRadius: 6,
+                      //     offset: const Offset(2, 4),
+                      //   ),
+                      // ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        SummaryItem(title: "Today", value: "Rs $today"),
+                        SummaryItem(title: "This Week", value: "Rs $week"),
+                        SummaryItem(title: "This Month", value: "Rs $month"),
+                      ],
+                    ),
+                  );
+                },
+              ),
+
+              Expanded(
+                child: GridView.builder(
+                  padding: const EdgeInsets.all(16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 14,
+                  ),
+                  itemCount: features.length,
+                  itemBuilder: (context, index) {
+                    final feature = features[index];
+                    return FeatureCard(
+                      title: feature["title"],
+                      icon: feature["icon"],
+                      onTap: () {
+                        if (feature.containsKey("route")) {
+                          if (feature.containsKey('arg')) {
+                            Navigator.pushNamed(
+                              context,
+                              feature["route"],
+                              arguments: feature['arg'],
+                            );
+                          } else {
+                            Navigator.pushNamed(context, feature["route"]);
+                          }
+                        } else if (feature.containsKey("action")) {
+                          feature["action"](context);
+                        }
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

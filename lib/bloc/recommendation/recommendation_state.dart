@@ -10,8 +10,8 @@ class RecommendationState extends Equatable {
   });
 
   RecommendationState copyWith({
-    final ApiResponse<String>? apiResponse,
-    final RecommendedItemModel? recommendedItemModel,
+    ApiResponse<String>? apiResponse,
+    RecommendedItemModel? recommendedItemModel,
   }) {
     return RecommendationState(
       apiResponse: apiResponse ?? this.apiResponse,
@@ -20,6 +20,5 @@ class RecommendationState extends Equatable {
   }
 
   @override
-  // TODO: implement props
-  List<Object?> get props => [];
+  List<Object?> get props => [apiResponse, recommendedItemModel];
 }

@@ -21,13 +21,13 @@ class ProductDetailsScreen extends StatefulWidget {
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   String selectedVariation = 'Full';
-
+  bool _showAllRecommendations = false;
   final Map<int, bool> _selected = {};
 
   @override
   void initState() {
     super.initState();
-    final String restaurantId = widget.restaurantId.toString();
+    // final String restaurantId = widget.restaurantId.toString();
 
     context.read<RecommendationBloc>().add(
       FetchRecommendedItemsEvent(
@@ -206,8 +206,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
             ),
             BlocBuilder<RecommendationBloc, RecommendationState>(
-              buildWhen: (current, previous) =>
-                  current.apiResponse.status != previous.apiResponse.status,
               builder: (context, state) {
                 if (state.apiResponse.status == Status.loading) {
                   return const Center(child: CircularProgressIndicator());
@@ -216,74 +214,70 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     child: Text(state.apiResponse.message ?? "Error"),
                   );
                 } else if (state.apiResponse.status == Status.completed &&
-                    state.recommendedItemModel.recommendations != null &&
-                    state.recommendedItemModel.recommendations!.isNotEmpty) {
+                    state.recommendedItemModel.recommendations?.isNotEmpty ==
+                        true) {
                   final items = state.recommendedItemModel.recommendations!;
-                  return SingleChildScrollView(
-                    padding: EdgeInsets.all(12.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.menuItem.itemName,
-                          style: GoogleFonts.poppins(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600,
+                  final visibleItems = _showAllRecommendations
+                      ? items
+                      : items.take(3).toList();
+
+                  return Column(
+                    children: [
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: visibleItems.length,
+                        itemBuilder: (context, index) {
+                          final item = visibleItems[index];
+                          return optionalItemsWidget(
+                            index: index,
+                            title: item.name ?? "Unnamed",
+                            price: "Rs. ${item.price}",
+                            original:
+                                "Rs. ${(double.tryParse(item.price ?? '0') ?? 0) * 1.15}",
+                            photo: item.photo,
+                          );
+                        },
+                      ),
+
+                      if (items.length > 3)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                _showAllRecommendations =
+                                    !_showAllRecommendations;
+                              });
+                            },
+                            child: Row(
+                              children: [
+                                Icon(
+                                  _showAllRecommendations
+                                      ? Icons.keyboard_arrow_up
+                                      : Icons.keyboard_arrow_down,
+                                  size: 30,
+                                  color: Colors.black,
+                                ),
+                                Text(
+                                  _showAllRecommendations
+                                      ? "View Less"
+                                      : "View ${items.length - 3} more",
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black,
+                                    fontSize: 14.sp,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        SizedBox(height: 12.h),
-
-                        /// Render optional items from API
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: items.length,
-                          itemBuilder: (context, index) {
-                            final item = items[index];
-
-                            /// Original price = price + 15%
-                            final double basePrice =
-                                double.tryParse(item.price ?? "0") ?? 0;
-                            final double originalPrice =
-                                basePrice + (basePrice * 0.15);
-
-                            return optionalItemsWidget(
-                              index: index,
-                              title: item.name ?? "Unnamed",
-                              price: "Rs. ${basePrice.toStringAsFixed(0)}",
-                              original:
-                                  "Rs. ${originalPrice.toStringAsFixed(0)}",
-                              photo: item.photo,
-                            );
-                          },
-                        ),
-                      ],
-                    ),
+                    ],
                   );
-                } else {
-                  return const Center(child: Text("No recommendations found"));
                 }
+                return const Center(child: Text("No recommendations found"));
               },
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.keyboard_arrow_down,
-                    size: 30,
-                    color: Colors.black,
-                  ),
-                  Text(
-                    "View 2 more",
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black,
-                      fontSize: 14.sp,
-                    ),
-                  ),
-                ],
-              ),
             ),
             SizedBox(height: 18.h),
             Padding(
@@ -577,40 +571,43 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           visualDensity: VisualDensity.compact,
         ),
         title: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: EdgeInsets.all(6.r),
+              padding: EdgeInsets.all(8.r),
               decoration: BoxDecoration(
                 color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(10.r),
+                borderRadius: BorderRadius.circular(12.r),
               ),
               child: photo != null && photo.isNotEmpty
                   ? Image.network(
-                      photo,
-                      height: 24.sp,
-                      width: 24.sp,
+                      ' $photo',
+                      height: 40.sp,
+                      width: 40.sp,
                       fit: BoxFit.cover,
                     )
                   : Icon(
                       Icons.fastfood,
-                      size: 24.sp,
+                      size: 28.sp,
                       color: Colors.deepOrangeAccent,
                     ),
             ),
-            SizedBox(width: 10.w),
-            Expanded(
+            SizedBox(width: 12.w),
+            Flexible(
               child: Text(
                 title,
                 style: GoogleFonts.poppins(
-                  fontSize: 13.sp,
+                  fontSize: 14.5.sp,
                   fontWeight: FontWeight.w500,
                   color: Colors.black87,
                 ),
                 overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
             ),
           ],
         ),
+
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,

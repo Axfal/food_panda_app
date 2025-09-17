@@ -4,6 +4,7 @@ import 'package:excellent_trade_app/repository/order/order_api_repository.dart';
 import '../../config/routes/route_export.dart';
 import '../../model/delivery_address/order_request_model.dart';
 import '../../model/vender/order/order_model.dart' hide OrderItem;
+import '../../service/sound_service/notification_sound_service.dart';
 import '../../service/web_socket_service/web_socket_service.dart';
 import '../../model/web_socket_order/web_socket_order_model.dart';
 
@@ -179,6 +180,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         unreadOrders: state.unreadOrders + 1,
       ),
     );
+    NotificationSound.playNotification();
 
     print("Total orders: ${updatedOrders.length}");
     print("Latest order number: ${order.orderNumber}");
