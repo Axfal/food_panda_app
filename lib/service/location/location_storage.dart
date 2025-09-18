@@ -1,19 +1,21 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
+import '../../config/routes/route_export.dart';
 import '../../model/location/location_details/locations_details_model.dart';
+import '../../model/google_map_location_details_model/google_map_api_model.dart';
 import '../storage/local_storage.dart';
 
 class LocationSessionController {
   final LocalStorage _localStorage = LocalStorage();
 
-  /// Singleton instance
   static final LocationSessionController _instance =
   LocationSessionController._internal();
 
   static LocationDetailsModel locationDetails = const LocationDetailsModel();
+  static GoogleMapApiModel? googleMapApiModel;
 
   LocationSessionController._internal() {
     _loadLocationOnStart();
+    _loadGoogleMapLocationOnStart();
   }
 
   factory LocationSessionController() => _instance;
@@ -24,15 +26,22 @@ class LocationSessionController {
     locationDetails = location;
   }
 
-  Future<void> loadLocation() async {
-    await _loadLocationOnStart();
+  // ✅ Save raw GoogleMapApiModel
+  Future<void> saveGoogleMapLocation(GoogleMapApiModel googleMapModel) async {
+    final String googleJson = jsonEncode(googleMapModel.toJson());
+    await _localStorage.setValue('google_map_location', googleJson);
+    googleMapApiModel = googleMapModel;
   }
+
+  // ✅ Load standardized LocationDetailsModel
+  Future<void> loadLocation() async => _loadLocationOnStart();
 
   Future<void> _loadLocationOnStart() async {
     try {
       final String? storedData = await _localStorage.readValue('location');
       if (storedData != null && storedData.isNotEmpty) {
-        locationDetails = LocationDetailsModel.fromJson(jsonDecode(storedData));
+        locationDetails =
+            LocationDetailsModel.fromJson(jsonDecode(storedData));
       } else {
         locationDetails = const LocationDetailsModel();
       }
@@ -42,17 +51,38 @@ class LocationSessionController {
     }
   }
 
+  // ✅ Load raw GoogleMapApiModel
+  Future<void> loadGoogleMapLocation() async => _loadGoogleMapLocationOnStart();
+
+  Future<void> _loadGoogleMapLocationOnStart() async {
+    try {
+      final String? storedData =
+      await _localStorage.readValue('google_map_location');
+      if (storedData != null && storedData.isNotEmpty) {
+        googleMapApiModel =
+            GoogleMapApiModel.fromJson(jsonDecode(storedData));
+      } else {
+        googleMapApiModel = null;
+      }
+    } catch (e) {
+      debugPrint('Error loading google map location: $e');
+      googleMapApiModel = null;
+    }
+  }
+
+  // ✅ Clear both
   Future<void> clearLocation() async {
     try {
       await _localStorage.clearValue('location');
+      await _localStorage.clearValue('google_map_location');
       locationDetails = const LocationDetailsModel();
+      googleMapApiModel = null;
     } catch (e) {
       debugPrint('Error clearing location: $e');
     }
   }
 
   /// Getters
-
   bool get hasLocation => locationDetails.success;
   Place? get currentPlace => locationDetails.place;
   String get errorMessage => locationDetails.error;

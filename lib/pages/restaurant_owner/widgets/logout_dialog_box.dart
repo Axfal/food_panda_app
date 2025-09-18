@@ -1,3 +1,4 @@
+import '../../../service/location/location_storage.dart';
 import '../restaurant_owner_exports.dart';
 
 Future<void> showLogoutDialog(BuildContext context) async {
@@ -78,6 +79,7 @@ Future<void> showLogoutDialog(BuildContext context) async {
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                       onPressed: () async {
+                        await LocationSessionController().clearLocation();
                         await SessionController().logoutUser(context);
                         Navigator.pushNamedAndRemoveUntil(
                           context,

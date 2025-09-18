@@ -5,6 +5,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:marquee/marquee.dart';
 import 'package:badges/badges.dart' as badges;
 import '../../../bloc/cart/cart_bloc.dart';
+import '../../../bloc/location/location_bloc.dart';
 import '../../../service/location/location_storage.dart';
 import '../../../service/cart/cart_service.dart'; // <-- for CartSessionController
 
@@ -25,6 +26,15 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if(!locationSession.hasLocation) {
+        context.read<LocationBloc>().add(
+        GetCurrentLocationEvent(),
+      );
+      }
+    });
+
     cartSessionController.loadCart().then((_) {
       setState(() {});
     });
@@ -42,66 +52,98 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
         children: [
           const Icon(LucideIcons.mapPin, color: Colors.white, size: 26),
           const SizedBox(width: 10),
+
+          // 🔹 Listen to LocationBloc updates
           Expanded(
             child: GestureDetector(
               onTap: () =>
                   Navigator.pushNamed(context, RoutesName.locationScreen),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 20,
-                    child: Text(
-                      locationSession.currentPlace?.name ?? "Unknown",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  SizedBox(
-                    height: 18,
-                    child:
-                        locationSession.hasLocation &&
-                            (locationSession.currentPlace?.address ?? "")
-                                    .length >
-                                20
-                        ? Marquee(
-                            text:
-                                locationSession.currentPlace?.address ??
-                                "Unknown",
-                            style: GoogleFonts.poppins(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                            scrollAxis: Axis.horizontal,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            blankSpace: 20,
-                            velocity: 30.0,
-                            pauseAfterRound: const Duration(seconds: 1),
-                            startPadding: 10,
-                            accelerationDuration: const Duration(seconds: 1),
-                            accelerationCurve: Curves.linear,
-                            decelerationDuration: const Duration(seconds: 1),
-                            decelerationCurve: Curves.easeOut,
-                          )
-                        : Text(
-                            locationSession.currentPlace?.address ?? "Unknown",
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.poppins(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
+              child: BlocBuilder<LocationBloc, LocationState>(
+                buildWhen: (prev, curr) =>
+                    prev.locationDetailsModel != curr.locationDetailsModel,
+                builder: (context, state) {
+                  final place = state.locationDetailsModel.place;
+
+                  String titleText = "Unknown";
+                  String addressText = "Unknown";
+
+                  if (place != null && place.address.isNotEmpty) {
+                    titleText = place.name.isNotEmpty
+                        ? place.name
+                        : "My Location";
+                    addressText = place.address;
+                  } else if (LocationSessionController.googleMapApiModel !=
+                          null &&
+                      LocationSessionController.googleMapApiModel!.results !=
+                          null &&
+                      LocationSessionController
+                          .googleMapApiModel!
+                          .results!
+                          .isNotEmpty) {
+                    final googleResult = LocationSessionController
+                        .googleMapApiModel!
+                        .results!
+                        .first;
+
+                    titleText = "My Location";
+                    addressText = googleResult.formattedAddress ?? "Unknown";
+                  }
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 20,
+                        child: Text(
+                          titleText,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
                           ),
-                  ),
-                ],
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      SizedBox(
+                        height: 18,
+                        child: (addressText.length > 20)
+                            ? Marquee(
+                                text: addressText,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                                scrollAxis: Axis.horizontal,
+                                blankSpace: 20,
+                                velocity: 30.0,
+                                pauseAfterRound: const Duration(seconds: 1),
+                                startPadding: 10,
+                                accelerationDuration: const Duration(
+                                  seconds: 1,
+                                ),
+                                accelerationCurve: Curves.linear,
+                                decelerationDuration: const Duration(
+                                  seconds: 1,
+                                ),
+                                decelerationCurve: Curves.easeOut,
+                              )
+                            : Text(
+                                addressText,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ),
@@ -124,7 +166,11 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
               showBadge: cartSessionController.hasItems,
               badgeContent: Text(
                 cartSessionController.cartCount.toString(),
-                style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  color: AppColors.primary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               position: badges.BadgePosition.topEnd(top: -2, end: 2),
               badgeStyle: const badges.BadgeStyle(

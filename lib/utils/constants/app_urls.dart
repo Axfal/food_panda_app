@@ -47,6 +47,9 @@ class AppUrl {
   /// location suggestion
   static const String locationSuggestion = '$baseUrl/location_suggestions.php';
   static const String locationDetails = '$baseUrl/location_details.php';
+  static const String googleMapLocationDetail = 'https://maps.googleapis.com/maps/api/geocode/json';
+  static const String googleApiKey = 'AIzaSyC-ojZ1Gn7r7TZt_kUn7dE2rcY2xWzMMh0';
+
 
   /// Search
   static const String search = '$baseUrl/search.php';

@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
+import 'package:excellent_trade_app/model/google_map_location_details_model/google_map_api_model.dart';
 import 'package:excellent_trade_app/model/location/location_details/locations_details_model.dart';
 import '../../config/routes/route_export.dart';
 import '../../model/location/location_suggestion/location_suggestion_model.dart';
@@ -19,57 +20,76 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
     on<GetCurrentLocationEvent>(_onGetCurrentLocationEvent);
   }
 
-
   Future<void> _onGetCurrentLocationEvent(
-      GetCurrentLocationEvent event,
-      Emitter<LocationState> emit,
-      ) async {
+    GetCurrentLocationEvent event,
+    Emitter<LocationState> emit,
+  ) async {
     emit(state.copyWith(apiResponse: const ApiResponse.loading()));
 
     try {
-      // 🔹 Step 1: Request permissions
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
-          emit(state.copyWith(
-            apiResponse: const ApiResponse.error("Location permissions are denied"),
-          ));
+          emit(
+            state.copyWith(
+              apiResponse: const ApiResponse.error(
+                "Location permissions are denied",
+              ),
+            ),
+          );
           return;
         }
       }
 
       if (permission == LocationPermission.deniedForever) {
-        emit(state.copyWith(
-          apiResponse: const ApiResponse.error(
-            "Location permissions are permanently denied",
+        emit(
+          state.copyWith(
+            apiResponse: const ApiResponse.error(
+              "Location permissions are permanently denied",
+            ),
           ),
-        ));
+        );
         return;
       }
 
-      // 🔹 Step 2: Get current position
       final position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
 
-      // 🔹 Step 3: Call API with lat/lng
-      final response = await locationApiResponse.locationDetails({
-        "lat": position.latitude,
-        "lng": position.longitude,
-      });
+      print("lat: ${position.latitude}");
+      print("lat: ${position.longitude}");
 
-      print("📍 API Response: $response");
+      final lat = position.latitude;
+      final lng = position.longitude;
+      final response = await locationApiResponse.googleMapLocationDetails(
+        lat,
+        lng,
+      );
 
-      // 🔹 Step 4: Handle response
       if (response != null &&
-          response['success'] == true &&
-          response['place'] != null) {
+          response['results'] != null &&
+          (response['results'] as List).isNotEmpty) {
+        final googleMapLocationDetails = GoogleMapApiModel.fromJson(response);
 
-        // 👇 FIX: use response['place'] instead of response
-        final locationDetails = LocationDetailsModel.fromJson(response['place']);
+        // ✅ Convert to LocationDetailsModel
+        final firstResult = googleMapLocationDetails.results!.first;
+        final locationDetails = LocationDetailsModel(
+          success: true,
+          place: Place(
+            placeId: firstResult.placeId ?? '',
+            address: firstResult.formattedAddress ?? '',
+            lat: firstResult.geometry?.location?.lat ?? 0.0,
+            lng: firstResult.geometry?.location?.lng ?? 0.0,
+            name: '', // Google API doesn't provide name directly
+          ),
+        );
 
+        // ✅ Save both models
         await LocationSessionController().saveLocation(locationDetails);
+        await LocationSessionController().saveGoogleMapLocation(
+          googleMapLocationDetails,
+        );
 
         emit(
           state.copyWith(
@@ -89,10 +109,9 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
         );
       }
     } catch (e) {
-      emit(state.copyWith(apiResponse: ApiResponse.error(e.toString())));
+      print('error: $e');
     }
   }
-
 
   Future<void> _onFetchLocationSuggestionEvent(
     FetchLocationSuggestionEvent event,
@@ -138,9 +157,9 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
   }
 
   Future<void> _onFetchLocationDetailsEvent(
-      FetchLocationDetailsEvent event,
-      Emitter<LocationState> emit,
-      ) async {
+    FetchLocationDetailsEvent event,
+    Emitter<LocationState> emit,
+  ) async {
     emit(state.copyWith(apiResponse: const ApiResponse.loading()));
 
     final Map<String, dynamic> data = {"place_id": event.placeId};
@@ -162,11 +181,7 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
           );
         } else {
           final errorMsg = response['error'] ?? 'Unknown error';
-          emit(
-            state.copyWith(
-              apiResponse: ApiResponse.error(errorMsg),
-            ),
-          );
+          emit(state.copyWith(apiResponse: ApiResponse.error(errorMsg)));
         }
       } else {
         emit(
@@ -176,11 +191,8 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
         );
       }
     } catch (e) {
-      emit(
-        state.copyWith(apiResponse: ApiResponse.error(e.toString())),
-      );
+      emit(state.copyWith(apiResponse: ApiResponse.error(e.toString())));
       debugPrint('FetchLocationDetailsEvent error: $e');
     }
   }
-
 }
