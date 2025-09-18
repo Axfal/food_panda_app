@@ -5,6 +5,7 @@ import '../../config/routes/route_export.dart';
 import '../../model/location/location_suggestion/location_suggestion_model.dart';
 import '../../repository/location/location_api_response.dart';
 import '../../service/location/location_storage.dart';
+import 'package:geolocator/geolocator.dart';
 part 'location_event.dart';
 part 'location_state.dart';
 
@@ -15,7 +16,83 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
     : super(const LocationState()) {
     on<FetchLocationSuggestionEvent>(_onFetchLocationSuggestionEvent);
     on<FetchLocationDetailsEvent>(_onFetchLocationDetailsEvent);
+    on<GetCurrentLocationEvent>(_onGetCurrentLocationEvent);
   }
+
+
+  Future<void> _onGetCurrentLocationEvent(
+      GetCurrentLocationEvent event,
+      Emitter<LocationState> emit,
+      ) async {
+    emit(state.copyWith(apiResponse: const ApiResponse.loading()));
+
+    try {
+      // 🔹 Step 1: Request permissions
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          emit(state.copyWith(
+            apiResponse: const ApiResponse.error("Location permissions are denied"),
+          ));
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        emit(state.copyWith(
+          apiResponse: const ApiResponse.error(
+            "Location permissions are permanently denied",
+          ),
+        ));
+        return;
+      }
+
+      // 🔹 Step 2: Get current position
+      final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      // 🔹 Step 3: Call API with lat/lng
+      final response = await locationApiResponse.locationDetails({
+        "lat": position.latitude,
+        "lng": position.longitude,
+      });
+
+      print("📍 API Response: $response");
+
+      // 🔹 Step 4: Handle response
+      if (response != null &&
+          response['success'] == true &&
+          response['place'] != null) {
+
+        // 👇 FIX: use response['place'] instead of response
+        final locationDetails = LocationDetailsModel.fromJson(response['place']);
+
+        await LocationSessionController().saveLocation(locationDetails);
+
+        emit(
+          state.copyWith(
+            locationDetailsModel: locationDetails,
+            apiResponse: const ApiResponse.completed(
+              'Current location fetched',
+            ),
+          ),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            apiResponse: ApiResponse.error(
+              response?['error'] ?? 'Failed to fetch current location',
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      emit(state.copyWith(apiResponse: ApiResponse.error(e.toString())));
+    }
+  }
+
 
   Future<void> _onFetchLocationSuggestionEvent(
     FetchLocationSuggestionEvent event,

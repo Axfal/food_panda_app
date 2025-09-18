@@ -21,3 +21,10 @@ class FetchLocationDetailsEvent extends LocationEvent {
   @override
   List<Object> get props => [placeId];
 }
+
+class GetCurrentLocationEvent extends LocationEvent {
+  const GetCurrentLocationEvent();
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}

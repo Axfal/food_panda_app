@@ -8,7 +8,7 @@ class LocationDetailsModel with _$LocationDetailsModel {
   const factory LocationDetailsModel({
     @Default(false) @JsonKey(name: 'success') bool success,
     @JsonKey(name: 'place') Place? place, // make place optional
-    @Default('') String error, // error message if API fails
+    @Default('') String error,
   }) = _LocationDetailsModel;
 
   factory LocationDetailsModel.fromJson(Map<String, dynamic> json) =>
