@@ -60,7 +60,7 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
                   Navigator.pushNamed(context, RoutesName.locationScreen),
               child: BlocBuilder<LocationBloc, LocationState>(
                 buildWhen: (prev, curr) =>
-                    prev.locationDetailsModel != curr.locationDetailsModel,
+                    prev.apiResponse.status != curr.apiResponse.status,
                 builder: (context, state) {
                   final place = state.locationDetailsModel.place;
 

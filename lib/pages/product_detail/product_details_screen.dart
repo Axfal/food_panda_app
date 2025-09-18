@@ -1,5 +1,6 @@
 import 'package:excellent_trade_app/bloc/recommendation/recommendation_bloc.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
+import 'package:excellent_trade_app/repository/auth/auth_repository.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
@@ -542,7 +543,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  /// Reusable optional items widget (design same, now dynamic)
   Widget optionalItemsWidget({
     required int index,
     required String title,
@@ -581,7 +581,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
               child: photo != null && photo.isNotEmpty
                   ? Image.network(
-                      ' $photo',
+                      '${AppUrl.baseUrl}/$photo',
                       height: 40.sp,
                       width: 40.sp,
                       fit: BoxFit.cover,

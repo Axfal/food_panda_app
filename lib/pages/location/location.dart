@@ -2,8 +2,10 @@ import 'package:excellent_trade_app/config/components/round_button_widget.dart';
 import 'package:excellent_trade_app/config/routes/route_export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/my_app_bar.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../Utils/constants/app_colors.dart';
 import '../../bloc/location/location_bloc.dart';
 import '../../data/response/status.dart';
@@ -20,13 +22,35 @@ class _LocationScreenState extends State<LocationScreen> {
   final TextEditingController _searchController = TextEditingController();
   String? selectedPlaceId;
   String? selectedDescription;
+  LatLng? _currentLatLng;
 
   @override
   void initState() {
     super.initState();
+    _determinePosition();
     context.read<LocationBloc>().add(
       const FetchLocationSuggestionEvent(query: ''),
     );
+  }
+
+  Future<void> _determinePosition() async {
+    LocationPermission permission;
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) return;
+    }
+
+    if (permission == LocationPermission.deniedForever) return;
+
+    Position pos = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    setState(() {
+      _currentLatLng = LatLng(pos.latitude, pos.longitude);
+    });
   }
 
   void _onSearchChanged(String value) {
@@ -49,7 +73,7 @@ class _LocationScreenState extends State<LocationScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Search Box
+            // 🔍 Search Box
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
               child: TextField(
@@ -81,15 +105,15 @@ class _LocationScreenState extends State<LocationScreen> {
                 ),
               ),
             ),
-        
-            // Suggestions List
+
+            // 📍 Suggestions List + Current Location
             Expanded(
               child: BlocBuilder<LocationBloc, LocationState>(
                 builder: (context, state) {
                   if (state.apiResponse.status == Status.loading) {
                     return const Center(child: CupertinoActivityIndicator());
                   }
-        
+
                   if (state.apiResponse.status == Status.error) {
                     return Center(
                       child: Text(
@@ -97,22 +121,52 @@ class _LocationScreenState extends State<LocationScreen> {
                       ),
                     );
                   }
-        
-                  final suggestions = state.locationSuggestionModel.suggestions;
-        
-                  if (suggestions.isEmpty) {
-                    return const Center(child: Text('No suggestions found'));
-                  }
-        
+
+                  final suggestions =
+                      state.locationSuggestionModel.suggestions;
+
                   return ListView.separated(
-                    itemCount: suggestions.length,
+                    itemCount: suggestions.length + 1,
                     separatorBuilder: (_, __) => Divider(
                       color: Colors.grey.shade300,
                       height: 0,
                       indent: 56,
                     ),
                     itemBuilder: (context, index) {
-                      final item = suggestions[index];
+                      if (index == 0) {
+                        // ✅ Always show Current Location on top
+                        return ListTile(
+                          leading: Icon(Icons.my_location,
+                              color: AppColors.primary, size: 22),
+                          title: Text(
+                            "Use Current Location",
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          trailing: selectedPlaceId == "current_location"
+                              ? CircleAvatar(
+                            radius: 12,
+                            backgroundColor: AppColors.primary,
+                            child: const Icon(
+                              Icons.check,
+                              size: 20,
+                              color: Colors.white,
+                            ),
+                          )
+                              : null,
+                          onTap: () {
+                            setState(() {
+                              selectedPlaceId = "current_location";
+                              selectedDescription = "Current Location";
+                            });
+                          },
+                        );
+                      }
+
+                      final item = suggestions[index - 1];
                       return ListTile(
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16,
@@ -154,22 +208,26 @@ class _LocationScreenState extends State<LocationScreen> {
                 },
               ),
             ),
-        
-            // Confirm Button
+
+            // ✅ Confirm Button
             Padding(
               padding: const EdgeInsets.all(16),
               child: SizedBox(
                 width: double.infinity,
                 child: BlocConsumer<LocationBloc, LocationState>(
-                  listenWhen: (current, previous) => current.locationDetailsModel != previous.locationDetailsModel,
+                  listenWhen: (prev, curr) =>
+                  prev.locationDetailsModel != curr.locationDetailsModel,
                   listener: (context, state) async {
                     if (state.apiResponse.status == Status.completed &&
                         state.locationDetailsModel.success) {
-                      await LocationSessionController().saveLocation(
-                        state.locationDetailsModel,
+                      await LocationSessionController()
+                          .saveLocation(state.locationDetailsModel);
+
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        RoutesName.home,
+                            (route) => false,
                       );
-        
-                      Navigator.pushNamedAndRemoveUntil(context, RoutesName.home, (route) => false);
                     }
                   },
                   builder: (context, state) {
@@ -179,11 +237,18 @@ class _LocationScreenState extends State<LocationScreen> {
                       onPress: selectedPlaceId == null
                           ? null
                           : () {
-                        context.read<LocationBloc>().add(
-                          FetchLocationDetailsEvent(
-                            placeId: selectedPlaceId!,
-                          ),
-                        );
+                        if (selectedPlaceId == "current_location") {
+                          // 🔥 Call BLoC to fetch Google Map API & save
+                          context
+                              .read<LocationBloc>()
+                              .add(const GetCurrentLocationEvent());
+                        } else {
+                          context.read<LocationBloc>().add(
+                            FetchLocationDetailsEvent(
+                              placeId: selectedPlaceId!,
+                            ),
+                          );
+                        }
                       },
                     );
                   },

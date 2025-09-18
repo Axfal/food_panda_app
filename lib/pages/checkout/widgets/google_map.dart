@@ -2,10 +2,10 @@ import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/my_app_bar.dart
 import 'package:excellent_trade_app/pages/home/home_exports.dart';
 import 'package:flutter/gestures.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import '../../../bloc/location/location_bloc.dart';
 import '../../../bloc/order/order_bloc.dart';
 import '../../../model/delivery_address/delievery_address_model.dart';
-import '../../../model/location/location_details/locations_details_model.dart';
 import '../../auth/signup/signup_exports.dart';
 
 class GoogleMapScreen extends StatefulWidget {
@@ -19,7 +19,80 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   final TextEditingController searchController = TextEditingController();
   bool showSuggestions = false;
   GoogleMapController? _mapController;
-  LatLng selectedLocation = LatLng(31.5204, 74.3587);
+
+  late LatLng selectedLocation;
+
+  @override
+  void initState() {
+    super.initState();
+    // prevent late initialization error
+    selectedLocation = const LatLng(31.5204, 74.3587);
+    _setCurrentLocation();
+    _setLatLng();
+  }
+
+  /// ✅ Pick location intelligently from session
+  Future<void> _setLatLng() async {
+    final locationSession = LocationSessionController();
+
+    if (locationSession.hasLocation && locationSession.currentPlace != null) {
+      // Case 1 → Saved standardized location
+      final lat = locationSession.currentPlace?.lat ?? 0.0;
+      final lng = locationSession.currentPlace?.lng ?? 0.0;
+      setState(() {
+        selectedLocation = LatLng(lat, lng);
+      });
+
+    } else if (locationSession.hasCurrentLocation &&
+        LocationSessionController.googleMapApiModel?.results?.isNotEmpty == true) {
+      // Case 2 → Raw Google Maps API location exists
+      final result = LocationSessionController.googleMapApiModel!.results!.first;
+      final lat = result.geometry?.location?.lat ?? 0.0;
+      final lng = result.geometry?.location?.lng ?? 0.0;
+      setState(() {
+        selectedLocation = LatLng(lat, lng);
+      });
+
+    } else {
+      // Case 3 → Default fallback
+      setState(() {
+        selectedLocation = const LatLng(31.5204, 74.3587);
+      });
+    }
+  }
+
+
+
+  Future<void> _setCurrentLocation() async {
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) return;
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied ||
+            permission == LocationPermission.deniedForever) {
+          return;
+        }
+      }
+
+      final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      setState(() {
+        selectedLocation = LatLng(position.latitude, position.longitude);
+      });
+
+      // Move the camera if map is ready
+      _mapController?.animateCamera(
+        CameraUpdate.newLatLng(selectedLocation),
+      );
+    } catch (e) {
+      debugPrint("Error fetching current location: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +102,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
         title: 'Select Location',
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
       ),
       body: SafeArea(
@@ -46,7 +119,6 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
           builder: (context, state) {
             return Stack(
               children: [
-                /// Fullscreen Google Map
                 GoogleMap(
                   initialCameraPosition: CameraPosition(
                     target: selectedLocation,
@@ -57,7 +129,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                     selectedLocation = position.target;
                   },
                   myLocationEnabled: true,
-                  myLocationButtonEnabled: true,
+                  myLocationButtonEnabled: false,
                   zoomControlsEnabled: false,
                   zoomGesturesEnabled: true,
                   scrollGesturesEnabled: true,
@@ -65,7 +137,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                   tiltGesturesEnabled: false,
                   gestureRecognizers: {
                     Factory<OneSequenceGestureRecognizer>(
-                      () => EagerGestureRecognizer(),
+                          () => EagerGestureRecognizer(),
                     ),
                   },
                 ),
@@ -79,7 +151,6 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                   ),
                 ),
 
-                /// Floating Search Bar at Top
                 Positioned(
                   top: 16.h,
                   left: 16.w,
@@ -130,7 +201,6 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                         ),
                       ),
 
-                      /// Suggestions dropdown
                       if (showSuggestions &&
                           state.locationSuggestionModel.suggestions.isNotEmpty)
                         Container(
@@ -140,7 +210,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                             borderRadius: BorderRadius.circular(14.r),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.08),
+                                color: Colors.black.withValues(alpha: 0.08),
                                 blurRadius: 12,
                                 offset: const Offset(0, 6),
                               ),
@@ -151,7 +221,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                             shrinkWrap: true,
                             padding: EdgeInsets.symmetric(vertical: 4.h),
                             itemCount: state.locationSuggestionModel.suggestions.length,
-                            separatorBuilder: (_, _) => Divider(
+                            separatorBuilder: (_, __) => Divider(
                               color: Colors.grey.shade200,
                               height: 1,
                               thickness: 0.7,
@@ -168,12 +238,14 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                                   searchController.text = suggestion.description;
                                   FocusScope.of(context).unfocus();
                                   context.read<LocationBloc>().add(
-                                    FetchLocationDetailsEvent(placeId: suggestion.placeId),
+                                    FetchLocationDetailsEvent(
+                                        placeId: suggestion.placeId),
                                   );
                                   setState(() {});
                                 },
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 12.w, vertical: 10.h),
                                   child: Row(
                                     children: [
                                       Container(
@@ -209,12 +281,25 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                             },
                           ),
                         ),
-
                     ],
                   ),
                 ),
 
-                /// Confirm Location Button at Bottom
+                Positioned(
+                  bottom: 100.h,
+                  right: 16.w,
+                  child: FloatingActionButton(
+                    backgroundColor: Colors.white,
+                    shape: const CircleBorder(),
+                    elevation: 4,
+                    onPressed: _setCurrentLocation,
+                    child: const Icon(
+                      Icons.my_location,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+
                 Positioned(
                   left: 16.w,
                   right: 16.w,
@@ -227,7 +312,6 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                         );
                       }
                       if (state.apiResponse.status == Status.completed) {
-                        // You can add success handling if needed
                       }
                     },
                     builder: (context, state) {
@@ -239,7 +323,6 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                           );
                           Navigator.pop(context, deliveryAddress);
                         },
-
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
                           foregroundColor: Colors.white,
