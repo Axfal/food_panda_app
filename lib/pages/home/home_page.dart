@@ -1,5 +1,6 @@
 import 'package:excellent_trade_app/bloc/near_by_restaurant/near_by_restaurant_bloc.dart';
 import 'package:flutter/cupertino.dart';
+import '../../Utils/constants/appWeight.dart';
 import 'home_exports.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,6 +12,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -75,224 +77,290 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.lightPink,
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height + 145.h,
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              /// Header Section
-              headerSection(),
-
-              /// Body Section
-              Positioned(
-                top: 315.h,
-                left: 0,
-                right: 0,
-                child: Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(
-                    // horizontal: 12.w,
-                    vertical: 16.h,
-                  ),
-                  decoration: const BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(30),
-                      topLeft: Radius.circular(30),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      BrandList(
-                        title: "",
-                        labels: [
-                          {'label': 'offers'},
-                          {'label': 'Top Restaurants'},
-                          {'label': 'New Restaurants'},
-                          {'label': 'Pick-up'},
-                          {'label': 'Home Chef'},
-                        ],
-                        images: [
-                          'assets/logos/offers.png',
-                          'assets/logos/super_restaurants.png',
-                          'assets/logos/new_restaurant.png',
-                          'assets/logos/pick_up.png',
-                          'assets/logos/home_chef.png',
-                        ],
-                        onTaps: [
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => OffersPage(),
-                            ),
-                          ),
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  TopRestaurantsPage(cardsData: foodCards),
-                            ),
-                          ),
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => NewRestaurantsPage(),
-                            ),
-                          ),
-                          () {},
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CampaignPage(
-                                campaignImage: 'assets/images/homechef_bg.jpg',
-                                sheetTitle: 'Homechef Deals and Discounts',
-                                sheetSubtitle: 'Ghar jesa khana!',
-                                cardsData: foodCards,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Divider(thickness: 1.5, color: AppColors.border),
-                      SizedBox(height: 18.h),
-                      CategoriesInputWidget(),
-                      // DiscountCardList(
-                      //   cards: discountCards,
-                      //   onTapCard: (card) {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (_) => CampaignPage(
-                      //           campaignImage: card['campaignImage'] ?? '',
-                      //           sheetTitle:
-                      //               card['sheetTitle'] ?? 'Special Offer',
-                      //           sheetSubtitle:
-                      //               card['sheetSubtitle'] ??
-                      //               'Enjoy exciting deals!',
-                      //           cardsData: List<Map<String, dynamic>>.from(
-                      //             card['cardsData'] ?? [],
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     );
-                      //   },
-                      // ),
-                      // SizedBox(height: 16.h),
-                      // BrandList(
-                      //   labels: [
-                      //     {'label': 'Burger Lab'},
-                      //     {'label': 'California Pizza'},
-                      //     {'label': 'KFC'},
-                      //     {'label': 'Broadway Pizza'},
-                      //     {'label': 'OPTP'},
-                      //     {'label': 'Pizza Max'},
-                      //     {'label': 'McDonald\'s'},
-                      //     {'label': 'Hardee\'s'},
-                      //   ],
-                      //   onTaps: [
-                      //     () {},
-                      //     () {},
-                      //     () {},
-                      //     () {},
-                      //     () {},
-                      //     () {},
-                      //     () {},
-                      //     () {},
-                      //   ], images: ,
-                      // ),
-                      // CardList(
-                      //   title: 'Try Something New',
-                      //   cardsData: foodCards,
-                      // ),
-                      // SizedBox(height: 16.h),
-                      ExploreWidget(),
-                      SizedBox(height: 20.h),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-
-      bottomNavigationBar: CustomBottomNavBar(
-        currentIndex: _selectedIndex,
-        onTap: _onNavItemTapped,
-      ),
-    );
-  }
-
-  Widget headerSection() {
-    return Container(
-      height: 340.h,
-      width: double.infinity,
-      decoration: BoxDecoration(color: AppColors.primary),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          HCustomAppBar(),
-
-          /// Search Bar
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-            child: Container(
-              height: 44.h,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(30.r),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 6,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 12.w),
-              child: Row(
+      body: CustomScrollView(
+        slivers: [
+          /// Location Header
+          SliverAppBar(
+            pinned: false,
+            floating: false,
+            snap: false,
+            expandedHeight: 127.h,
+            toolbarHeight: 55.h,
+            backgroundColor: AppColors.primary,
+            elevation: 0,
+            automaticallyImplyLeading: false,
+            flexibleSpace: FlexibleSpaceBar(
+              collapseMode: CollapseMode.parallax,
+              background: Column(
                 children: [
-                  Icon(
-                    CupertinoIcons.search,
-                    size: 20.sp,
-                    color: Colors.grey[800],
-                  ),
-                  SizedBox(width: 8.w),
-                  Expanded(
-                    child: TextField(
-                      cursorColor: AppColors.primary,
-                      style: GoogleFonts.poppins(
-                        fontSize: 13.sp,
-                        color: Colors.black,
+                  HCustomAppBar(),
+                  // add banners here not image but text
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(12.w),
+                      margin: EdgeInsets.only(bottom: 10.h),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 5,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
                       ),
-                      decoration: InputDecoration(
-                        hintText: "Search for restaurants",
-                        hintStyle: GoogleFonts.poppins(
-                          fontSize: 13.sp,
-                          color: Colors.grey,
+                      child: Text(
+                        "🍽️ Special Deal: 30% OFF on Top Restaurants!",
+                        style: GoogleFonts.poppins(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primary,
                         ),
-                        border: InputBorder.none,
-                        isCollapsed: true,
-                        contentPadding: EdgeInsets.zero,
                       ),
-                      onTap: () {
-                        Navigator.pushNamed(context, RoutesName.searchScreen);
-                      },
                     ),
                   ),
                 ],
               ),
             ),
           ),
+          SliverAppBar(
+            pinned: true,
+            floating: false,
+            snap: false,
+            toolbarHeight: 80.h,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            automaticallyImplyLeading: false,
+            flexibleSpace: Container(
+              decoration: BoxDecoration(color: Colors.white),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(24.r),
+                    bottomRight: Radius.circular(24.r),
+                  ),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                child: SafeArea(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Hi, Anfal 👋",
+                        style: GoogleFonts.poppins(
+                          fontSize: 24.sp,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        "Don’t wait, just mate with food – FoodMate!",
+                        style: GoogleFonts.poppins(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white.withOpacity(0.9),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
 
-          /// Promo Banner + Grid
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12.w),
-            child: PromotionalBannerWithGrid(),
+          /// Search Bar
+          // SliverAppBar(
+          //   pinned: true,
+          //   floating: true,
+          //   snap: true,
+          //   // total height = your desired bar + status bar height
+          //   toolbarHeight: 65.h + MediaQuery.of(context).padding.top,
+          //   backgroundColor: AppColors.primary,
+          //   shadowColor: Colors.black12,
+          //   automaticallyImplyLeading: false,
+          //   flexibleSpace: LayoutBuilder(
+          //     builder: (context, constraints) {
+          //       final topPadding = MediaQuery.of(context).padding.top;
+          //       return Padding(
+          //         padding: EdgeInsets.fromLTRB(16.w, topPadding, 16.w, 18.h),
+          //         child: Align(
+          //           alignment: Alignment.bottomCenter,
+          //           child: GestureDetector(
+          //             onTap: () =>
+          //                 Navigator.pushNamed(context, RoutesName.searchScreen),
+          //             child: Container(
+          //               height: 50.h,
+          //               decoration: BoxDecoration(
+          //                 color: Colors.white,
+          //                 borderRadius: BorderRadius.circular(40.r),
+          //                 boxShadow: [
+          //                   BoxShadow(
+          //                     color: Colors.black12.withOpacity(0.08),
+          //                     blurRadius: 8,
+          //                     offset: const Offset(0, 3),
+          //                   ),
+          //                 ],
+          //               ),
+          //               padding: EdgeInsets.symmetric(horizontal: 14.w),
+          //               child: Row(
+          //                 children: [
+          //                   Icon(
+          //                     CupertinoIcons.search,
+          //                     size: 20.sp,
+          //                     color: Colors.grey[700],
+          //                   ),
+          //                   SizedBox(width: 10.w),
+          //                   Expanded(
+          //                     child: Text(
+          //                       "Search for restaurants, cuisines...",
+          //                       style: GoogleFonts.poppins(
+          //                         fontSize: 13.sp,
+          //                         color: Colors.grey[600],
+          //                       ),
+          //                     ),
+          //                   ),
+          //                   Container(
+          //                     decoration: BoxDecoration(
+          //                       color: AppColors.primary,
+          //                       borderRadius: BorderRadius.circular(50),
+          //                     ),
+          //                     padding: EdgeInsets.all(6.w),
+          //                     child: Icon(
+          //                       CupertinoIcons.slider_horizontal_3,
+          //                       size: 18.sp,
+          //                       color: Colors.white,
+          //                     ),
+          //                   ),
+          //                 ],
+          //               ),
+          //             ),
+          //           ),
+          //         ),
+          //       );
+          //     },
+          //   ),
+          // ),
+
+          /// Promotional Banners
+          // SliverAppBar(
+          //   pinned: false,
+          //   floating: false,
+          //   snap: false,
+          //   automaticallyImplyLeading: false,
+          //   expandedHeight: 125.h,
+          //   backgroundColor: AppColors.primary,
+          //   elevation: 0,
+          //   flexibleSpace: FlexibleSpaceBar(
+          //     collapseMode: CollapseMode.pin,
+          //     background: Padding(
+          //       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          //       child: PromotionalBannerWithGrid(),
+          //     ),
+          //   ),
+          // ),
+
+          /// 🏷 Content Section
+          SliverToBoxAdapter(
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 8.w),
+              decoration: const BoxDecoration(
+                color: AppColors.white,
+                // borderRadius: BorderRadius.only(
+                //   topRight: Radius.circular(24),
+                //   topLeft: Radius.circular(24),
+                // ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BrandList(
+                    title: "",
+                    labels: [
+                      {'label': 'Offers'},
+                      {'label': 'Top Restaurants'},
+                      {'label': 'New'},
+                      {'label': 'Pick-up'},
+                      {'label': 'Home Chef'},
+                    ],
+                    images: [
+                      'assets/logos/offers.png',
+                      'assets/logos/super_restaurants.png',
+                      'assets/logos/new_restaurant.png',
+                      'assets/logos/pick_up.png',
+                      'assets/logos/home_chef.png',
+                    ],
+                    onTaps: [
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => OffersPage()),
+                      ),
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              TopRestaurantsPage(cardsData: foodCards),
+                        ),
+                      ),
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NewRestaurantsPage(),
+                        ),
+                      ),
+                      () {},
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CampaignPage(
+                            campaignImage: 'assets/images/homechef_bg.jpg',
+                            sheetTitle: 'Homechef Deals & Discounts',
+                            sheetSubtitle: 'Ghar jesa khana!',
+                            cardsData: foodCards,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  Divider(thickness: 1.2, color: AppColors.border),
+                  SizedBox(height: 20.h),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 8,
+                    ),
+                    child: Text(
+                      "Categories",
+                      style: GoogleFonts.montserrat(
+                        fontSize: 20,
+                        fontWeight: AppWeights.bold,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                  ),
+                  CategoriesInputWidget(),
+                  SizedBox(height: 8.h),
+                  Divider(thickness: 1.2, color: AppColors.border),
+                  SizedBox(height: 8.h),
+                  ExploreWidget(),
+                  SizedBox(height: 24.h),
+                ],
+              ),
+            ),
           ),
         ],
+      ),
+
+      bottomNavigationBar: CustomBottomNavBar(
+        currentIndex: _selectedIndex,
+        onTap: _onNavItemTapped,
       ),
     );
   }

@@ -53,7 +53,6 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
           const Icon(LucideIcons.mapPin, color: Colors.white, size: 26),
           const SizedBox(width: 10),
 
-          // 🔹 Listen to LocationBloc updates
           Expanded(
             child: GestureDetector(
               onTap: () =>
@@ -184,7 +183,7 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
                     MaterialPageRoute(builder: (context) => CartSection()),
                   );
                 },
-                icon: const Icon(CupertinoIcons.bag),
+                icon: const Icon(CupertinoIcons.shopping_cart),
                 color: Colors.white,
                 iconSize: 25,
               ),

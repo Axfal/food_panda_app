@@ -25,43 +25,37 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
   @override
   void initState() {
     super.initState();
-    // prevent late initialization error
     selectedLocation = const LatLng(31.5204, 74.3587);
     _setCurrentLocation();
     _setLatLng();
   }
 
-  /// ✅ Pick location intelligently from session
   Future<void> _setLatLng() async {
     final locationSession = LocationSessionController();
 
     if (locationSession.hasLocation && locationSession.currentPlace != null) {
-      // Case 1 → Saved standardized location
       final lat = locationSession.currentPlace?.lat ?? 0.0;
       final lng = locationSession.currentPlace?.lng ?? 0.0;
       setState(() {
         selectedLocation = LatLng(lat, lng);
       });
-
     } else if (locationSession.hasCurrentLocation &&
-        LocationSessionController.googleMapApiModel?.results?.isNotEmpty == true) {
+        LocationSessionController.googleMapApiModel?.results?.isNotEmpty ==
+            true) {
       // Case 2 → Raw Google Maps API location exists
-      final result = LocationSessionController.googleMapApiModel!.results!.first;
+      final result =
+          LocationSessionController.googleMapApiModel!.results!.first;
       final lat = result.geometry?.location?.lat ?? 0.0;
       final lng = result.geometry?.location?.lng ?? 0.0;
       setState(() {
         selectedLocation = LatLng(lat, lng);
       });
-
     } else {
-      // Case 3 → Default fallback
       setState(() {
         selectedLocation = const LatLng(31.5204, 74.3587);
       });
     }
   }
-
-
 
   Future<void> _setCurrentLocation() async {
     try {
@@ -85,10 +79,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
         selectedLocation = LatLng(position.latitude, position.longitude);
       });
 
-      // Move the camera if map is ready
-      _mapController?.animateCamera(
-        CameraUpdate.newLatLng(selectedLocation),
-      );
+      _mapController?.animateCamera(CameraUpdate.newLatLng(selectedLocation));
     } catch (e) {
       debugPrint("Error fetching current location: $e");
     }
@@ -137,7 +128,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                   tiltGesturesEnabled: false,
                   gestureRecognizers: {
                     Factory<OneSequenceGestureRecognizer>(
-                          () => EagerGestureRecognizer(),
+                      () => EagerGestureRecognizer(),
                     ),
                   },
                 ),
@@ -220,7 +211,10 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                           child: ListView.separated(
                             shrinkWrap: true,
                             padding: EdgeInsets.symmetric(vertical: 4.h),
-                            itemCount: state.locationSuggestionModel.suggestions.length,
+                            itemCount: state
+                                .locationSuggestionModel
+                                .suggestions
+                                .length,
                             separatorBuilder: (_, __) => Divider(
                               color: Colors.grey.shade200,
                               height: 1,
@@ -228,24 +222,29 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                               indent: 50,
                             ),
                             itemBuilder: (context, index) {
-                              final suggestion =
-                              state.locationSuggestionModel.suggestions[index];
+                              final suggestion = state
+                                  .locationSuggestionModel
+                                  .suggestions[index];
 
                               return InkWell(
                                 borderRadius: BorderRadius.circular(12.r),
                                 onTap: () {
                                   showSuggestions = false;
-                                  searchController.text = suggestion.description;
+                                  searchController.text =
+                                      suggestion.description;
                                   FocusScope.of(context).unfocus();
                                   context.read<LocationBloc>().add(
                                     FetchLocationDetailsEvent(
-                                        placeId: suggestion.placeId),
+                                      placeId: suggestion.placeId,
+                                    ),
                                   );
                                   setState(() {});
                                 },
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: 12.w, vertical: 10.h),
+                                    horizontal: 12.w,
+                                    vertical: 10.h,
+                                  ),
                                   child: Row(
                                     children: [
                                       Container(
@@ -293,10 +292,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                     shape: const CircleBorder(),
                     elevation: 4,
                     onPressed: _setCurrentLocation,
-                    child: const Icon(
-                      Icons.my_location,
-                      color: Colors.black87,
-                    ),
+                    child: const Icon(Icons.my_location, color: Colors.black87),
                   ),
                 ),
 
@@ -311,8 +307,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                           message: state.apiResponse.message.toString(),
                         );
                       }
-                      if (state.apiResponse.status == Status.completed) {
-                      }
+                      if (state.apiResponse.status == Status.completed) {}
                     },
                     builder: (context, state) {
                       return ElevatedButton(
