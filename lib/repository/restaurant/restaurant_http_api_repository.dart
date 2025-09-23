@@ -62,8 +62,16 @@ class RestaurantHttpApiRepository implements RestaurantApiRepository {
 
   @override
   Future nearByRestaurant(dynamic data) async {
-    final uri = Uri.parse(AppUrl.nearByRestaurant).replace(queryParameters: data);
+    final uri = Uri.parse(
+      AppUrl.nearByRestaurant,
+    ).replace(queryParameters: data);
     final response = await _networkServices.getApi(uri.toString());
+    return response;
+  }
+
+  @override
+  Future topRestaurant(data) async {
+    final response = await _networkServices.postApi(AppUrl.topRestaurant, data);
     return response;
   }
 }

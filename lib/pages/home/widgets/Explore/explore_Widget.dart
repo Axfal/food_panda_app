@@ -1,13 +1,6 @@
 import 'package:excellent_trade_app/pages/home/home_exports.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import '../../../../Utils/constants/appWeight.dart';
-import '../../../../Utils/constants/app_colors.dart';
-import '../../../../data/response/status.dart';
-import '../../../../service/location/location_storage.dart';
 import '../cards/large_foodCard.dart';
 import '../../../../bloc/near_by_restaurant/near_by_restaurant_bloc.dart';
 
@@ -28,6 +21,7 @@ class _ExploreWidgetState extends State<ExploreWidget> {
           current.nearByRestaurantModel != previous.nearByRestaurantModel ||
           current.apiResponse.status != previous.apiResponse.status,
       builder: (context, state) {
+
         if (state.apiResponse.status == Status.loading) {
           return SizedBox(
             height: 250,
@@ -51,7 +45,7 @@ class _ExploreWidgetState extends State<ExploreWidget> {
           final cardsData = restaurants.map((restaurant) {
             return {
               "imagePath": restaurant.logo ?? '',
-              "title": restaurant.name ?? '',
+              "title": restaurant.name,
               "rating": double.tryParse(restaurant.rating.toString()) ?? 0.0,
               "reviewsCount": 10,
               "duration": '15-30 min',
@@ -102,6 +96,13 @@ class _ExploreWidgetState extends State<ExploreWidget> {
                       deliveryFee: card['deliveryFee'] as int,
                       discountLabel: card['discountLabel'] as String,
                       isAd: card['isAd'] as bool,
+                      onTap: () {
+                    // Navigator.pushNamed(
+                    // context,
+                    // RoutesName.menu,
+                    // arguments: {"restaurant_data": restaurantData},
+                    // );
+                      },
                     ),
                   );
                 },

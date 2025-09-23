@@ -117,7 +117,7 @@ class _AccountPageState extends State<AccountPage> {
                 children: [
                   Expanded(
                     child: buildIconCard(
-                      imagePath: 'assets/images/icons/order.png',
+                      icon: Icons.list_alt_outlined,
                       label: 'Orders',
                       onTap: () => Navigator.push(
                         context,

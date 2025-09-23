@@ -94,19 +94,18 @@ class _HomePageState extends State<HomePage> {
               background: Column(
                 children: [
                   HCustomAppBar(),
-                  // add banners here not image but text
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Container(
                       width: double.infinity,
-                      padding: EdgeInsets.all(12.w),
+                      padding: EdgeInsets.all(8.w),
                       margin: EdgeInsets.only(bottom: 10.h),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12.r),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
+                            color: Colors.black.withValues(alpha: 0.05),
                             blurRadius: 5,
                             offset: Offset(0, 3),
                           ),
