@@ -32,7 +32,6 @@ class WishListModel with _$WishListModel {
     throw UnimplementedError();
   }
 
-
 }
 
 @freezed

@@ -31,7 +31,6 @@ class RestaurantByCategory with _$RestaurantByCategory {
     // TODO: implement toJson
     throw UnimplementedError();
   }
-
 }
 
 @freezed
@@ -62,6 +61,7 @@ class CategoryData with _$CategoryData {
     // TODO: implement toJson
     throw UnimplementedError();
   }
+
 }
 
 @freezed

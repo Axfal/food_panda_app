@@ -26,6 +26,7 @@ class OrderModel with _$OrderModel {
     // TODO: implement toJson
     throw UnimplementedError();
   }
+
 }
 
 @freezed
@@ -171,6 +172,7 @@ class OrderData with _$OrderData {
   @override
   // TODO: implement updatedAt
   String get updatedAt => throw UnimplementedError();
+
 }
 
 @freezed
@@ -236,4 +238,5 @@ class OrderItem with _$OrderItem {
   @override
   // TODO: implement totalPrice
   String get totalPrice => throw UnimplementedError();
+
 }

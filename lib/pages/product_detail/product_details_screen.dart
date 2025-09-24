@@ -1,5 +1,6 @@
 import 'package:excellent_trade_app/bloc/recommendation/recommendation_bloc.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
+import 'package:excellent_trade_app/pages/product_detail/widgets/product_review_widget.dart';
 import 'package:excellent_trade_app/repository/auth/auth_repository.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,7 +44,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     final item = widget.menuItem;
     final double oldPrice = double.parse(item.itemPrice) * 1.15;
 
-    /// 15% by default dada kahin ka
+    /// 15% by default jb tk response mn naheen a jata
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -162,6 +163,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
             ),
             variationCardWidget(),
+            productReviewBox(context),
             SizedBox(height: 8.h),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),

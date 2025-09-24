@@ -73,5 +73,7 @@ class AppUrl {
 
   /// Recommended Items
   static const String recommendedItems = '$baseUrl/item_recommendations.php';
-  
+
+  /// Product Review
+  static const String getProductReview = '$baseUrl//get_product_reviews.php';
 }

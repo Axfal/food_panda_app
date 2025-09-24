@@ -67,61 +67,85 @@ class BrandList extends StatelessWidget {
                   const SizedBox(height: 14),
                 ],
                 SizedBox(
-                  height: 170,
+                  height: 180, // enough for taller images
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: brands.length,
                     separatorBuilder: (context, index) =>
-                    const SizedBox(width: 14),
+                    const SizedBox(width: 16),
                     itemBuilder: (context, index) {
                       final brand = brands[index];
                       return GestureDetector(
                         onTap: () {},
-                        child: Column(
-                          children: [
-                            Container(
-                              width: 90,
-                              height: 90,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(14),
-                                border: Border.all(
-                                  color: AppColors.primary,
-                                  width: 1.5,
-                                ),
+                        child: Container(
+                          width: 120,
+                          height: 160,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.08),
+                                blurRadius: 6,
+                                offset: const Offset(0, 3),
                               ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Image.network(
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Stack(
+                              alignment: Alignment.bottomCenter,
+                              children: [
+                                Image.network(
                                   'https://itgenesis.space/Panda_API/API/${brand.logo}' ??
                                       "https://via.placeholder.com/150",
+                                  width: 120,
+                                  height: 160,
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stack) {
-                                    return Icon(
-                                      Icons.store,
-                                      size: 40,
-                                      color: AppColors.primary,
+                                    return Container(
+                                      color: Colors.grey.shade200,
+                                      child: Icon(
+                                        Icons.store,
+                                        size: 40,
+                                        color: AppColors.primary,
+                                      ),
                                     );
                                   },
                                 ),
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            SizedBox(
-                              width: 90,
-                              child: Text(
-                                brand.name ?? "Unknown",
-                                textAlign: TextAlign.center,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.poppins(
-                                  fontWeight: AppWeights.medium,
-                                  fontSize: 13,
-                                  color: AppColors.textPrimary,
+                                // Gradient overlay
+                                Container(
+                                  height: 45,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.black.withOpacity(0.6),
+                                        Colors.transparent,
+                                      ],
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                // Name text
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 8),
+                                  child: Text(
+                                    brand.name ?? "Unknown",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 13,
+                                      fontWeight: AppWeights.medium,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       );
                     },

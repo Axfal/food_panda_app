@@ -46,8 +46,6 @@ class NearByRestaurant with _$NearByRestaurant {
     // TODO: implement toJson
     throw UnimplementedError();
   }
-
-
 }
 
 @freezed
@@ -138,7 +136,6 @@ class Restaurant with _$Restaurant {
     // TODO: implement toJson
     throw UnimplementedError();
   }
-
 }
 
 @freezed
@@ -179,7 +176,6 @@ class Location with _$Location {
     // TODO: implement toJson
     throw UnimplementedError();
   }
-
 }
 
 /// Helper functions to convert String to double and back

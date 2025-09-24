@@ -219,10 +219,10 @@ return $default(_that.success,_that.restaurant);case _:
 @JsonSerializable()
 
 class _RestaurantMenuModel implements RestaurantMenuModel {
-  const _RestaurantMenuModel({required this.success, required this.restaurant});
+  const _RestaurantMenuModel({this.success = false, required this.restaurant});
   factory _RestaurantMenuModel.fromJson(Map<String, dynamic> json) => _$RestaurantMenuModelFromJson(json);
 
-@override final  bool success;
+@override@JsonKey() final  bool success;
 @override final  Restaurant restaurant;
 
 /// Create a copy of RestaurantMenuModel
@@ -299,7 +299,7 @@ $RestaurantCopyWith<$Res> get restaurant {
 /// @nodoc
 mixin _$Restaurant {
 
-@JsonKey(name: 'restaurant_id') int get restaurantId;@JsonKey(name: 'restaurant_name') String get restaurantName;@JsonKey(name: 'restaurant_logo') String? get restaurantLogo; List<MenuCategory> get categories;
+@JsonKey(name: 'restaurant_id') int get restaurantId;@JsonKey(name: 'restaurant_name') String get restaurantName;@JsonKey(name: 'restaurant_logo') String get restaurantLogo; List<MenuCategory> get categories;
 /// Create a copy of Restaurant
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -332,7 +332,7 @@ abstract mixin class $RestaurantCopyWith<$Res>  {
   factory $RestaurantCopyWith(Restaurant value, $Res Function(Restaurant) _then) = _$RestaurantCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'restaurant_id') int restaurantId,@JsonKey(name: 'restaurant_name') String restaurantName,@JsonKey(name: 'restaurant_logo') String? restaurantLogo, List<MenuCategory> categories
+@JsonKey(name: 'restaurant_id') int restaurantId,@JsonKey(name: 'restaurant_name') String restaurantName,@JsonKey(name: 'restaurant_logo') String restaurantLogo, List<MenuCategory> categories
 });
 
 
@@ -349,12 +349,12 @@ class _$RestaurantCopyWithImpl<$Res>
 
 /// Create a copy of Restaurant
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? restaurantId = null,Object? restaurantName = null,Object? restaurantLogo = freezed,Object? categories = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? restaurantId = null,Object? restaurantName = null,Object? restaurantLogo = null,Object? categories = null,}) {
   return _then(_self.copyWith(
 restaurantId: null == restaurantId ? _self.restaurantId : restaurantId // ignore: cast_nullable_to_non_nullable
 as int,restaurantName: null == restaurantName ? _self.restaurantName : restaurantName // ignore: cast_nullable_to_non_nullable
-as String,restaurantLogo: freezed == restaurantLogo ? _self.restaurantLogo : restaurantLogo // ignore: cast_nullable_to_non_nullable
-as String?,categories: null == categories ? _self.categories : categories // ignore: cast_nullable_to_non_nullable
+as String,restaurantLogo: null == restaurantLogo ? _self.restaurantLogo : restaurantLogo // ignore: cast_nullable_to_non_nullable
+as String,categories: null == categories ? _self.categories : categories // ignore: cast_nullable_to_non_nullable
 as List<MenuCategory>,
   ));
 }
@@ -440,7 +440,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'restaurant_id')  int restaurantId, @JsonKey(name: 'restaurant_name')  String restaurantName, @JsonKey(name: 'restaurant_logo')  String? restaurantLogo,  List<MenuCategory> categories)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'restaurant_id')  int restaurantId, @JsonKey(name: 'restaurant_name')  String restaurantName, @JsonKey(name: 'restaurant_logo')  String restaurantLogo,  List<MenuCategory> categories)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Restaurant() when $default != null:
 return $default(_that.restaurantId,_that.restaurantName,_that.restaurantLogo,_that.categories);case _:
@@ -461,7 +461,7 @@ return $default(_that.restaurantId,_that.restaurantName,_that.restaurantLogo,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'restaurant_id')  int restaurantId, @JsonKey(name: 'restaurant_name')  String restaurantName, @JsonKey(name: 'restaurant_logo')  String? restaurantLogo,  List<MenuCategory> categories)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'restaurant_id')  int restaurantId, @JsonKey(name: 'restaurant_name')  String restaurantName, @JsonKey(name: 'restaurant_logo')  String restaurantLogo,  List<MenuCategory> categories)  $default,) {final _that = this;
 switch (_that) {
 case _Restaurant():
 return $default(_that.restaurantId,_that.restaurantName,_that.restaurantLogo,_that.categories);case _:
@@ -481,7 +481,7 @@ return $default(_that.restaurantId,_that.restaurantName,_that.restaurantLogo,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'restaurant_id')  int restaurantId, @JsonKey(name: 'restaurant_name')  String restaurantName, @JsonKey(name: 'restaurant_logo')  String? restaurantLogo,  List<MenuCategory> categories)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'restaurant_id')  int restaurantId, @JsonKey(name: 'restaurant_name')  String restaurantName, @JsonKey(name: 'restaurant_logo')  String restaurantLogo,  List<MenuCategory> categories)?  $default,) {final _that = this;
 switch (_that) {
 case _Restaurant() when $default != null:
 return $default(_that.restaurantId,_that.restaurantName,_that.restaurantLogo,_that.categories);case _:
@@ -496,14 +496,14 @@ return $default(_that.restaurantId,_that.restaurantName,_that.restaurantLogo,_th
 @JsonSerializable()
 
 class _Restaurant implements Restaurant {
-  const _Restaurant({@JsonKey(name: 'restaurant_id') required this.restaurantId, @JsonKey(name: 'restaurant_name') required this.restaurantName, @JsonKey(name: 'restaurant_logo') this.restaurantLogo, required final  List<MenuCategory> categories}): _categories = categories;
+  const _Restaurant({@JsonKey(name: 'restaurant_id') this.restaurantId = 0, @JsonKey(name: 'restaurant_name') this.restaurantName = '', @JsonKey(name: 'restaurant_logo') this.restaurantLogo = '', final  List<MenuCategory> categories = const []}): _categories = categories;
   factory _Restaurant.fromJson(Map<String, dynamic> json) => _$RestaurantFromJson(json);
 
 @override@JsonKey(name: 'restaurant_id') final  int restaurantId;
 @override@JsonKey(name: 'restaurant_name') final  String restaurantName;
-@override@JsonKey(name: 'restaurant_logo') final  String? restaurantLogo;
+@override@JsonKey(name: 'restaurant_logo') final  String restaurantLogo;
  final  List<MenuCategory> _categories;
-@override List<MenuCategory> get categories {
+@override@JsonKey() List<MenuCategory> get categories {
   if (_categories is EqualUnmodifiableListView) return _categories;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_categories);
@@ -543,7 +543,7 @@ abstract mixin class _$RestaurantCopyWith<$Res> implements $RestaurantCopyWith<$
   factory _$RestaurantCopyWith(_Restaurant value, $Res Function(_Restaurant) _then) = __$RestaurantCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'restaurant_id') int restaurantId,@JsonKey(name: 'restaurant_name') String restaurantName,@JsonKey(name: 'restaurant_logo') String? restaurantLogo, List<MenuCategory> categories
+@JsonKey(name: 'restaurant_id') int restaurantId,@JsonKey(name: 'restaurant_name') String restaurantName,@JsonKey(name: 'restaurant_logo') String restaurantLogo, List<MenuCategory> categories
 });
 
 
@@ -560,12 +560,12 @@ class __$RestaurantCopyWithImpl<$Res>
 
 /// Create a copy of Restaurant
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? restaurantId = null,Object? restaurantName = null,Object? restaurantLogo = freezed,Object? categories = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? restaurantId = null,Object? restaurantName = null,Object? restaurantLogo = null,Object? categories = null,}) {
   return _then(_Restaurant(
 restaurantId: null == restaurantId ? _self.restaurantId : restaurantId // ignore: cast_nullable_to_non_nullable
 as int,restaurantName: null == restaurantName ? _self.restaurantName : restaurantName // ignore: cast_nullable_to_non_nullable
-as String,restaurantLogo: freezed == restaurantLogo ? _self.restaurantLogo : restaurantLogo // ignore: cast_nullable_to_non_nullable
-as String?,categories: null == categories ? _self._categories : categories // ignore: cast_nullable_to_non_nullable
+as String,restaurantLogo: null == restaurantLogo ? _self.restaurantLogo : restaurantLogo // ignore: cast_nullable_to_non_nullable
+as String,categories: null == categories ? _self._categories : categories // ignore: cast_nullable_to_non_nullable
 as List<MenuCategory>,
   ));
 }
@@ -577,7 +577,7 @@ as List<MenuCategory>,
 /// @nodoc
 mixin _$MenuCategory {
 
-@JsonKey(name: 'category_id') int get categoryId;@JsonKey(name: 'category_name') String get categoryName;@JsonKey(name: 'category_photo') String? get categoryPhoto; List<MenuItem> get items;
+@JsonKey(name: 'category_id') int get categoryId;@JsonKey(name: 'category_name') String get categoryName;@JsonKey(name: 'category_photo') String get categoryPhoto; List<MenuItem> get items;
 /// Create a copy of MenuCategory
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -610,7 +610,7 @@ abstract mixin class $MenuCategoryCopyWith<$Res>  {
   factory $MenuCategoryCopyWith(MenuCategory value, $Res Function(MenuCategory) _then) = _$MenuCategoryCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'category_id') int categoryId,@JsonKey(name: 'category_name') String categoryName,@JsonKey(name: 'category_photo') String? categoryPhoto, List<MenuItem> items
+@JsonKey(name: 'category_id') int categoryId,@JsonKey(name: 'category_name') String categoryName,@JsonKey(name: 'category_photo') String categoryPhoto, List<MenuItem> items
 });
 
 
@@ -627,12 +627,12 @@ class _$MenuCategoryCopyWithImpl<$Res>
 
 /// Create a copy of MenuCategory
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? categoryId = null,Object? categoryName = null,Object? categoryPhoto = freezed,Object? items = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? categoryId = null,Object? categoryName = null,Object? categoryPhoto = null,Object? items = null,}) {
   return _then(_self.copyWith(
 categoryId: null == categoryId ? _self.categoryId : categoryId // ignore: cast_nullable_to_non_nullable
 as int,categoryName: null == categoryName ? _self.categoryName : categoryName // ignore: cast_nullable_to_non_nullable
-as String,categoryPhoto: freezed == categoryPhoto ? _self.categoryPhoto : categoryPhoto // ignore: cast_nullable_to_non_nullable
-as String?,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
+as String,categoryPhoto: null == categoryPhoto ? _self.categoryPhoto : categoryPhoto // ignore: cast_nullable_to_non_nullable
+as String,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<MenuItem>,
   ));
 }
@@ -718,7 +718,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'category_id')  int categoryId, @JsonKey(name: 'category_name')  String categoryName, @JsonKey(name: 'category_photo')  String? categoryPhoto,  List<MenuItem> items)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'category_id')  int categoryId, @JsonKey(name: 'category_name')  String categoryName, @JsonKey(name: 'category_photo')  String categoryPhoto,  List<MenuItem> items)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MenuCategory() when $default != null:
 return $default(_that.categoryId,_that.categoryName,_that.categoryPhoto,_that.items);case _:
@@ -739,7 +739,7 @@ return $default(_that.categoryId,_that.categoryName,_that.categoryPhoto,_that.it
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'category_id')  int categoryId, @JsonKey(name: 'category_name')  String categoryName, @JsonKey(name: 'category_photo')  String? categoryPhoto,  List<MenuItem> items)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'category_id')  int categoryId, @JsonKey(name: 'category_name')  String categoryName, @JsonKey(name: 'category_photo')  String categoryPhoto,  List<MenuItem> items)  $default,) {final _that = this;
 switch (_that) {
 case _MenuCategory():
 return $default(_that.categoryId,_that.categoryName,_that.categoryPhoto,_that.items);case _:
@@ -759,7 +759,7 @@ return $default(_that.categoryId,_that.categoryName,_that.categoryPhoto,_that.it
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'category_id')  int categoryId, @JsonKey(name: 'category_name')  String categoryName, @JsonKey(name: 'category_photo')  String? categoryPhoto,  List<MenuItem> items)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'category_id')  int categoryId, @JsonKey(name: 'category_name')  String categoryName, @JsonKey(name: 'category_photo')  String categoryPhoto,  List<MenuItem> items)?  $default,) {final _that = this;
 switch (_that) {
 case _MenuCategory() when $default != null:
 return $default(_that.categoryId,_that.categoryName,_that.categoryPhoto,_that.items);case _:
@@ -774,14 +774,14 @@ return $default(_that.categoryId,_that.categoryName,_that.categoryPhoto,_that.it
 @JsonSerializable()
 
 class _MenuCategory implements MenuCategory {
-  const _MenuCategory({@JsonKey(name: 'category_id') required this.categoryId, @JsonKey(name: 'category_name') required this.categoryName, @JsonKey(name: 'category_photo') required this.categoryPhoto, required final  List<MenuItem> items}): _items = items;
+  const _MenuCategory({@JsonKey(name: 'category_id') this.categoryId = 0, @JsonKey(name: 'category_name') this.categoryName = '', @JsonKey(name: 'category_photo') this.categoryPhoto = '', final  List<MenuItem> items = const []}): _items = items;
   factory _MenuCategory.fromJson(Map<String, dynamic> json) => _$MenuCategoryFromJson(json);
 
 @override@JsonKey(name: 'category_id') final  int categoryId;
 @override@JsonKey(name: 'category_name') final  String categoryName;
-@override@JsonKey(name: 'category_photo') final  String? categoryPhoto;
+@override@JsonKey(name: 'category_photo') final  String categoryPhoto;
  final  List<MenuItem> _items;
-@override List<MenuItem> get items {
+@override@JsonKey() List<MenuItem> get items {
   if (_items is EqualUnmodifiableListView) return _items;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_items);
@@ -821,7 +821,7 @@ abstract mixin class _$MenuCategoryCopyWith<$Res> implements $MenuCategoryCopyWi
   factory _$MenuCategoryCopyWith(_MenuCategory value, $Res Function(_MenuCategory) _then) = __$MenuCategoryCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'category_id') int categoryId,@JsonKey(name: 'category_name') String categoryName,@JsonKey(name: 'category_photo') String? categoryPhoto, List<MenuItem> items
+@JsonKey(name: 'category_id') int categoryId,@JsonKey(name: 'category_name') String categoryName,@JsonKey(name: 'category_photo') String categoryPhoto, List<MenuItem> items
 });
 
 
@@ -838,12 +838,12 @@ class __$MenuCategoryCopyWithImpl<$Res>
 
 /// Create a copy of MenuCategory
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? categoryId = null,Object? categoryName = null,Object? categoryPhoto = freezed,Object? items = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? categoryId = null,Object? categoryName = null,Object? categoryPhoto = null,Object? items = null,}) {
   return _then(_MenuCategory(
 categoryId: null == categoryId ? _self.categoryId : categoryId // ignore: cast_nullable_to_non_nullable
 as int,categoryName: null == categoryName ? _self.categoryName : categoryName // ignore: cast_nullable_to_non_nullable
-as String,categoryPhoto: freezed == categoryPhoto ? _self.categoryPhoto : categoryPhoto // ignore: cast_nullable_to_non_nullable
-as String?,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
+as String,categoryPhoto: null == categoryPhoto ? _self.categoryPhoto : categoryPhoto // ignore: cast_nullable_to_non_nullable
+as String,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
 as List<MenuItem>,
   ));
 }
@@ -855,7 +855,7 @@ as List<MenuItem>,
 /// @nodoc
 mixin _$MenuItem {
 
-@JsonKey(name: 'item_id') int get itemId;@JsonKey(name: 'item_name') String get itemName;@JsonKey(name: 'item_description') String get itemDescription;@JsonKey(name: 'item_price') String get itemPrice;@JsonKey(name: 'item_photo') String? get itemPhoto;@JsonKey(name: 'item_status') String get itemStatus;
+@JsonKey(name: 'item_id') int get itemId;@JsonKey(name: 'item_name') String get itemName;@JsonKey(name: 'item_description') String get itemDescription;@JsonKey(name: 'item_price') String get itemPrice;@JsonKey(name: 'item_photo') String get itemPhoto;@JsonKey(name: 'item_status') String get itemStatus;
 /// Create a copy of MenuItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -888,7 +888,7 @@ abstract mixin class $MenuItemCopyWith<$Res>  {
   factory $MenuItemCopyWith(MenuItem value, $Res Function(MenuItem) _then) = _$MenuItemCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'item_id') int itemId,@JsonKey(name: 'item_name') String itemName,@JsonKey(name: 'item_description') String itemDescription,@JsonKey(name: 'item_price') String itemPrice,@JsonKey(name: 'item_photo') String? itemPhoto,@JsonKey(name: 'item_status') String itemStatus
+@JsonKey(name: 'item_id') int itemId,@JsonKey(name: 'item_name') String itemName,@JsonKey(name: 'item_description') String itemDescription,@JsonKey(name: 'item_price') String itemPrice,@JsonKey(name: 'item_photo') String itemPhoto,@JsonKey(name: 'item_status') String itemStatus
 });
 
 
@@ -905,14 +905,14 @@ class _$MenuItemCopyWithImpl<$Res>
 
 /// Create a copy of MenuItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? itemId = null,Object? itemName = null,Object? itemDescription = null,Object? itemPrice = null,Object? itemPhoto = freezed,Object? itemStatus = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? itemId = null,Object? itemName = null,Object? itemDescription = null,Object? itemPrice = null,Object? itemPhoto = null,Object? itemStatus = null,}) {
   return _then(_self.copyWith(
 itemId: null == itemId ? _self.itemId : itemId // ignore: cast_nullable_to_non_nullable
 as int,itemName: null == itemName ? _self.itemName : itemName // ignore: cast_nullable_to_non_nullable
 as String,itemDescription: null == itemDescription ? _self.itemDescription : itemDescription // ignore: cast_nullable_to_non_nullable
 as String,itemPrice: null == itemPrice ? _self.itemPrice : itemPrice // ignore: cast_nullable_to_non_nullable
-as String,itemPhoto: freezed == itemPhoto ? _self.itemPhoto : itemPhoto // ignore: cast_nullable_to_non_nullable
-as String?,itemStatus: null == itemStatus ? _self.itemStatus : itemStatus // ignore: cast_nullable_to_non_nullable
+as String,itemPhoto: null == itemPhoto ? _self.itemPhoto : itemPhoto // ignore: cast_nullable_to_non_nullable
+as String,itemStatus: null == itemStatus ? _self.itemStatus : itemStatus // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -998,7 +998,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'item_id')  int itemId, @JsonKey(name: 'item_name')  String itemName, @JsonKey(name: 'item_description')  String itemDescription, @JsonKey(name: 'item_price')  String itemPrice, @JsonKey(name: 'item_photo')  String? itemPhoto, @JsonKey(name: 'item_status')  String itemStatus)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'item_id')  int itemId, @JsonKey(name: 'item_name')  String itemName, @JsonKey(name: 'item_description')  String itemDescription, @JsonKey(name: 'item_price')  String itemPrice, @JsonKey(name: 'item_photo')  String itemPhoto, @JsonKey(name: 'item_status')  String itemStatus)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MenuItem() when $default != null:
 return $default(_that.itemId,_that.itemName,_that.itemDescription,_that.itemPrice,_that.itemPhoto,_that.itemStatus);case _:
@@ -1019,7 +1019,7 @@ return $default(_that.itemId,_that.itemName,_that.itemDescription,_that.itemPric
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'item_id')  int itemId, @JsonKey(name: 'item_name')  String itemName, @JsonKey(name: 'item_description')  String itemDescription, @JsonKey(name: 'item_price')  String itemPrice, @JsonKey(name: 'item_photo')  String? itemPhoto, @JsonKey(name: 'item_status')  String itemStatus)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'item_id')  int itemId, @JsonKey(name: 'item_name')  String itemName, @JsonKey(name: 'item_description')  String itemDescription, @JsonKey(name: 'item_price')  String itemPrice, @JsonKey(name: 'item_photo')  String itemPhoto, @JsonKey(name: 'item_status')  String itemStatus)  $default,) {final _that = this;
 switch (_that) {
 case _MenuItem():
 return $default(_that.itemId,_that.itemName,_that.itemDescription,_that.itemPrice,_that.itemPhoto,_that.itemStatus);case _:
@@ -1039,7 +1039,7 @@ return $default(_that.itemId,_that.itemName,_that.itemDescription,_that.itemPric
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'item_id')  int itemId, @JsonKey(name: 'item_name')  String itemName, @JsonKey(name: 'item_description')  String itemDescription, @JsonKey(name: 'item_price')  String itemPrice, @JsonKey(name: 'item_photo')  String? itemPhoto, @JsonKey(name: 'item_status')  String itemStatus)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'item_id')  int itemId, @JsonKey(name: 'item_name')  String itemName, @JsonKey(name: 'item_description')  String itemDescription, @JsonKey(name: 'item_price')  String itemPrice, @JsonKey(name: 'item_photo')  String itemPhoto, @JsonKey(name: 'item_status')  String itemStatus)?  $default,) {final _that = this;
 switch (_that) {
 case _MenuItem() when $default != null:
 return $default(_that.itemId,_that.itemName,_that.itemDescription,_that.itemPrice,_that.itemPhoto,_that.itemStatus);case _:
@@ -1054,14 +1054,14 @@ return $default(_that.itemId,_that.itemName,_that.itemDescription,_that.itemPric
 @JsonSerializable()
 
 class _MenuItem implements MenuItem {
-  const _MenuItem({@JsonKey(name: 'item_id') required this.itemId, @JsonKey(name: 'item_name') required this.itemName, @JsonKey(name: 'item_description') required this.itemDescription, @JsonKey(name: 'item_price') required this.itemPrice, @JsonKey(name: 'item_photo') this.itemPhoto, @JsonKey(name: 'item_status') required this.itemStatus});
+  const _MenuItem({@JsonKey(name: 'item_id') this.itemId = 0, @JsonKey(name: 'item_name') this.itemName = '', @JsonKey(name: 'item_description') this.itemDescription = '', @JsonKey(name: 'item_price') this.itemPrice = '0.0', @JsonKey(name: 'item_photo') this.itemPhoto = '', @JsonKey(name: 'item_status') this.itemStatus = 'unavailable'});
   factory _MenuItem.fromJson(Map<String, dynamic> json) => _$MenuItemFromJson(json);
 
 @override@JsonKey(name: 'item_id') final  int itemId;
 @override@JsonKey(name: 'item_name') final  String itemName;
 @override@JsonKey(name: 'item_description') final  String itemDescription;
 @override@JsonKey(name: 'item_price') final  String itemPrice;
-@override@JsonKey(name: 'item_photo') final  String? itemPhoto;
+@override@JsonKey(name: 'item_photo') final  String itemPhoto;
 @override@JsonKey(name: 'item_status') final  String itemStatus;
 
 /// Create a copy of MenuItem
@@ -1097,7 +1097,7 @@ abstract mixin class _$MenuItemCopyWith<$Res> implements $MenuItemCopyWith<$Res>
   factory _$MenuItemCopyWith(_MenuItem value, $Res Function(_MenuItem) _then) = __$MenuItemCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'item_id') int itemId,@JsonKey(name: 'item_name') String itemName,@JsonKey(name: 'item_description') String itemDescription,@JsonKey(name: 'item_price') String itemPrice,@JsonKey(name: 'item_photo') String? itemPhoto,@JsonKey(name: 'item_status') String itemStatus
+@JsonKey(name: 'item_id') int itemId,@JsonKey(name: 'item_name') String itemName,@JsonKey(name: 'item_description') String itemDescription,@JsonKey(name: 'item_price') String itemPrice,@JsonKey(name: 'item_photo') String itemPhoto,@JsonKey(name: 'item_status') String itemStatus
 });
 
 
@@ -1114,14 +1114,14 @@ class __$MenuItemCopyWithImpl<$Res>
 
 /// Create a copy of MenuItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? itemId = null,Object? itemName = null,Object? itemDescription = null,Object? itemPrice = null,Object? itemPhoto = freezed,Object? itemStatus = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? itemId = null,Object? itemName = null,Object? itemDescription = null,Object? itemPrice = null,Object? itemPhoto = null,Object? itemStatus = null,}) {
   return _then(_MenuItem(
 itemId: null == itemId ? _self.itemId : itemId // ignore: cast_nullable_to_non_nullable
 as int,itemName: null == itemName ? _self.itemName : itemName // ignore: cast_nullable_to_non_nullable
 as String,itemDescription: null == itemDescription ? _self.itemDescription : itemDescription // ignore: cast_nullable_to_non_nullable
 as String,itemPrice: null == itemPrice ? _self.itemPrice : itemPrice // ignore: cast_nullable_to_non_nullable
-as String,itemPhoto: freezed == itemPhoto ? _self.itemPhoto : itemPhoto // ignore: cast_nullable_to_non_nullable
-as String?,itemStatus: null == itemStatus ? _self.itemStatus : itemStatus // ignore: cast_nullable_to_non_nullable
+as String,itemPhoto: null == itemPhoto ? _self.itemPhoto : itemPhoto // ignore: cast_nullable_to_non_nullable
+as String,itemStatus: null == itemStatus ? _self.itemStatus : itemStatus // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

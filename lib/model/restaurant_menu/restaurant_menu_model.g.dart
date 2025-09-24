@@ -8,7 +8,7 @@ part of 'restaurant_menu_model.dart';
 
 _RestaurantMenuModel _$RestaurantMenuModelFromJson(Map<String, dynamic> json) =>
     _RestaurantMenuModel(
-      success: json['success'] as bool,
+      success: json['success'] as bool? ?? false,
       restaurant: Restaurant.fromJson(
         json['restaurant'] as Map<String, dynamic>,
       ),
@@ -22,12 +22,14 @@ Map<String, dynamic> _$RestaurantMenuModelToJson(
 };
 
 _Restaurant _$RestaurantFromJson(Map<String, dynamic> json) => _Restaurant(
-  restaurantId: (json['restaurant_id'] as num).toInt(),
-  restaurantName: json['restaurant_name'] as String,
-  restaurantLogo: json['restaurant_logo'] as String?,
-  categories: (json['categories'] as List<dynamic>)
-      .map((e) => MenuCategory.fromJson(e as Map<String, dynamic>))
-      .toList(),
+  restaurantId: (json['restaurant_id'] as num?)?.toInt() ?? 0,
+  restaurantName: json['restaurant_name'] as String? ?? '',
+  restaurantLogo: json['restaurant_logo'] as String? ?? '',
+  categories:
+      (json['categories'] as List<dynamic>?)
+          ?.map((e) => MenuCategory.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
 );
 
 Map<String, dynamic> _$RestaurantToJson(_Restaurant instance) =>
@@ -40,12 +42,14 @@ Map<String, dynamic> _$RestaurantToJson(_Restaurant instance) =>
 
 _MenuCategory _$MenuCategoryFromJson(Map<String, dynamic> json) =>
     _MenuCategory(
-      categoryId: (json['category_id'] as num).toInt(),
-      categoryName: json['category_name'] as String,
-      categoryPhoto: json['category_photo'] as String?,
-      items: (json['items'] as List<dynamic>)
-          .map((e) => MenuItem.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      categoryId: (json['category_id'] as num?)?.toInt() ?? 0,
+      categoryName: json['category_name'] as String? ?? '',
+      categoryPhoto: json['category_photo'] as String? ?? '',
+      items:
+          (json['items'] as List<dynamic>?)
+              ?.map((e) => MenuItem.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$MenuCategoryToJson(_MenuCategory instance) =>
@@ -57,12 +61,12 @@ Map<String, dynamic> _$MenuCategoryToJson(_MenuCategory instance) =>
     };
 
 _MenuItem _$MenuItemFromJson(Map<String, dynamic> json) => _MenuItem(
-  itemId: (json['item_id'] as num).toInt(),
-  itemName: json['item_name'] as String,
-  itemDescription: json['item_description'] as String,
-  itemPrice: json['item_price'] as String,
-  itemPhoto: json['item_photo'] as String?,
-  itemStatus: json['item_status'] as String,
+  itemId: (json['item_id'] as num?)?.toInt() ?? 0,
+  itemName: json['item_name'] as String? ?? '',
+  itemDescription: json['item_description'] as String? ?? '',
+  itemPrice: json['item_price'] as String? ?? '0.0',
+  itemPhoto: json['item_photo'] as String? ?? '',
+  itemStatus: json['item_status'] as String? ?? 'unavailable',
 );
 
 Map<String, dynamic> _$MenuItemToJson(_MenuItem instance) => <String, dynamic>{

@@ -44,7 +44,6 @@ class LargeFoodCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // 🔷 Image with Favorite & Ad Label
             Stack(
               children: [
                 ClipRRect(
@@ -97,15 +96,16 @@ class LargeFoodCard extends StatelessWidget {
                   right: 10,
                   top: 10,
                   child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 16,
+                    backgroundColor: Colors.black.withValues(alpha: 0.4),
+                    radius: 18,
                     child: const Icon(
                       Icons.favorite_border,
                       size: 18,
-                      color: Colors.grey,
+                      color: Colors.white,
                     ),
                   ),
                 ),
+
                 if (isAd)
                   Positioned(
                     left: 10,
@@ -116,7 +116,7 @@ class LargeFoodCard extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.6),
+                        color: Colors.black.withValues(alpha: 0.6),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: const Text(
@@ -132,7 +132,6 @@ class LargeFoodCard extends StatelessWidget {
               ],
             ),
 
-            // 🔶 Title & Rating Row
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 10, 12, 4),
               child: Row(
@@ -174,7 +173,6 @@ class LargeFoodCard extends StatelessWidget {
               ),
             ),
 
-            // 🔸 Duration, Cuisine, Price
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
               child: Text(
@@ -198,7 +196,6 @@ class LargeFoodCard extends StatelessWidget {
               ),
             ),
 
-            // 💰 Discount Label
             if (discountLabel.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.all(12),
