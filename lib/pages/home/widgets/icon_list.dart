@@ -19,7 +19,7 @@ class HorizontalIconList extends StatelessWidget {
     {
       'image': "assets/images/icons/badge.png",
       'label': 'Top Restaurants',
-      'page': TopRestaurantsPage(cardsData: foodCards),
+      'page': TopRestaurantsPage(),
     },
     {
       'image': "assets/images/icons/dish_cover.jpg",
@@ -51,7 +51,7 @@ class HorizontalIconList extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         itemCount: icons.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 14),
+        separatorBuilder: (_, _) => const SizedBox(width: 14),
         itemBuilder: (context, index) {
           final item = icons[index];
           return GestureDetector(
@@ -71,7 +71,7 @@ class HorizontalIconList extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 6,
                         offset: const Offset(0, 3),
                       ),

@@ -176,7 +176,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     cartController.clearCart();
                     Navigator.pushNamedAndRemoveUntil(
                       context,
-                      RoutesName.home,
+                      RoutesName.baseScreen,
                           (routes) => false,
                     );
                   }

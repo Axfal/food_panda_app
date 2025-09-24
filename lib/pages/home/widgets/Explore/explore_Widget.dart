@@ -57,7 +57,7 @@ class _ExploreWidgetState extends State<ExploreWidget> {
             };
           }).toList();
 
-          final visibleData = _showAll ? cardsData : cardsData.take(2).toList();
+          final visibleData = _showAll ? cardsData : cardsData.take(1).toList();
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,7 +111,7 @@ class _ExploreWidgetState extends State<ExploreWidget> {
               const SizedBox(height: 8),
 
               // Show More / Show Less Button
-              if (cardsData.length > 2)
+              if (cardsData.length > 1)
                 Center(
                   child: TextButton.icon(
                     style: TextButton.styleFrom(

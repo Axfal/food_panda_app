@@ -1,20 +1,48 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../../../Utils/constants/app_colors.dart';
-import '../../globalWidgets/PrimeryWidgets/customTopBar.dart';
-import '../../../globalWidgets/PrimeryWidgets/customeBottonNavBar.dart';
+import 'package:excellent_trade_app/pages/home/home_exports.dart';
+import 'package:flutter/cupertino.dart';
+import '../../../bloc/top_restaurant/top_restaurant_bloc.dart';
 import '../../globalWidgets/PrimeryWidgets/my_app_bar.dart';
 import '../home/widgets/cards/large_foodCard.dart';
 
-class TopRestaurantsPage extends StatelessWidget {
-  final List<Map<String, dynamic>> cardsData;
+class TopRestaurantsPage extends StatefulWidget {
+  const TopRestaurantsPage({super.key});
 
-  const TopRestaurantsPage({super.key, required this.cardsData});
+  @override
+  State<TopRestaurantsPage> createState() => _TopRestaurantsPageState();
+}
+
+class _TopRestaurantsPageState extends State<TopRestaurantsPage> {
+  late String lat;
+  late String lng;
+  late String radius;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final locationSession = LocationSessionController();
+    lat = locationSession.currentPlace?.lat.toString() ?? "00.00";
+    lng = locationSession.currentPlace?.lng.toString() ?? "00.00";
+    radius = "5";
+
+    final bloc = context.read<TopRestaurantBloc>();
+
+    if (bloc.state.topRestaurantModel.restaurants == null ||
+        bloc.state.topRestaurantModel.restaurants!.isEmpty) {
+      bloc.add(FetchTopRestaurantEvent(lng: lng, lat: lat, radius: radius));
+    }
+  }
+
+  Future<void> _onRefresh() async {
+    context.read<TopRestaurantBloc>().add(
+      FetchTopRestaurantEvent(lng: lng, lat: lat, radius: radius),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Colors.white,
       appBar: MyAppBar(
         title: 'Top Restaurants',
         leading: IconButton(
@@ -22,89 +50,116 @@ class TopRestaurantsPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
       ),
-      body: Center(
-        child: Text(
-          'Coming Soon',
-          style: GoogleFonts.poppins(fontSize: 22, color: Colors.black54),
+      body: SafeArea(
+        child: BlocBuilder<TopRestaurantBloc, TopRestaurantState>(
+          builder: (context, state) {
+            final response = state.apiResponse;
+
+            if (response.status == Status.loading) {
+              return const Center(
+                child: CupertinoActivityIndicator(color: Colors.black54),
+              );
+            }
+
+            if (response.status == Status.error) {
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.error_outline,
+                      color: Colors.redAccent,
+                      size: 48,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      response.message ?? 'Something went wrong',
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black87,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton.icon(
+                      onPressed: _onRefresh,
+                      icon: const Icon(Icons.refresh),
+                      label: const Text("Retry"),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            if (state.topRestaurantModel.restaurants != null &&
+                state.topRestaurantModel.restaurants!.isNotEmpty) {
+              final restaurants = state.topRestaurantModel.restaurants!;
+              return RefreshIndicator(
+                onRefresh: _onRefresh,
+                backgroundColor: Colors.white,
+                color: AppColors.primary,
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: restaurants.length,
+                  itemBuilder: (context, index) {
+                    final r = restaurants[index];
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      child: LargeFoodCard(
+                        onTap: () {},
+                        imagePath: 'https://itgenesis.space/Panda_API/API/${r.logo}',
+                        title: r.name ?? "Unknown Restaurant",
+                        rating: double.tryParse(r.avgRating ?? "0.0") ?? 0.0,
+                        reviewsCount: r.totalReviews ?? 0,
+                        duration: "${r.distance?.toStringAsFixed(1)} km away",
+                        priceLevel: "\$\$",
+                        cuisine: r.description ?? "No description",
+                        deliveryFee: 0,
+                        discountLabel: "Best Choice",
+                        isAd: false,
+                      ),
+                    );
+                  },
+                ),
+              );
+            }
+
+            return RefreshIndicator(
+              onRefresh: _onRefresh,
+              color: Colors.orange,
+              child: ListView(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.restaurant_menu,
+                            size: 60,
+                            color: Colors.grey,
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            "No restaurants found near you.",
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
   }
 }
-
-// Dummy onTap to satisfy const constructor for stateless widget.
-// You can replace this with a real handler if needed.
-void _emptyOnTap(int index) {}
-
-
-
-
-//SafeArea(
-//       child: Scaffold(
-//         backgroundColor: Colors.transparent,
-//         bottomNavigationBar: const CustomBottomNavBar(
-//           currentIndex: 0,
-//           onTap: _emptyOnTap,
-//         ),
-//         body: Container(
-//           decoration: const BoxDecoration(
-//             gradient: LinearGradient(
-//               colors: [AppColors.white, Color(0xFFFFF3E0)],
-//               begin: Alignment.centerLeft,
-//               end: Alignment.centerRight,
-//             ),
-//           ),
-//           child: Column(
-//             children: [
-//               const CustomTopBar(
-//                 heading: 'Top restaurants',
-//                 subheading: 'The best Restaurants delivering in your area',
-//                 imagePath: 'assets/images/icons/badge.png',
-//               ),
-//
-//               Expanded(
-//                 child: Container(
-//                   padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-//                   decoration: BoxDecoration(
-//                     color: AppColors.white,
-//                     borderRadius: const BorderRadius.only(
-//                       topRight: Radius.circular(16),
-//                       topLeft: Radius.circular(16),
-//                     ),
-//                     boxShadow: [
-//                       BoxShadow(
-//                         color: AppColors.black.withOpacity(0.25),
-//                         blurRadius: 8,
-//                         offset: Offset(0, -2),
-//                       ),
-//                     ],
-//                   ),
-//                   child: ListView.builder(
-//                     itemCount: cardsData.length,
-//                     itemBuilder: (context, index) {
-//                       final card = cardsData[index];
-//                       return Container(
-//                         margin: const EdgeInsets.only(bottom: 16),
-//                         child: LargeFoodCard(
-//                           onTap: (){},
-//                           imagePath: card['imagePath'],
-//                           title: card['title'],
-//                           rating: card['rating'],
-//                           reviewsCount: card['reviewsCount'],
-//                           duration: card['duration'],
-//                           priceLevel: card['priceLevel'],
-//                           cuisine: card['cuisine'],
-//                           deliveryFee: card['deliveryFee'],
-//                           discountLabel: card['discountLabel'],
-//                           isAd: card['isAd'],
-//                         ),
-//                       );
-//                     },
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:excellent_trade_app/Utils/constants/appWeight.dart';
@@ -50,19 +51,48 @@ class LargeFoodCard extends StatelessWidget {
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(14),
                   ),
-                  child: Container(
+                  child: SizedBox(
                     height: 140,
                     width: 350,
-                    color: Colors.grey.shade100,
-                    child: Center(
-                      child: Icon(
-                        Icons.fastfood_rounded,
-                        size: 80,
-                        color: Colors.black.withValues(alpha: 0.08),
-                      ),
-                    ),
+                    child: (imagePath.isEmpty)
+                        ? Container(
+                            color: Colors.grey.shade100,
+                            child: Center(
+                              child: Icon(
+                                Icons.fastfood_rounded,
+                                size: 80,
+                                color: Colors.black.withValues(alpha: 0.08),
+                              ),
+                            ),
+                          )
+                        : Image.network(
+                            imagePath,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Container(
+                                  color: Colors.grey.shade100,
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.fastfood_rounded,
+                                      size: 80,
+                                      color: Colors.black.withValues(
+                                        alpha: 0.08,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            loadingBuilder: (context, child, progress) {
+                              if (progress == null) return child;
+                              return Container(
+                                color: Colors.grey.shade100,
+                                child: const Center(
+                                  child: CupertinoActivityIndicator(color: Colors.black54,)),
+                              );
+                            },
+                          ),
                   ),
                 ),
+
                 Positioned(
                   right: 10,
                   top: 10,

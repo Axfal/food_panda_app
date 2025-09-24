@@ -123,10 +123,7 @@ class _GroceryPageState extends State<GroceryPage> {
           ),
         ),
       ),
-      bottomNavigationBar: CustomBottomNavBar(
-        currentIndex: _selectedIndex,
-        onTap: _onNavItemTapped,
-      ),
+
     );
   }
 

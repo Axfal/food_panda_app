@@ -60,10 +60,6 @@ class DishesOnDiscountPage extends StatelessWidget {
           );
         },
       ),
-      bottomNavigationBar: CustomBottomNavBar(
-        currentIndex: 0,
-        onTap: _emptyOnTap,
-      ),
     );
   }
 }

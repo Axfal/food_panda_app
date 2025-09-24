@@ -13,7 +13,7 @@ class RoutesName {
 
   static const String registerRestaurant = 'register_restaurant';
 
-  static const String home = 'home_screen';
+  static const String baseScreen = 'base_screen';
 
   static const String productDetails = 'product_details';
 

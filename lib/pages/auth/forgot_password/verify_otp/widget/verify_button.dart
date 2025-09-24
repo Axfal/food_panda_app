@@ -31,7 +31,7 @@ class VerifyButton extends StatelessWidget {
             } else {
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                RoutesName.home,
+                RoutesName.baseScreen,
                 (route) => false,
               );
             }

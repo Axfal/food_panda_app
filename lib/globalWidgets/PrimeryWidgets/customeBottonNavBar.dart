@@ -1,64 +1,85 @@
-import 'package:excellent_trade_app/pages/grocery/grocery_page.dart';
-import 'package:excellent_trade_app/pages/profile/account_page.dart';
-import 'package:flutter/material.dart';
-import '../../../../Utils/constants/app_colors.dart';
-import '../../pages/home/home_page.dart';
-import '../../pages/search/search_page.dart';
-
-class CustomBottomNavBar extends StatelessWidget {
-  final int currentIndex;
-  final Function(int) onTap;
-
-  const CustomBottomNavBar({
-    super.key,
-    required this.currentIndex,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    void _navigate(BuildContext context, Widget page) {
-      Navigator.of(context).pushReplacement(
-        PageRouteBuilder(
-          pageBuilder: (_, __, ___) => page,
-          transitionsBuilder: (_, animation, __, child) {
-            return FadeTransition(opacity: animation, child: child);
-          },
-          transitionDuration: const Duration(milliseconds: 250),
-        ),
-      );
-    }
-
-    return BottomNavigationBar(
-      backgroundColor: AppColors.white,
-      currentIndex: currentIndex,
-      onTap: (index) {
-        if (index == currentIndex) return;
-
-        switch (index) {
-          case 0:
-            _navigate(context, const HomePage());
-            break;
-          case 1:
-            _navigate(context, const GroceryPage());
-            break;
-          case 2:
-            _navigate(context, const SearchPage());
-            break;
-          case 3:
-            _navigate(context, const AccountPage());
-            break;
-        }
-      },
-      selectedItemColor: AppColors.primary,
-      unselectedItemColor: AppColors.textSecondary,
-      type: BottomNavigationBarType.fixed,
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.restaurant), label: 'Food'),
-        BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Grocery'),
-        BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account'),
-      ],
-    );
-  }
-}
+// import 'package:excellent_trade_app/pages/grocery/grocery_page.dart';
+// import 'package:excellent_trade_app/pages/profile/account_page.dart';
+// import 'package:flutter/material.dart';
+// import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+// import '../../pages/home/home_page.dart';
+// import '../../pages/search/search_page.dart';
+// import '../../../../Utils/constants/app_colors.dart';
+//
+// class CustomBottomNavBar extends StatefulWidget {
+//   const CustomBottomNavBar({super.key});
+//
+//   @override
+//   State<CustomBottomNavBar> createState() => _CustomBottomNavBarState();
+// }
+//
+// class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
+//   int _currentIndex = 0;
+//
+//   final List<Widget> _pages = const [
+//     HomePage(),
+//     GroceryPage(),
+//     SearchPage(),
+//     AccountPage(),
+//   ];
+//
+//   void _navigate(int index) {
+//     setState(() => _currentIndex = index);
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: _pages[_currentIndex],
+//
+//       // Better Styled Bottom Bar
+//       bottomNavigationBar: SafeArea(
+//         child: Container(
+//           margin: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
+//           decoration: BoxDecoration(
+//             color: AppColors.primary, // your app theme color
+//             borderRadius: BorderRadius.circular(18),
+//             boxShadow: [
+//               BoxShadow(
+//                 color: Colors.black.withValues(alpha: 0.2),
+//                 blurRadius: 8,
+//                 offset: const Offset(0, 4),
+//               ),
+//             ],
+//           ),
+//           child: Padding(
+//             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+//             child: SalomonBottomBar(
+//               currentIndex: _currentIndex,
+//               onTap: _navigate,
+//               selectedItemColor: Colors.white,
+//               unselectedItemColor: Colors.white70,
+//               items: [
+//                 SalomonBottomBarItem(
+//                   icon: const Icon(Icons.restaurant, size: 24),
+//                   title: const Text("Food"),
+//                   selectedColor: Colors.white,
+//                 ),
+//                 SalomonBottomBarItem(
+//                   icon: const Icon(Icons.store, size: 24),
+//                   title: const Text("Grocery"),
+//                   selectedColor: Colors.white,
+//                 ),
+//                 SalomonBottomBarItem(
+//                   icon: const Icon(Icons.search, size: 24),
+//                   title: const Text("Search"),
+//                   selectedColor: Colors.white,
+//                 ),
+//                 SalomonBottomBarItem(
+//                   icon: const Icon(Icons.person, size: 24),
+//                   title: const Text("Account"),
+//                   selectedColor: Colors.white,
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

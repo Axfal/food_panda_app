@@ -315,10 +315,6 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ),
       ),
-      bottomNavigationBar: CustomBottomNavBar(
-        currentIndex: _selectedIndex,
-        onTap: _onNavItemTapped,
-      ),
     );
   }
 }

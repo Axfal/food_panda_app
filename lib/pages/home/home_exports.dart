@@ -14,7 +14,7 @@ export '../../service/location/location_storage.dart';
 export '../Campaign/Campain_page.dart';
 export '../location/location.dart';
 export 'widgets/Explore/explore_Widget.dart';
-export 'widgets/brand_list.dart';
+export 'widgets/categories_list.dart';
 export '../data/card_data.dart';
 export 'widgets/app_bar.dart';
 export 'widgets/cardList/card_list.dart';

@@ -7,6 +7,8 @@ import '../../pages/auth/forgot_password/forget_password_export.dart';
 import 'package:excellent_trade_app/model/restaurant_menu/restaurant_menu_model.dart'
     as menu_model;
 
+import '../../pages/base_screen.dart';
+
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -42,9 +44,9 @@ class Routes {
                 BlocProvider.value(value: args, child: const VerifyOtpScreen()),
           );
         }
-      case RoutesName.home:
+      case RoutesName.baseScreen:
         return MaterialPageRoute(
-          builder: (BuildContext context) => const HomePage(),
+          builder: (BuildContext context) => const BaseScreen(),
         );
       case RoutesName.productDetails:
         final args = settings.arguments as Map<String, dynamic>?;

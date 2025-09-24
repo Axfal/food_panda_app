@@ -224,10 +224,6 @@ class _AccountPageState extends State<AccountPage> {
           ),
         ),
       ),
-      bottomNavigationBar: CustomBottomNavBar(
-        currentIndex: _selectedIndex,
-        onTap: _onNavItemTapped,
-      ),
     );
   }
 

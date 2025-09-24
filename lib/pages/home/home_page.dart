@@ -1,6 +1,7 @@
 import 'package:excellent_trade_app/bloc/near_by_restaurant/near_by_restaurant_bloc.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:excellent_trade_app/pages/home/widgets/brand_list.dart';
 import '../../Utils/constants/appWeight.dart';
+import '../../bloc/top_restaurant/top_restaurant_bloc.dart';
 import 'home_exports.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,6 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  late String radius;
 
   @override
   void initState() {
@@ -30,10 +32,19 @@ class _HomePageState extends State<HomePage> {
       final lng =
           locationSessionController.currentPlace?.lng.toString() ??
           '73.91907590';
+      radius = "5";
       context.read<NearByRestaurantBloc>().add(
         FetchNearByRestaurantEvent(lat: lat, lng: lng),
       );
+
       _selectLocation();
+
+      final bloc = context.read<TopRestaurantBloc>();
+
+      if (bloc.state.topRestaurantModel.restaurants == null ||
+          bloc.state.topRestaurantModel.restaurants!.isEmpty) {
+        bloc.add(FetchTopRestaurantEvent(lng: lng, lat: lat, radius: radius));
+      }
     });
   }
 
@@ -279,7 +290,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  BrandList(
+                  CategoryList(
                     title: "",
                     labels: [
                       {'label': 'Offers'},
@@ -303,8 +314,7 @@ class _HomePageState extends State<HomePage> {
                       () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              TopRestaurantsPage(cardsData: foodCards),
+                          builder: (context) => TopRestaurantsPage(),
                         ),
                       ),
                       () => Navigator.push(
@@ -350,16 +360,12 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(height: 8.h),
                   ExploreWidget(),
                   SizedBox(height: 24.h),
+                  BrandList(title: 'Top Brands'),
                 ],
               ),
             ),
           ),
         ],
-      ),
-
-      bottomNavigationBar: CustomBottomNavBar(
-        currentIndex: _selectedIndex,
-        onTap: _onNavItemTapped,
       ),
     );
   }

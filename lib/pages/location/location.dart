@@ -225,7 +225,7 @@ class _LocationScreenState extends State<LocationScreen> {
 
                       Navigator.pushNamedAndRemoveUntil(
                         context,
-                        RoutesName.home,
+                        RoutesName.baseScreen,
                             (route) => false,
                       );
                     }
