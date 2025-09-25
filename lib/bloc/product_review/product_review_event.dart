@@ -19,3 +19,28 @@ class FetchProductReviewEvent extends ProductReviewEvent {
   @override
   List<Object?> get props => [restaurantId, menuItemId];
 }
+
+class AddProductReviewEvent extends ProductReviewEvent {
+  final int restaurantId;
+  final int menuItemId;
+  final int userId;
+  final double ratting;
+  final String reviewText;
+
+  const AddProductReviewEvent({
+    required this.restaurantId,
+    required this.menuItemId,
+    required this.userId,
+    required this.ratting,
+    required this.reviewText,
+  });
+
+  @override
+  List<Object> get props => [
+    restaurantId,
+    menuItemId,
+    userId,
+    ratting,
+    reviewText,
+  ];
+}

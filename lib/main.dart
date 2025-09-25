@@ -7,6 +7,7 @@ import 'package:excellent_trade_app/bloc/location/location_bloc.dart';
 import 'package:excellent_trade_app/bloc/near_by_restaurant/near_by_restaurant_bloc.dart';
 import 'package:excellent_trade_app/bloc/new_restaurant/new_restaurant_bloc.dart';
 import 'package:excellent_trade_app/bloc/performance/performance_bloc.dart';
+import 'package:excellent_trade_app/bloc/product_review/product_review_bloc.dart';
 import 'package:excellent_trade_app/bloc/recommendation/recommendation_bloc.dart';
 import 'package:excellent_trade_app/bloc/top_restaurant/top_restaurant_bloc.dart';
 import 'package:excellent_trade_app/bloc/vendor/menu_management/menu_management_bloc.dart';
@@ -170,6 +171,11 @@ class MyApp extends StatelessWidget {
                     BlocProvider<TopRestaurantBloc>(
                       create: (context) =>
                           TopRestaurantBloc(restaurantApiRepository: getIt()),
+                    ),
+                    BlocProvider<ProductReviewBloc>(
+                      create: (context) => ProductReviewBloc(
+                        productReviewApiRepository: getIt(),
+                      ),
                     ),
                   ],
                   child: MaterialApp(

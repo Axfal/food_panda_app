@@ -46,6 +46,7 @@ class NewRestaurantModel with _$NewRestaurantModel {
     // TODO: implement toJson
     throw UnimplementedError();
   }
+
 }
 
 @freezed
@@ -136,6 +137,7 @@ class Restaurant with _$Restaurant {
     // TODO: implement toJson
     throw UnimplementedError();
   }
+
 }
 
 @freezed
@@ -176,4 +178,5 @@ class Location with _$Location {
     // TODO: implement toJson
     throw UnimplementedError();
   }
+
 }

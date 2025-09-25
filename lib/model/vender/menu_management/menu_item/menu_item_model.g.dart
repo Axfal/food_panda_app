@@ -15,7 +15,7 @@ _MenuItemModel _$MenuItemModelFromJson(Map<String, dynamic> json) =>
           (json['items'] as List<dynamic>?)
               ?.map((e) => Item.fromJson(e as Map<String, dynamic>))
               .toList() ??
-          const [],
+          const <Item>[],
     );
 
 Map<String, dynamic> _$MenuItemModelToJson(_MenuItemModel instance) =>
@@ -35,6 +35,11 @@ _Item _$ItemFromJson(Map<String, dynamic> json) => _Item(
   price: json['price'] as String? ?? '0.00',
   photo: json['photo'] as String? ?? '',
   status: json['status'] as String? ?? '',
+  variations:
+      (json['variations'] as List<dynamic>?)
+          ?.map((e) => Variation.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const <Variation>[],
 );
 
 Map<String, dynamic> _$ItemToJson(_Item instance) => <String, dynamic>{
@@ -46,4 +51,18 @@ Map<String, dynamic> _$ItemToJson(_Item instance) => <String, dynamic>{
   'price': instance.price,
   'photo': instance.photo,
   'status': instance.status,
+  'variations': instance.variations,
 };
+
+_Variation _$VariationFromJson(Map<String, dynamic> json) => _Variation(
+  id: (json['id'] as num?)?.toInt() ?? 0,
+  name: json['name'] as String? ?? '',
+  price: json['price'] as String? ?? '0.00',
+);
+
+Map<String, dynamic> _$VariationToJson(_Variation instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'price': instance.price,
+    };

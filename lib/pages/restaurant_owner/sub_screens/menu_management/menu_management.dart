@@ -5,8 +5,8 @@ import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/my_app_bar.dart
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../../../../model/vender/menu_management/menu_category/menu_category_model.dart';
+import 'menu_item_screen.dart';
 
 class MenuManagement extends StatefulWidget {
   final String restaurantId;
@@ -697,6 +697,7 @@ class _MenuManagementState extends State<MenuManagement> {
           onPressed: () => Navigator.pop(context),
           icon: Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
+        actions: [IconButton(onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MenuItemScreen())), icon: Icon(Icons.add))],
       ),
       body: BlocProvider(
         create: (_) =>

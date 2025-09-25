@@ -83,4 +83,5 @@ class UserModel with _$UserModel {
   // TODO: implement token
   String get token => throw UnimplementedError();
 
+
 }

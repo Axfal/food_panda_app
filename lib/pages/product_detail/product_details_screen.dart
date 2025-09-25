@@ -1,3 +1,4 @@
+import 'package:excellent_trade_app/bloc/product_review/product_review_bloc.dart';
 import 'package:excellent_trade_app/bloc/recommendation/recommendation_bloc.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
 import 'package:excellent_trade_app/pages/product_detail/widgets/product_review_widget.dart';
@@ -29,13 +30,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    // final String restaurantId = widget.restaurantId.toString();
 
     context.read<RecommendationBloc>().add(
       FetchRecommendedItemsEvent(
-        cartItem: [2, 9], //[widget.menuItem.itemId],
-        restaurantId: '6', //restaurantId,
+        cartItem: [2, 9], // [widget.menuItem.itemId],
+        restaurantId: '6', // restaurantId,
       ),
+    );
+
+    context.read<ProductReviewBloc>().add(
+      FetchProductReviewEvent(restaurantId: 6, menuItemId: 32),
     );
   }
 
@@ -59,7 +63,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   width: double.infinity,
                   decoration: BoxDecoration(color: Colors.grey[200]),
                   child: Image.network(
-                    item.itemPhoto ?? '',
+                    item.itemPhoto,
                     fit: BoxFit.cover,
                     width: double.infinity,
                     errorBuilder: (context, error, stackTrace) {
@@ -163,7 +167,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
             ),
             variationCardWidget(),
-            productReviewBox(context),
+            productReviewBox(context, menuItemId: 32, restaurantId: 6),
             SizedBox(height: 8.h),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),

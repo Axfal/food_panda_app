@@ -5,6 +5,8 @@ import 'package:excellent_trade_app/repository/order/order_api_repository.dart';
 import 'package:excellent_trade_app/repository/order/order_http_api_repository.dart';
 import 'package:excellent_trade_app/repository/performance/performance_api_repo.dart';
 import 'package:excellent_trade_app/repository/performance/performance_http_api_repo.dart';
+import 'package:excellent_trade_app/repository/product_review/product_review_api_repository.dart';
+import 'package:excellent_trade_app/repository/product_review/product_review_http_api_repository.dart';
 import 'package:excellent_trade_app/repository/recommendation/recommendation_api_repo.dart';
 import 'package:excellent_trade_app/repository/search/search_api_response.dart';
 import 'package:excellent_trade_app/repository/search/search_http_api_response.dart';
@@ -59,6 +61,9 @@ class ServiceLocator {
     );
     getIt.registerLazySingleton<RecommendationApiRepository>(
       () => RecommendationHttpApiRepository(),
+    );
+    getIt.registerLazySingleton<ProductReviewApiRepository>(
+      () => ProductReviewHttpApiRepository(),
     );
   }
 }

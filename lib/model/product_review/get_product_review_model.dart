@@ -2,7 +2,7 @@ class GetProductReviewModel {
   bool? success;
   int? restaurantId;
   int? menuItemId;
-  int? averageRating;
+  double? averageRating;
   int? totalReviews;
   List<Reviews>? reviews;
 
@@ -20,7 +20,8 @@ class GetProductReviewModel {
       success: json['success'],
       restaurantId: json['restaurant_id'],
       menuItemId: json['menu_item_id'],
-      averageRating: json['average_rating'],
+      // cast to num then to double so both int and double work
+      averageRating: (json['average_rating'] as num?)?.toDouble(),
       totalReviews: json['total_reviews'],
       reviews: json['reviews'] != null
           ? (json['reviews'] as List)
@@ -45,7 +46,7 @@ class GetProductReviewModel {
 class Reviews {
   int? id;
   int? userId;
-  int? rating;
+  double? rating;
   String? reviewText;
   String? createdAt;
   String? userName;
@@ -63,7 +64,7 @@ class Reviews {
     return Reviews(
       id: json['id'],
       userId: json['user_id'],
-      rating: json['rating'],
+      rating: (json['rating'] as num?)?.toDouble(),
       reviewText: json['review_text'],
       createdAt: json['created_at'],
       userName: json['user_name'],

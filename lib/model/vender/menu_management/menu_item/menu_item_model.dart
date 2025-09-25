@@ -9,10 +9,10 @@ class MenuItemModel with _$MenuItemModel {
     @Default(false) @JsonKey(name: 'success') bool success,
     @Default(0) @JsonKey(name: 'count') int count,
     @Default('') @JsonKey(name: 'error') String error,
-    @Default([]) @JsonKey(name: 'items') List<Item> items,
+    @Default(<Item>[]) @JsonKey(name: 'items') List<Item> items,
   }) = _MenuItemModel;
 
-  const MenuItemModel._(); // ✅ Needed if you want custom getters in the future
+  const MenuItemModel._();
 
   factory MenuItemModel.fromJson(Map<String, dynamic> json) =>
       _$MenuItemModelFromJson(json);
@@ -48,12 +48,16 @@ class Item with _$Item {
     @Default(0) @JsonKey(name: 'category_id') int categoryId,
     @Default('') @JsonKey(name: 'name') String name,
     @Default('') @JsonKey(name: 'description') String description,
+    // If API gives null for price, default string is used
     @Default('0.00') @JsonKey(name: 'price') String price,
     @Default('') @JsonKey(name: 'photo') String photo,
     @Default('') @JsonKey(name: 'status') String status,
+    @Default(<Variation>[])
+    @JsonKey(name: 'variations')
+    List<Variation> variations,
   }) = _Item;
 
-  const Item._(); // ✅ Needed if you want custom getters in the future
+  const Item._();
 
   factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
 
@@ -88,6 +92,42 @@ class Item with _$Item {
   @override
   // TODO: implement status
   String get status => throw UnimplementedError();
+
+  @override
+  Map<String, dynamic> toJson() {
+    // TODO: implement toJson
+    throw UnimplementedError();
+  }
+
+  @override
+  // TODO: implement variations
+  List<Variation> get variations => throw UnimplementedError();
+}
+
+@freezed
+class Variation with _$Variation {
+  const factory Variation({
+    @Default(0) @JsonKey(name: 'id') int id,
+    @Default('') @JsonKey(name: 'name') String name,
+    @Default('0.00') @JsonKey(name: 'price') String price,
+  }) = _Variation;
+
+  const Variation._();
+
+  factory Variation.fromJson(Map<String, dynamic> json) =>
+      _$VariationFromJson(json);
+
+  @override
+  // TODO: implement id
+  int get id => throw UnimplementedError();
+
+  @override
+  // TODO: implement name
+  String get name => throw UnimplementedError();
+
+  @override
+  // TODO: implement price
+  String get price => throw UnimplementedError();
 
   @override
   Map<String, dynamic> toJson() {
