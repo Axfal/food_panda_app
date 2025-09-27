@@ -1,313 +1,287 @@
+import 'dart:io';
+
 import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/my_app_bar.dart';
+import 'package:excellent_trade_app/model/vender/menu_management/menu_item/menu_item_model.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../../../../bloc/vendor/menu_management/menu_management_bloc.dart';
 
 class MenuItemScreen extends StatefulWidget {
-  const MenuItemScreen({super.key});
+  final int restaurantId;
+  final int categoryId;
+  const MenuItemScreen({
+    super.key,
+    required this.restaurantId,
+    required this.categoryId,
+  });
 
   @override
   State<MenuItemScreen> createState() => _MenuItemScreenState();
 }
 
 class _MenuItemScreenState extends State<MenuItemScreen> {
-  final List<Map<String, dynamic>> menuItems = [
-    {
-      'photo':
-          'https://itgenesis.space/Panda_API/API/uploads/menu_items/item_68a437e09732f5.40037927.png',
-      'name': 'Burger',
-      'description': 'Juicy beef burger with fresh veggies',
-      'price': '123.00',
-      'variations': [
-        {'name': 'Small', 'price': '800.00'},
-        {'name': 'Medium', 'price': '1200.00'},
-        {'name': 'Large', 'price': '1500.00'},
-        {'name': 'Family', 'price': '2000.00'},
-        {'name': 'Party', 'price': '2500.00'},
-        {'name': 'Small', 'price': '800.00'},
-        {'name': 'Medium', 'price': '1200.00'},
+  @override
+  void initState() {
+    super.initState();
 
-        {'name': 'Family', 'price': '2000.00'},
-        {'name': 'Party', 'price': '2500.00'},
-      ],
-    },
-    {
-      'photo':
-          'https://itgenesis.space/Panda_API/API/uploads/menu_items/item_68a437e09732f5.40037927.png',
-      'name': 'Burger',
-      'description': 'Juicy beef burger with fresh veggies',
-      'price': '123.00',
-      'variations': [
-        {'name': 'Small', 'price': '800.00'},
-        {'name': 'Party', 'price': '2500.00'},
-      ],
-    },
-    {
-      'photo':
-          'https://itgenesis.space/Panda_API/API/uploads/menu_items/item_68a437e09732f5.40037927.png',
-      'name': 'Burger',
-      'description': 'Juicy beef burger with fresh veggies',
-      'price': '123.00',
-      'variations': [
-        {'name': 'Small', 'price': '800.00'},
-        {'name': 'Medium', 'price': '1200.00'},
-        {'name': 'Large', 'price': '1500.00'},
-        {'name': 'Family', 'price': '2000.00'},
+    final bloc = context.read<MenuManagementBloc>();
 
-        {'name': 'Party', 'price': '2500.00'},
-      ],
-    },
-    {
-      'photo':
-          'https://itgenesis.space/Panda_API/API/uploads/menu_items/item_68a437e09732f5.40037927.png',
-      'name': 'Burger',
-      'description': 'Juicy beef burger with fresh veggies',
-      'price': '123.00',
-      'variations': [
-        {'name': 'Small', 'price': '800.00'},
-      ],
-    },
-    {
-      'photo':
-          'https://itgenesis.space/Panda_API/API/uploads/menu_items/item_68a437e09732f5.40037927.png',
-      'name': 'Burger',
-      'description': 'Juicy beef burger with fresh veggies',
-      'price': '123.00',
-      'variations': [
-        {'name': 'Small', 'price': '800.00'},
-        {'name': 'Party', 'price': '2500.00'},
-      ],
-    },
-    {
-      'photo':
-          'https://itgenesis.space/Panda_API/API/uploads/menu_items/item_68a437e09732f5.40037927.png',
-      'name': 'Burger',
-      'description': 'Juicy beef burger with fresh veggies',
-      'price': '123.00',
-      'variations': [
-        {'name': 'Small', 'price': '800.00'},
-        {'name': 'Medium', 'price': '1200.00'},
-        {'name': 'Large', 'price': '1500.00'},
-        {'name': 'Family', 'price': '2000.00'},
-        {'name': 'Party', 'price': '2500.00'},
-        {'name': 'Small', 'price': '800.00'},
-        {'name': 'Medium', 'price': '1200.00'},
-        {'name': 'Large', 'price': '1500.00'},
-        {'name': 'Family', 'price': '2000.00'},
-        {'name': 'Party', 'price': '2500.00'},
-        {'name': 'Small', 'price': '800.00'},
-        {'name': 'Medium', 'price': '1200.00'},
-        {'name': 'Large', 'price': '1500.00'},
-        {'name': 'Family', 'price': '2000.00'},
-        {'name': 'Party', 'price': '2500.00'},
-      ],
-    },
-    {
-      'photo':
-          'https://itgenesis.space/Panda_API/API/uploads/menu_items/item_68d2393ad48ee9.04508879.png',
-      'name': 'Veg Cheese Pizza',
-      'description': 'Fresh pizza with veggies',
-      'price': '1200.00',
-      'variations': [],
-    },
-    {
-      'photo':
-          'https://itgenesis.space/Panda_API/API/uploads/menu_items/item_68d23a4d643498.04633781.png',
-      'name': 'Veg Cheese Pizza',
-      'description': 'Fresh pizza with veggies',
-      'price': null,
-      'variations': [],
-    },
-  ];
+    if (bloc.state.itemsByCategory[widget.categoryId.toString()] == null ||
+        bloc.state.itemsByCategory[widget.categoryId.toString()]!.isEmpty) {
+      bloc.add(
+        FetchItemsEvent(
+          restaurantId: widget.restaurantId.toString(),
+          categoryId: widget.categoryId.toString(),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       appBar: MyAppBar(
         title: 'Menu Item',
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
       ),
-
-      // Staggered grid
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16),
-        child: MasonryGridView.count(
-          crossAxisCount: 2,
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
-          itemCount: menuItems.length,
-          itemBuilder: (context, index) {
-            final item = menuItems[index];
-            final variations = item['variations'] as List;
-            final price = item['price'] as String?;
-            final displayPrice = variations.isNotEmpty
-                ? 'From ${variations.first['price']}'
-                : price ?? '0.00';
-
-            return GestureDetector(
-              onTap: () => _openBottomSheet(context, item),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: AppColors.primary.withValues(
-                      alpha: 0.4,
-                    ), // softer border
-                    width: 1.5,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(
-                        alpha: 0.06,
-                      ), // very subtle shadow
-                      blurRadius: 6,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(16),
-                      ),
-                      child: Image.network(
-                        item['photo'],
-                        width: double.infinity,
-                        height: 160,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item['name'],
-                            style: GoogleFonts.poppins(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            'Rs. $displayPrice',
-                            style: GoogleFonts.poppins(
-                              fontSize: 13,
-                              color: Colors.redAccent,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            item['description'],
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              color: Colors.grey[700],
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 6),
-                          if (variations.isNotEmpty)
-                            Wrap(
-                              spacing: 4,
-                              runSpacing: 4,
-                              children: variations
-                                  .map(
-                                    (v) => Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 6,
-                                        vertical: 3,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: Colors.redAccent.withValues(
-                                          alpha: 0.1,
-                                        ),
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      child: Text(
-                                        '${v['name']}',
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 11,
-                                          color: Colors.redAccent,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
+        child: RefreshIndicator(
+          color: Colors.white,
+          backgroundColor: AppColors.primary,
+          onRefresh: () async {
+            context.read<MenuManagementBloc>().add(
+              FetchItemsEvent(
+                restaurantId: widget.restaurantId.toString(),
+                categoryId: widget.categoryId.toString(),
               ),
             );
           },
+          child: BlocBuilder<MenuManagementBloc, MenuManagementStates>(
+            builder: (context, state) {
+              final items =
+                  state.itemsByCategory[widget.categoryId.toString()] ?? [];
+
+              if (state.itemsApiResponse.status == Status.loading) {
+                return const Center(child: CupertinoActivityIndicator());
+              }
+
+              if (state.itemsApiResponse.status == Status.error) {
+                return Center(
+                  child: Text(
+                    state.itemsApiResponse.message ?? 'Error loading items',
+                  ),
+                );
+              }
+
+              return MasonryGridView.count(
+                crossAxisCount: 2,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  final item = items[index];
+                  final displayPrice = item.variations.isNotEmpty
+                      ? 'From ${item.variations.first.price}'
+                      : (item.price.isNotEmpty == true ? item.price : '0.00');
+
+                  return GestureDetector(
+                    child: Material(
+                      elevation: 4,
+                      borderRadius: BorderRadius.circular(16),
+                      clipBehavior: Clip.antiAlias,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Stack(
+                            children: [
+                              AspectRatio(
+                                aspectRatio: 1,
+                                child: Image.network(
+                                  item.photo,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Positioned(
+                                top: 8,
+                                right: 8,
+                                child: InkWell(
+                                  onTap: () {
+                                    _openBottomSheet(context, item: item);
+                                  },
+                                  borderRadius: BorderRadius.circular(30),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.6,
+                                      ),
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withValues(
+                                            alpha: 0.25,
+                                          ),
+                                          blurRadius: 4,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: const Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                      size: 18,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(16),
+                                bottomRight: Radius.circular(16),
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.name,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black87,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  'Rs. $displayPrice',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 13,
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  item.description,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 12,
+                                    color: Colors.black54,
+                                    height: 1.3,
+                                  ),
+                                ),
+                                if (item.variations.isNotEmpty) ...[
+                                  const SizedBox(height: 6),
+                                  Wrap(
+                                    spacing: 6,
+                                    runSpacing: 6,
+                                    children: item.variations.map((v) {
+                                      return Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade200,
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          v.name,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 11,
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
 
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _openBottomSheet(context, null),
+        onPressed: () => _openBottomSheet(context),
+        backgroundColor: AppColors.primary,
+        icon: const Icon(Icons.add, color: Colors.white),
         label: Text(
           'Add Item',
           style: GoogleFonts.poppins(
-            fontSize: 18,
+            fontSize: 16,
             color: Colors.white,
             fontWeight: FontWeight.w600,
           ),
         ),
-        icon: const Icon(Icons.add, color: Colors.white, weight: 20),
-        backgroundColor: AppColors.primary,
       ),
     );
   }
 
-  void _openBottomSheet(BuildContext context, Map<String, dynamic>? item) {
-    showModalBottomSheet(
+  Future<void> _openBottomSheet(BuildContext context, {Item? item}) async {
+    // ✅ Controllers defined outside the builder so they persist
+    final nameController = TextEditingController(text: item?.name ?? '');
+    final priceController = TextEditingController(
+      text: item?.price.toString() ?? '',
+    );
+    final descController = TextEditingController(text: item?.description ?? '');
+    bool status = item?.status == 'available';
+    String? photo = item?.photo;
+
+    // ✅ Variations initialized here (outside builder)
+    final List<Map<String, TextEditingController>> variations = [];
+    if (item != null && item.variations.isNotEmpty) {
+      for (var v in item.variations) {
+        variations.add({
+          'name': TextEditingController(text: v.name),
+          'price': TextEditingController(text: v.price),
+        });
+      }
+    } else {
+      variations.add({
+        'name': TextEditingController(),
+        'price': TextEditingController(),
+      });
+    }
+
+    final result = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white, // <-- directly set white background
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
-        final nameController = TextEditingController(text: item?['name'] ?? '');
-        final priceController = TextEditingController(
-          text: item?['price'] ?? '',
-        );
-        final descController = TextEditingController(
-          text: item?['description'] ?? '',
-        );
-
-        bool status = item?['status'] ?? true;
-        String? photo = item?['photo'];
-
-        // Variations
-        List<Map<String, TextEditingController>> variations = [];
-        if (item?['variations'] != null) {
-          for (var v in item!['variations']) {
-            variations.add({
-              'name': TextEditingController(text: v['name']),
-              'price': TextEditingController(text: v['price']),
-            });
-          }
-        } else {
-          variations.add({
-            'name': TextEditingController(),
-            'price': TextEditingController(),
-          });
-        }
-
         return SafeArea(
           child: StatefulBuilder(
             builder: (context, setState) {
@@ -323,7 +297,6 @@ class _MenuItemScreenState extends State<MenuItemScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // drag handle
                       Container(
                         width: 40,
                         height: 4,
@@ -377,19 +350,40 @@ class _MenuItemScreenState extends State<MenuItemScreen> {
                         ),
                       ),
                       const SizedBox(height: 8),
-
                       SwitchListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
+                        ),
                         value: status,
-                        activeColor: Colors.redAccent,
-                        title: const Text(
-                          'Status (Active/Inactive)',
-                          style: TextStyle(color: Colors.black87),
+                        activeColor: Colors.white,
+                        activeTrackColor: Colors.redAccent,
+                        inactiveThumbColor: Colors.white,
+                        inactiveTrackColor: Colors.grey.shade300,
+                        title: Text(
+                          status
+                              ? 'Status: Available'
+                              : 'Status: Not available',
+                          style: const TextStyle(
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        secondary: Icon(
+                          status ? Icons.check_circle : Icons.cancel,
+                          color: status ? Colors.redAccent : Colors.grey,
                         ),
                         onChanged: (val) => setState(() => status = val),
                       ),
-
                       InkWell(
-                        onTap: () async {},
+                        onTap: () async {
+                          final picked = await ImagePicker().pickImage(
+                            source: ImageSource.gallery,
+                          );
+                          if (picked != null) {
+                            setState(() => photo = picked.path);
+                          }
+                        },
                         borderRadius: BorderRadius.circular(12),
                         child: Container(
                           height: 110,
@@ -403,14 +397,17 @@ class _MenuItemScreenState extends State<MenuItemScreen> {
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.05),
+                                color: Colors.black.withOpacity(0.05),
                                 blurRadius: 4,
                                 offset: const Offset(0, 2),
                               ),
                             ],
                             image: photo != null
                                 ? DecorationImage(
-                                    image: NetworkImage(photo),
+                                    image: photo!.startsWith('http')
+                                        ? NetworkImage(photo!)
+                                        : FileImage(File(photo!))
+                                              as ImageProvider,
                                     fit: BoxFit.cover,
                                   )
                                 : null,
@@ -437,9 +434,7 @@ class _MenuItemScreenState extends State<MenuItemScreen> {
                               : null,
                         ),
                       ),
-
                       const SizedBox(height: 12),
-
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -474,7 +469,6 @@ class _MenuItemScreenState extends State<MenuItemScreen> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Variation Name (more width)
                                 Expanded(
                                   flex: 2,
                                   child: TextField(
@@ -502,26 +496,12 @@ class _MenuItemScreenState extends State<MenuItemScreen> {
                                           color: Colors.grey.shade300,
                                         ),
                                       ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        borderSide: BorderSide(
-                                          color: Colors.grey.shade300,
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        borderSide: const BorderSide(
-                                          color: Colors.blueAccent,
-                                        ),
-                                      ),
                                     ),
                                   ),
                                 ),
                                 const SizedBox(width: 10),
-
-                                // Price (smaller)
                                 Expanded(
-                                  flex: 1, // smaller portion
+                                  flex: 1,
                                   child: TextField(
                                     controller: variations[index]['price'],
                                     style: const TextStyle(
@@ -548,24 +528,10 @@ class _MenuItemScreenState extends State<MenuItemScreen> {
                                           color: Colors.grey.shade300,
                                         ),
                                       ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        borderSide: BorderSide(
-                                          color: Colors.grey.shade300,
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        borderSide: const BorderSide(
-                                          color: Colors.blueAccent,
-                                        ),
-                                      ),
                                     ),
                                   ),
                                 ),
                                 const SizedBox(width: 6),
-
-                                // Delete Button
                                 Container(
                                   decoration: BoxDecoration(
                                     color: Colors.redAccent.withOpacity(0.08),
@@ -598,33 +564,21 @@ class _MenuItemScreenState extends State<MenuItemScreen> {
                             });
                           });
                         },
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.add_circle_outline,
-                          color: AppColors.primary,
+                          color: Colors.redAccent,
                           size: 20,
                         ),
-                        label: Text(
+                        label: const Text(
                           'Add Variation',
                           style: TextStyle(
-                            color: AppColors.primary,
+                            color: Colors.redAccent,
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
                           ),
                         ),
-                        style: TextButton.styleFrom(
-                          backgroundColor: AppColors.primary.withValues(alpha: .09),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 10,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
                       ),
                       const SizedBox(height: 12),
-
-                      // Save Button
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.redAccent,
@@ -634,6 +588,16 @@ class _MenuItemScreenState extends State<MenuItemScreen> {
                           ),
                         ),
                         onPressed: () {
+                          if (item == null && photo == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Please upload a photo'),
+                                backgroundColor: Colors.redAccent,
+                              ),
+                            );
+                            return;
+                          }
+
                           final data = {
                             'name': nameController.text,
                             'price': priceController.text,
@@ -665,9 +629,44 @@ class _MenuItemScreenState extends State<MenuItemScreen> {
         );
       },
     );
+
+    if (result != null) {
+      final variationsList = (result['variations'] as List)
+          .map((v) => Variation(name: v['name'], price: v['price']))
+          .toList();
+
+      if (item == null) {
+        context.read<MenuManagementBloc>().add(
+          AddItemEvent(
+            restaurantId: widget.restaurantId.toString(),
+            categoryId: widget.categoryId.toString(),
+            name: result['name'],
+            description: result['description'],
+            price: result['price'],
+            status: result['status'] ? 'available' : 'not_available',
+            photo: result['photo'] != null ? File(result['photo']) : null,
+            variations: variationsList,
+          ),
+        );
+      } else {
+        context.read<MenuManagementBloc>().add(
+          UpdateItemEvent(
+            itemId: item.id.toString(),
+            restaurantId: widget.restaurantId.toString(),
+            categoryId: widget.categoryId.toString(),
+            name: result['name'],
+            description: result['description'],
+            price: result['price'],
+            status: result['status'] ? 'available' : 'not_available',
+            photo: result['photo'] != null ? File(result['photo']) : null,
+            variations: variationsList,
+          ),
+        );
+      }
+    }
   }
 
-  // Common InputDecoration builder for cleaner style
+  // ✅ Common InputDecoration builder
   InputDecoration _buildInputDecoration({
     required String label,
     required String hint,

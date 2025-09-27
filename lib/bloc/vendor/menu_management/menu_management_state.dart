@@ -1,7 +1,6 @@
 part of 'menu_management_bloc.dart';
 
 class MenuManagementStates extends Equatable {
-  final bool refreshItem;
   final List<Category> categories;
   final Item item;
   final Map<String, List<Item>> itemsByCategory;
@@ -9,7 +8,6 @@ class MenuManagementStates extends Equatable {
   final ApiResponse<List<Item>> itemsApiResponse;
 
   const MenuManagementStates({
-    this.refreshItem = false,
     this.categories = const [],
     this.itemsByCategory = const {},
     this.item = const Item(),
@@ -18,7 +16,6 @@ class MenuManagementStates extends Equatable {
   });
 
   MenuManagementStates copyWith({
-    bool? refreshItem,
     List<Category>? categories,
     Item? item,
     Map<String, List<Item>>? itemsByCategory,
@@ -27,7 +24,6 @@ class MenuManagementStates extends Equatable {
   }) {
     return MenuManagementStates(
       categories: categories ?? this.categories,
-      refreshItem: refreshItem ?? this.refreshItem,
       itemsByCategory: itemsByCategory ?? this.itemsByCategory,
       item: item ?? this.item,
       categoriesApiResponse:
@@ -40,7 +36,6 @@ class MenuManagementStates extends Equatable {
   List<Object?> get props => [
     categories,
     item,
-    refreshItem,
     itemsByCategory,
     categoriesApiResponse,
     itemsApiResponse,

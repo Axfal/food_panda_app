@@ -10,17 +10,15 @@ sealed class MenuManagementEvent extends Equatable {
 /// ---------- ITEM EVENTS ----------
 
 class FetchItemsEvent extends MenuManagementEvent {
-  final bool refreshItem;
   final String restaurantId;
   final String categoryId;
   const FetchItemsEvent({
     required this.restaurantId,
     required this.categoryId,
-    required this.refreshItem,
   });
 
   @override
-  List<Object> get props => [restaurantId, categoryId, refreshItem];
+  List<Object> get props => [restaurantId, categoryId];
 }
 
 class AddItemEvent extends MenuManagementEvent {
@@ -30,16 +28,18 @@ class AddItemEvent extends MenuManagementEvent {
   final String description;
   final String price;
   final String status;
-  final File photo;
+  final File? photo;
+  final List<Variation> variations;
 
   const AddItemEvent({
     required this.name,
     required this.restaurantId,
     required this.price,
-    required this.photo,
+    this.photo,
     required this.status,
     required this.description,
     required this.categoryId,
+    required this.variations,
   });
 
   @override
@@ -51,6 +51,7 @@ class AddItemEvent extends MenuManagementEvent {
     status,
     restaurantId,
     photo,
+    variations
   ];
 }
 
@@ -61,18 +62,20 @@ class UpdateItemEvent extends MenuManagementEvent {
   final String description;
   final String price;
   final String status;
-  final File photo;
+  final File? photo;
   final String itemId;
+  final List<Variation> variations;
 
   const UpdateItemEvent({
     required this.name,
     required this.restaurantId,
     required this.itemId,
     required this.price,
-    required this.photo,
+    this.photo,
     required this.status,
     required this.description,
     required this.categoryId,
+    required this.variations,
   });
 
   @override
@@ -85,6 +88,7 @@ class UpdateItemEvent extends MenuManagementEvent {
     description,
     categoryId,
     photo,
+    variations
   ];
 }
 
@@ -107,12 +111,17 @@ class FetchCategoriesEvent extends MenuManagementEvent {
 }
 
 class AddCategoryEvent extends MenuManagementEvent {
-  final Category category;
-  final File? image;
-  const AddCategoryEvent(this.category, this.image);
+  final String restaurantId;
+  final String categoryName;
+  final File image;
+  const AddCategoryEvent({
+    required this.restaurantId,
+    required this.categoryName,
+    required this.image,
+  });
 
   @override
-  List<Object?> get props => [category, image];
+  List<Object?> get props => [restaurantId, image, categoryName];
 }
 
 class UpdateCategoryEvent extends MenuManagementEvent {
@@ -136,7 +145,10 @@ class DeleteCategoryEvent extends MenuManagementEvent {
   final String categoryId;
   final String restaurantId;
 
-  const DeleteCategoryEvent(this.restaurantId, this.categoryId);
+  const DeleteCategoryEvent({
+    required this.restaurantId,
+    required this.categoryId,
+  });
 
   @override
   List<Object?> get props => [categoryId, restaurantId];

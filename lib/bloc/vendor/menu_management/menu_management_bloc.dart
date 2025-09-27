@@ -1,11 +1,13 @@
 // ignore_for_file: avoid_print
 
+import 'dart:convert';
 import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:excellent_trade_app/dependency_injection/dependency_injection.dart';
 import 'package:excellent_trade_app/model/vender/menu_management/menu_category/menu_category_model.dart';
 import 'package:excellent_trade_app/model/vender/menu_management/menu_item/menu_item_model.dart';
+import 'package:excellent_trade_app/repository/auth/auth_repository.dart';
 import '../../../data/response/api_response.dart';
 
 part 'menu_management_event.dart';
@@ -83,12 +85,11 @@ class MenuManagementBloc
     AddCategoryEvent event,
     Emitter<MenuManagementStates> emit,
   ) async {
-    emit(state.copyWith(categoriesApiResponse: const ApiResponse.loading()));
+    // emit(state.copyWith(categoriesApiResponse: const ApiResponse.loading()));
 
     final Map<String, dynamic> data = {
-      "restaurant_id": event.category.restaurantId,
-      "name": event.category.name,
-      "categories[]"
+      "restaurant_id": event.restaurantId,
+      "categories[]": event.categoryName,
       "photos[]": event.image,
     };
 
@@ -97,11 +98,15 @@ class MenuManagementBloc
 
       if (response != null) {
         if (response['success'] == true) {
+          final List<dynamic> cats = response['categories'] ?? [];
+
+          final Map<String, dynamic> cat = cats.first;
+
           final newCategory = Category(
-            id: event.category.id,
-            restaurantId: event.category.restaurantId,
-            name: event.category.name,
-            photo: event.category.photo,
+            id: int.tryParse(cat['id'].toString()) ?? 0,
+            restaurantId: int.tryParse(event.restaurantId) ?? 0,
+            name: cat['name'] ?? event.categoryName,
+            photo: '${AppUrl.baseUrl}/${cat['photo'] ?? ''}',
           );
 
           final updatedCategories = List<Category>.from(state.categories)
@@ -142,7 +147,7 @@ class MenuManagementBloc
     DeleteCategoryEvent event,
     Emitter<MenuManagementStates> emit,
   ) async {
-    emit(state.copyWith(categoriesApiResponse: const ApiResponse.loading()));
+    // emit(state.copyWith(categoriesApiResponse: const ApiResponse.loading()));
 
     final Map<String, dynamic> data = {
       "id": event.categoryId,
@@ -193,7 +198,7 @@ class MenuManagementBloc
     UpdateCategoryEvent event,
     Emitter<MenuManagementStates> emit,
   ) async {
-    emit(state.copyWith(categoriesApiResponse: const ApiResponse.loading()));
+    // emit(state.copyWith(categoriesApiResponse: const ApiResponse.loading()));
 
     final Map<String, dynamic> data = {
       "id": event.categoryId,
@@ -216,7 +221,7 @@ class MenuManagementBloc
             if (c.id.toString() == event.categoryId) {
               return c.copyWith(
                 name: event.name ?? c.name,
-                photo: event.photo?.path ?? c.photo,
+                photo: '${AppUrl.baseUrl}/${response['category']['photo']}',
               );
             }
             return c;
@@ -253,16 +258,10 @@ class MenuManagementBloc
     }
   }
 
-  /// Fetch items for a specific category and cache results
   void _onFetchItem(
     FetchItemsEvent event,
     Emitter<MenuManagementStates> emit,
   ) async {
-    if (state.itemsByCategory.containsKey(event.categoryId) &&
-        state.refreshItem == false) {
-      return;
-    }
-
     emit(state.copyWith(itemsApiResponse: const ApiResponse.loading()));
 
     try {
@@ -271,8 +270,133 @@ class MenuManagementBloc
         event.categoryId,
       );
 
+      Map<String, dynamic> dato = {
+        "success": true,
+        "count": 6,
+        "items": [
+          {
+            "id": 27,
+            "restaurant_id": 6,
+            "category_id": 2,
+            "name": "burger",
+            "description": "burger",
+            "price": "123.00",
+            "photo":
+                "https://itgenesis.space/Panda_API/API/uploads/menu_items/item_689b2f58f137f3.31342311.jpg",
+            "status": "available",
+            "variations": [],
+          },
+          {
+            "id": 33,
+            "restaurant_id": 6,
+            "category_id": 2,
+            "name": "Veg Chisse Pizza",
+            "description": "Fresh pizza with veggies",
+            "price": "1200.00",
+            "photo":
+                "https://itgenesis.space/Panda_API/API/uploads/menu_items/item_689b2f58f137f3.31342311.jpg",
+            "status": "available",
+            "variations": [],
+          },
+          {
+            "id": 34,
+            "restaurant_id": 6,
+            "category_id": 2,
+            "name": "Veg Chisse Pizza",
+            "description": "Fresh pizza with veggies",
+            "price": null,
+            "photo":
+                "https://itgenesis.space/Panda_API/API/uploads/menu_items/item_689b2f58f137f3.31342311.jpg",
+            "status": "available",
+            "variations": [
+              {"id": 4, "name": "Small", "price": "800.00"},
+              {"id": 5, "name": "Medium", "price": "1200.00"},
+              {"id": 6, "name": "Large", "price": "1500.00"},
+            ],
+          },
+          {
+            "id": 34,
+            "restaurant_id": 6,
+            "category_id": 2,
+            "name": "Veg Chisse Pizza",
+            "description": "Fresh pizza with veggies",
+            "price": null,
+            "photo":
+                "https://itgenesis.space/Panda_API/API/uploads/menu_items/item_689b2f58f137f3.31342311.jpg",
+            "status": "available",
+            "variations": [
+              {"id": 4, "name": "Small", "price": "800.00"},
+              {"id": 5, "name": "Medium", "price": "1200.00"},
+              {"id": 6, "name": "Large", "price": "1500.00"},
+            ],
+          },
+          {
+            "id": 34,
+            "restaurant_id": 6,
+            "category_id": 2,
+            "name": "Veg Chisse Pizza",
+            "description": "Fresh pizza with veggies",
+            "price": null,
+            "photo":
+                "https://itgenesis.space/Panda_API/API/uploads/menu_items/item_689b2f58f137f3.31342311.jpg",
+            "status": "available",
+            "variations": [
+              {"id": 4, "name": "Small", "price": "800.00"},
+              {"id": 5, "name": "Medium", "price": "1200.00"},
+              {"id": 6, "name": "Large", "price": "1500.00"},
+              {"id": 5, "name": "Medium", "price": "1200.00"},
+              {"id": 6, "name": "Large", "price": "1500.00"},
+              {"id": 5, "name": "Medium", "price": "1200.00"},
+              {"id": 6, "name": "Large", "price": "1500.00"},
+              {"id": 5, "name": "Medium", "price": "1200.00"},
+              {"id": 6, "name": "Large", "price": "1500.00"},
+            ],
+          },
+          {
+            "id": 2,
+            "restaurant_id": 6,
+            "category_id": 2,
+            "name": "Veg Pizza",
+            "description": "Fresh pizza with veggies",
+            "price": "1200.00",
+            "photo":
+                "https://itgenesis.space/Panda_API/API/uploads/menu_items/item_689b2f58f137f3.31342311.jpg",
+            "status": "available",
+            "variations": [],
+          },
+          {
+            "id": 3,
+            "restaurant_id": 6,
+            "category_id": 2,
+            "name": "Veg Pizza",
+            "description": "Fresh pizza with veggies",
+            "price": "1200.00",
+            "photo":
+                "https://itgenesis.space/Panda_API/API/uploads/menu_items/item_689c1f236ad860.47484525.png",
+            "status": "available",
+            "variations": [],
+          },
+          {
+            "id": 32,
+            "restaurant_id": 6,
+            "category_id": 2,
+            "name": "Veg Pizza.",
+            "description": "Fresh pizza with veggies..",
+            "price": "130.00",
+            "photo":
+                "https://itgenesis.space/Panda_API/API/uploads/menu_items/item_68d238c19530a5.57489668.png",
+            "status": "available",
+            "variations": [
+              {"id": 1, "name": "Small...", "price": "850.00"},
+              {"id": 2, "name": "Medium", "price": "1250.00"},
+              {"id": 9, "name": "Extra Large", "price": "1800.00"},
+            ],
+          },
+        ],
+      };
+
       if (response is Map<String, dynamic>) {
-        final itemModel = MenuItemModel.fromJson(response);
+        final itemModel = MenuItemModel.fromJson(dato);
 
         if (itemModel.success) {
           final updatedItemsByCategory = Map<String, List<Item>>.from(
@@ -314,7 +438,7 @@ class MenuManagementBloc
     AddItemEvent event,
     Emitter<MenuManagementStates> emit,
   ) async {
-    emit(state.copyWith(itemsApiResponse: const ApiResponse.loading()));
+    // emit(state.copyWith(itemsApiResponse: const ApiResponse.loading()));
 
     final Map<String, dynamic> data = {
       "restaurant_id": event.restaurantId,
@@ -322,59 +446,52 @@ class MenuManagementBloc
       "name": event.name,
       "description": event.description,
       "price": event.price,
-      "status": 'available',
+      "status": event.status,
       "photo": event.photo,
+      "variations": event.variations.map((v) => v.toJson()).toList(),
     };
 
-    print("data => $data");
+    print("add-item data => $data");
 
     try {
       final response = await vendorApiRepository.addMenuItem(data);
 
-      if (response != null) {
-        if (response['success'] == true) {
-          final newItem = Item(
-            id: response['item_id'],
-            status: 'available',
-            name: event.name,
-            description: event.description,
-            restaurantId: int.parse(event.restaurantId),
-            categoryId: int.parse(event.categoryId),
-            photo: event.photo.path,
-            price: event.price,
-          );
+      if (response != null && response['success'] == true) {
+        final newItem = Item(
+          id: response['item_id'],
+          status: event.status,
+          name: event.name,
+          description: event.description,
+          restaurantId: int.parse(event.restaurantId),
+          categoryId: int.parse(event.categoryId),
+          photo: event.photo?.path ?? '',
+          price: event.price,
+          variations: event.variations,
+        );
 
-          final updatedItemsByCategory = Map<String, List<Item>>.from(
-            state.itemsByCategory,
-          );
+        final updatedItemsByCategory = Map<String, List<Item>>.from(
+          state.itemsByCategory,
+        );
 
-          final existingItems = List<Item>.from(
-            updatedItemsByCategory[event.categoryId] ?? [],
-          );
-          existingItems.add(newItem);
+        final existingItems = List<Item>.from(
+          updatedItemsByCategory[event.categoryId] ?? [],
+        );
+        existingItems.add(newItem);
 
-          updatedItemsByCategory[event.categoryId] = existingItems;
+        updatedItemsByCategory[event.categoryId] = existingItems;
 
-          emit(
-            state.copyWith(
-              itemsByCategory: updatedItemsByCategory,
-              itemsApiResponse: ApiResponse.completed(existingItems),
-            ),
-          );
-        } else {
-          emit(
-            state.copyWith(
-              itemsApiResponse: ApiResponse.error(
-                response['error'] ?? 'Failed to add item',
-              ),
-            ),
-          );
-        }
+        emit(
+          state.copyWith(
+            itemsByCategory: updatedItemsByCategory,
+
+            itemsApiResponse: ApiResponse.completed(existingItems),
+          ),
+        );
       } else {
         emit(
           state.copyWith(
-            itemsApiResponse: const ApiResponse.error(
-              'No response from server',
+            itemsApiResponse: ApiResponse.error(
+              response?['error'] ?? 'Failed to add item',
             ),
           ),
         );
@@ -388,81 +505,82 @@ class MenuManagementBloc
     UpdateItemEvent event,
     Emitter<MenuManagementStates> emit,
   ) async {
-    emit(state.copyWith(itemsApiResponse: const ApiResponse.loading()));
+    // emit(state.copyWith(itemsApiResponse: const ApiResponse.loading()));
+
+    final validVariations = event.variations
+        .where((v) => v.name.isNotEmpty && v.price.isNotEmpty)
+        .map((v) => v.toJson())
+        .toList();
 
     final Map<String, dynamic> data = {
       "id": event.itemId,
       "restaurant_id": event.restaurantId,
       "category_id": event.categoryId,
+      if (event.name.isNotEmpty) "name": event.name,
+      if (event.description.isNotEmpty) "description": event.description,
+      if (event.price.isNotEmpty) "price": event.price,
+      if (event.status.isNotEmpty) "status": event.status,
+      if (event.photo != null &&
+          event.photo is File &&
+          (event.photo as File).path.isNotEmpty)
+        "photo": event.photo,
+      "variations": jsonEncode(validVariations),
     };
 
-    if (event.name.isNotEmpty) data["name"] = event.name;
-    if (event.description.isNotEmpty) data["description"] = event.description;
-    if (event.price.isNotEmpty) data["price"] = event.price;
-    if (event.status.isNotEmpty) data["status"] = event.status;
-    if (event.photo.path.isNotEmpty) data["photo"] = event.photo;
+    print("update-item data => $data");
 
     try {
       final response = await vendorApiRepository.updateMenuItem(data);
 
-      if (response != null) {
-        if (response['success'] == true) {
-          final updatedItemsByCategory = Map<String, List<Item>>.from(
-            state.itemsByCategory,
+      if (response != null && response['success'] == true) {
+        final updatedItemsByCategory = Map<String, List<Item>>.from(
+          state.itemsByCategory,
+        );
+
+        final items = List<Item>.from(
+          updatedItemsByCategory[event.categoryId] ?? [],
+        );
+
+        final itemIndex = items.indexWhere(
+          (item) => item.id.toString() == event.itemId,
+        );
+
+        if (itemIndex != -1) {
+          final oldItem = items[itemIndex];
+
+          final updatedItem = Item(
+            id: oldItem.id,
+            restaurantId: oldItem.restaurantId,
+            categoryId: oldItem.categoryId,
+            name: event.name.isNotEmpty ? event.name : oldItem.name,
+            description: event.description.isNotEmpty
+                ? event.description
+                : oldItem.description,
+            price: event.price.isNotEmpty ? event.price : oldItem.price,
+            status: event.status.isNotEmpty ? event.status : oldItem.status,
+            photo: "${AppUrl.baseUrl}/${response['item']['photo'] ?? ''}",
+            variations: event.variations.isNotEmpty
+                ? event.variations
+                : oldItem.variations,
           );
 
-          final items = List<Item>.from(
-            updatedItemsByCategory[event.categoryId] ?? [],
-          );
-
-          final itemIndex = items.indexWhere(
-            (item) => item.id.toString() == event.itemId,
-          );
-
-          if (itemIndex != -1) {
-            final oldItem = items[itemIndex];
-
-            final updatedItem = Item(
-              id: int.parse(event.itemId),
-              restaurantId: int.parse(event.restaurantId),
-              categoryId: int.parse(event.categoryId),
-              name: event.name.isNotEmpty ? event.name : oldItem.name,
-              description: event.description.isNotEmpty
-                  ? event.description
-                  : oldItem.description,
-              price: event.price.isNotEmpty ? event.price : oldItem.price,
-              status: event.status.isNotEmpty ? event.status : oldItem.status,
-              photo: event.photo.path.isNotEmpty
-                  ? event.photo.path
-                  : oldItem.photo,
-            );
-
-            items[itemIndex] = updatedItem;
-            updatedItemsByCategory[event.categoryId] = items;
-          }
-
-          emit(
-            state.copyWith(
-              itemsByCategory: updatedItemsByCategory,
-              itemsApiResponse: ApiResponse.completed(
-                updatedItemsByCategory[event.categoryId] ?? [],
-              ),
-            ),
-          );
-        } else {
-          emit(
-            state.copyWith(
-              itemsApiResponse: ApiResponse.error(
-                response['error'] ?? 'Failed to update item',
-              ),
-            ),
-          );
+          items[itemIndex] = updatedItem;
+          updatedItemsByCategory[event.categoryId] = items;
         }
+
+        emit(
+          state.copyWith(
+            itemsByCategory: updatedItemsByCategory,
+            itemsApiResponse: ApiResponse.completed(
+              updatedItemsByCategory[event.categoryId] ?? [],
+            ),
+          ),
+        );
       } else {
         emit(
           state.copyWith(
-            itemsApiResponse: const ApiResponse.error(
-              'No response from server',
+            itemsApiResponse: ApiResponse.error(
+              response?['error'] ?? 'Failed to update item',
             ),
           ),
         );
