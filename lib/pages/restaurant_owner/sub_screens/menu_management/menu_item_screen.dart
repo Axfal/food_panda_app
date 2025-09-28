@@ -71,7 +71,9 @@ class _MenuItemScreenState extends State<MenuItemScreen> {
                   state.itemsByCategory[widget.categoryId.toString()] ?? [];
 
               if (state.itemsApiResponse.status == Status.loading) {
-                return const Center(child: CupertinoActivityIndicator());
+                return const Center(
+                  child: CupertinoActivityIndicator(color: Colors.black54),
+                );
               }
 
               if (state.itemsApiResponse.status == Status.error) {
@@ -249,7 +251,6 @@ class _MenuItemScreenState extends State<MenuItemScreen> {
   }
 
   Future<void> _openBottomSheet(BuildContext context, {Item? item}) async {
-    // ✅ Controllers defined outside the builder so they persist
     final nameController = TextEditingController(text: item?.name ?? '');
     final priceController = TextEditingController(
       text: item?.price.toString() ?? '',
@@ -258,7 +259,6 @@ class _MenuItemScreenState extends State<MenuItemScreen> {
     bool status = item?.status == 'available';
     String? photo = item?.photo;
 
-    // ✅ Variations initialized here (outside builder)
     final List<Map<String, TextEditingController>> variations = [];
     if (item != null && item.variations.isNotEmpty) {
       for (var v in item.variations) {
@@ -658,7 +658,9 @@ class _MenuItemScreenState extends State<MenuItemScreen> {
             description: result['description'],
             price: result['price'],
             status: result['status'] ? 'available' : 'not_available',
-            photo: result['photo'] != null ? File(result['photo']) : null,
+            photo: (result['photo'] != null && !result['photo'].toString().startsWith("http"))
+                ? File(result['photo'])
+                : null,
             variations: variationsList,
           ),
         );

@@ -57,7 +57,7 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
       //   'arg': {'user_id': userId},
       // },
       {
-        "title": "Menu Items",
+        "title": "Menu", /// menu management
         "icon": Icons.fastfood,
         "route": RoutesName.menuManagement,
         'arg': {'restaurant_id': "5"},

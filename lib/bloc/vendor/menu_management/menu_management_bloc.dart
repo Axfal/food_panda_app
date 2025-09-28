@@ -270,133 +270,8 @@ class MenuManagementBloc
         event.categoryId,
       );
 
-      Map<String, dynamic> dato = {
-        "success": true,
-        "count": 6,
-        "items": [
-          {
-            "id": 27,
-            "restaurant_id": 6,
-            "category_id": 2,
-            "name": "burger",
-            "description": "burger",
-            "price": "123.00",
-            "photo":
-                "https://itgenesis.space/Panda_API/API/uploads/menu_items/item_689b2f58f137f3.31342311.jpg",
-            "status": "available",
-            "variations": [],
-          },
-          {
-            "id": 33,
-            "restaurant_id": 6,
-            "category_id": 2,
-            "name": "Veg Chisse Pizza",
-            "description": "Fresh pizza with veggies",
-            "price": "1200.00",
-            "photo":
-                "https://itgenesis.space/Panda_API/API/uploads/menu_items/item_689b2f58f137f3.31342311.jpg",
-            "status": "available",
-            "variations": [],
-          },
-          {
-            "id": 34,
-            "restaurant_id": 6,
-            "category_id": 2,
-            "name": "Veg Chisse Pizza",
-            "description": "Fresh pizza with veggies",
-            "price": null,
-            "photo":
-                "https://itgenesis.space/Panda_API/API/uploads/menu_items/item_689b2f58f137f3.31342311.jpg",
-            "status": "available",
-            "variations": [
-              {"id": 4, "name": "Small", "price": "800.00"},
-              {"id": 5, "name": "Medium", "price": "1200.00"},
-              {"id": 6, "name": "Large", "price": "1500.00"},
-            ],
-          },
-          {
-            "id": 34,
-            "restaurant_id": 6,
-            "category_id": 2,
-            "name": "Veg Chisse Pizza",
-            "description": "Fresh pizza with veggies",
-            "price": null,
-            "photo":
-                "https://itgenesis.space/Panda_API/API/uploads/menu_items/item_689b2f58f137f3.31342311.jpg",
-            "status": "available",
-            "variations": [
-              {"id": 4, "name": "Small", "price": "800.00"},
-              {"id": 5, "name": "Medium", "price": "1200.00"},
-              {"id": 6, "name": "Large", "price": "1500.00"},
-            ],
-          },
-          {
-            "id": 34,
-            "restaurant_id": 6,
-            "category_id": 2,
-            "name": "Veg Chisse Pizza",
-            "description": "Fresh pizza with veggies",
-            "price": null,
-            "photo":
-                "https://itgenesis.space/Panda_API/API/uploads/menu_items/item_689b2f58f137f3.31342311.jpg",
-            "status": "available",
-            "variations": [
-              {"id": 4, "name": "Small", "price": "800.00"},
-              {"id": 5, "name": "Medium", "price": "1200.00"},
-              {"id": 6, "name": "Large", "price": "1500.00"},
-              {"id": 5, "name": "Medium", "price": "1200.00"},
-              {"id": 6, "name": "Large", "price": "1500.00"},
-              {"id": 5, "name": "Medium", "price": "1200.00"},
-              {"id": 6, "name": "Large", "price": "1500.00"},
-              {"id": 5, "name": "Medium", "price": "1200.00"},
-              {"id": 6, "name": "Large", "price": "1500.00"},
-            ],
-          },
-          {
-            "id": 2,
-            "restaurant_id": 6,
-            "category_id": 2,
-            "name": "Veg Pizza",
-            "description": "Fresh pizza with veggies",
-            "price": "1200.00",
-            "photo":
-                "https://itgenesis.space/Panda_API/API/uploads/menu_items/item_689b2f58f137f3.31342311.jpg",
-            "status": "available",
-            "variations": [],
-          },
-          {
-            "id": 3,
-            "restaurant_id": 6,
-            "category_id": 2,
-            "name": "Veg Pizza",
-            "description": "Fresh pizza with veggies",
-            "price": "1200.00",
-            "photo":
-                "https://itgenesis.space/Panda_API/API/uploads/menu_items/item_689c1f236ad860.47484525.png",
-            "status": "available",
-            "variations": [],
-          },
-          {
-            "id": 32,
-            "restaurant_id": 6,
-            "category_id": 2,
-            "name": "Veg Pizza.",
-            "description": "Fresh pizza with veggies..",
-            "price": "130.00",
-            "photo":
-                "https://itgenesis.space/Panda_API/API/uploads/menu_items/item_68d238c19530a5.57489668.png",
-            "status": "available",
-            "variations": [
-              {"id": 1, "name": "Small...", "price": "850.00"},
-              {"id": 2, "name": "Medium", "price": "1250.00"},
-              {"id": 9, "name": "Extra Large", "price": "1800.00"},
-            ],
-          },
-        ],
-      };
-
       if (response is Map<String, dynamic>) {
-        final itemModel = MenuItemModel.fromJson(dato);
+        final itemModel = MenuItemModel.fromJson(response);
 
         if (itemModel.success) {
           final updatedItemsByCategory = Map<String, List<Item>>.from(
@@ -441,8 +316,8 @@ class MenuManagementBloc
     // emit(state.copyWith(itemsApiResponse: const ApiResponse.loading()));
 
     final Map<String, dynamic> data = {
-      "restaurant_id": event.restaurantId,
-      "category_id": event.categoryId,
+      "restaurant_id": int.parse(event.restaurantId),
+      "category_id": int.parse(event.categoryId),
       "name": event.name,
       "description": event.description,
       "price": event.price,
@@ -464,7 +339,7 @@ class MenuManagementBloc
           description: event.description,
           restaurantId: int.parse(event.restaurantId),
           categoryId: int.parse(event.categoryId),
-          photo: event.photo?.path ?? '',
+          photo: response['photo_url'] ?? '',
           price: event.price,
           variations: event.variations,
         );
