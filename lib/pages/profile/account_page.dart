@@ -3,11 +3,10 @@ import 'package:excellent_trade_app/pages/restaurant_owner/widgets/logout_dialog
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../bloc/account/profile/profile_bloc.dart';
-import '../../globalWidgets/PrimeryWidgets/customeBottonNavBar.dart';
 import '../auth/forgot_password/forget_password_export.dart';
 import 'subPages/addresses_page.dart';
 import 'subPages/fav_page.dart';
-import 'subPages/order_page.dart';
+import 'subPages/order_history_screen.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -17,14 +16,6 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
-  int _selectedIndex = 3;
-
-  void _onNavItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,18 +30,22 @@ class _AccountPageState extends State<AccountPage> {
               const SizedBox(height: 8),
               BlocBuilder<ProfileBloc, ProfileState>(
                 buildWhen: (current, previous) =>
-                current.profileApiResponse.status != previous.profileApiResponse.status,
+                    current.profileApiResponse.status !=
+                    previous.profileApiResponse.status,
                 builder: (context, state) {
                   final user = state.userModel;
 
                   return GestureDetector(
-                    onTap: () => Navigator.pushNamed(context, RoutesName.profile),
+                    onTap: () =>
+                        Navigator.pushNamed(context, RoutesName.profile),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         CircleAvatar(
                           radius: 24,
-                          backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                          backgroundColor: AppColors.primary.withValues(
+                            alpha: 0.1,
+                          ),
                           child: ClipOval(
                             child: Image.network(
                               user.photo,
@@ -94,7 +89,6 @@ class _AccountPageState extends State<AccountPage> {
                 },
               ),
 
-
               const SizedBox(height: 20),
               Container(
                 height: 100,
@@ -117,11 +111,11 @@ class _AccountPageState extends State<AccountPage> {
                 children: [
                   Expanded(
                     child: buildIconCard(
-                      icon: Icons.list_alt_outlined,
+                      icon: Icons.receipt_long_sharp,
                       label: 'Orders',
-                      onTap: () => Navigator.push(
+                      onTap: () => Navigator.pushNamed(
                         context,
-                        MaterialPageRoute(builder: (_) => PastOrdersPage()),
+                        RoutesName.orderHistoryScreen,
                       ),
                     ),
                   ),

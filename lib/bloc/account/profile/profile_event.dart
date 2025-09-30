@@ -30,6 +30,7 @@ class NameChangeEvent extends ProfileEvent {
   // TODO: implement props
   List<Object?> get props => [name];
 }
+
 class PhotoChangeEvent extends ProfileEvent {
   final File photo;
   const PhotoChangeEvent({required this.photo});

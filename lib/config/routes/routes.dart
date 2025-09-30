@@ -1,6 +1,7 @@
 import 'package:excellent_trade_app/pages/checkout/widgets/google_map.dart';
 import 'package:excellent_trade_app/pages/home/home_exports.dart';
 import 'package:excellent_trade_app/pages/order_now.dart';
+import 'package:excellent_trade_app/pages/profile/subPages/order_history_screen.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/order_notifications_screen/order_notification_screen.dart';
 import 'package:excellent_trade_app/pages/restuarant_item_screen.dart';
 import '../../pages/auth/forgot_password/forget_password_export.dart';
@@ -225,6 +226,10 @@ class Routes {
 
       case RoutesName.wishList:
         return MaterialPageRoute(builder: (context) => FavouriteScreen());
+
+      case RoutesName.orderHistoryScreen:
+        return MaterialPageRoute(builder: (context) => OrderHistoryScreen());
+
       default:
         return MaterialPageRoute(
           builder: (_) {

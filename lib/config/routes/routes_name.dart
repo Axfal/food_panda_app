@@ -62,4 +62,7 @@ class RoutesName {
   static const String orderNotification = 'order_notification';
 
   static const String googleMap = 'google_map';
+
+  static const String orderHistoryScreen = 'order_history_screen';
+
 }

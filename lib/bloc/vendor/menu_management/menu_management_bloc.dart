@@ -316,8 +316,8 @@ class MenuManagementBloc
     // emit(state.copyWith(itemsApiResponse: const ApiResponse.loading()));
 
     final Map<String, dynamic> data = {
-      "restaurant_id": int.parse(event.restaurantId),
-      "category_id": int.parse(event.categoryId),
+      "restaurant_id": event.restaurantId,
+      "category_id": event.categoryId,
       "name": event.name,
       "description": event.description,
       "price": event.price,
@@ -333,12 +333,12 @@ class MenuManagementBloc
 
       if (response != null && response['success'] == true) {
         final newItem = Item(
-          id: response['item_id'],
+          id: int.tryParse(response['item_id'].toString()) ?? 0,
+          restaurantId: int.parse(event.restaurantId),
+          categoryId: int.parse(event.categoryId),
           status: event.status,
           name: event.name,
           description: event.description,
-          restaurantId: int.parse(event.restaurantId),
-          categoryId: int.parse(event.categoryId),
           photo: response['photo_url'] ?? '',
           price: event.price,
           variations: event.variations,

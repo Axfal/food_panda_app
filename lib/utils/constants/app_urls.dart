@@ -48,9 +48,9 @@ class AppUrl {
   /// location suggestion
   static const String locationSuggestion = '$baseUrl/location_suggestions.php';
   static const String locationDetails = '$baseUrl/location_details.php';
-  static const String googleMapLocationDetail = 'https://maps.googleapis.com/maps/api/geocode/json';
+  static const String googleMapLocationDetail =
+      'https://maps.googleapis.com/maps/api/geocode/json';
   static const String googleApiKey = 'AIzaSyC-ojZ1Gn7r7TZt_kUn7dE2rcY2xWzMMh0';
-
 
   /// Search
   static const String search = '$baseUrl/search.php';
@@ -64,6 +64,8 @@ class AppUrl {
   /// Order
   static const String getOrders = '$baseUrl/get_orders.php';
   static const String updateStatus = '$baseUrl/update_order.php';
+  static const String getCustomerOrderHistory =
+      '$baseUrl/get_order_customer.php';
 
   /// Income
   static const String getIncome = '$baseUrl/get_income.php';

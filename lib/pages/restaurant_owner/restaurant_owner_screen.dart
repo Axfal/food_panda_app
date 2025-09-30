@@ -3,7 +3,9 @@ import 'package:excellent_trade_app/bloc/income/income_bloc.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/featured_card.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/logout_dialog_box.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/summary_itme.dart';
+import '../../bloc/account/profile/profile_bloc.dart';
 import '../../bloc/order/order_bloc.dart';
+import '../../bloc/vendor/restaurant/restaurant_bloc.dart';
 import '../../model/web_socket_order/web_socket_order_model.dart';
 import '../../service/sound_service/notification_sound_service.dart';
 import '../../service/web_socket_service/web_socket_service.dart';
@@ -31,7 +33,8 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
     restaurantId = SessionController.user.restaurantId.toString();
     _webSocketService = WebSocketService(url: "wss://itgenesis.space/ws/");
     _webSocketService.connect();
-
+    context.read<RestaurantBloc>().add(FetchRestaurantEvent());
+    context.read<ProfileBloc>().add(FetchProfileEvent(id: userId));
     context.read<IncomeBloc>().add(
       FetchTodayIncomeEvent(restaurantId: restaurantId, type: "today"),
     );
@@ -42,13 +45,22 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
       FetchMonthlyIncomeEvent(restaurantId: restaurantId, type: "month"),
     );
 
+    final bloc = context.read<RestaurantBloc>();
+    final myRestaurantId =
+        int.tryParse(SessionController.restaurantId.toString()) ?? 0;
+
+    final restaurant = bloc.state.restaurants?.firstWhere(
+      (r) => r.id == 6, // myRestaurantId,
+      orElse: () => const Restaurant(),
+    );
+
     features = [
       {"title": "Profile", "icon": Icons.person, "route": RoutesName.profile},
       {
         "title": "My Restaurants",
         "icon": Icons.store,
-        "route": RoutesName.menuManagement,
-        'arg': {'restaurant_id': "5"},
+        "route": RoutesName.registerRestaurant,
+        'arg': {'user_id': userId, "restaurant": restaurant},
       },
       // {
       //   "title": "New Restaurant",
@@ -57,7 +69,9 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
       //   'arg': {'user_id': userId},
       // },
       {
-        "title": "Menu", /// menu management
+        "title": "Menu",
+
+        /// menu management
         "icon": Icons.fastfood,
         "route": RoutesName.menuManagement,
         'arg': {'restaurant_id': "5"},
@@ -84,6 +98,45 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
       },
     ];
   }
+
+  Map<String, dynamic> data = {
+    "success": true,
+    "restaurant": {
+      "id": 6,
+      "owner_id": 10,
+      "name": "anfal....",
+      "description": "demo",
+      "phone": "03418410597",
+      "logo":
+          "https://itgenesis.space/Panda_API/API/uploads/logos/logo_68a2f88b7af861.04042819.png",
+      "status": "open",
+      "hours": "Mon-Fri 10:00 AM - 9:00 PM",
+      "rating": "0.0",
+      "created_at": "2025-08-11 09:29:09",
+      "categories": [
+        {
+          "id": 11,
+          "name": "Pizza",
+          "image":
+              "https://itgenesis.space/Panda_API/API/uploads/categories/6fcec3b2f173417f.jpg",
+        },
+        {
+          "id": 13,
+          "name": "Burgers",
+          "image":
+              "https://itgenesis.space/Panda_API/API/uploads/categories/1b0900cde36bea65.jpg",
+        },
+      ],
+      "location": {
+        "restaurant_id": 6,
+        "place_id": "ChIJibqgxR0DGTkR1D8YSFyh2gA",
+        "address":
+            "Sabzazar Sabzazar Housing Scheme Phase 1 & 2 Lahore, Pakistan",
+        "lat": "31.52088860",
+        "lng": "74.27005210",
+      },
+    },
+  };
 
   void _showOrderDialog(BuildContext context, WebSocketOrder order) {
     showDialog(
@@ -229,7 +282,11 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
                     ),
                   ),
 
-                  const Divider(height: 28, thickness: 1, color: Colors.black45,),
+                  const Divider(
+                    height: 28,
+                    thickness: 1,
+                    color: Colors.black45,
+                  ),
 
                   Column(
                     children: [
@@ -240,7 +297,11 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
                           order.totalAmount - order.finalAmount,
                           isDiscount: true,
                         ),
-                      const Divider(height: 28, thickness: 1, color: Colors.black45,),
+                      const Divider(
+                        height: 28,
+                        thickness: 1,
+                        color: Colors.black45,
+                      ),
                       _buildAmountRow(
                         "Final Total",
                         order.finalAmount,

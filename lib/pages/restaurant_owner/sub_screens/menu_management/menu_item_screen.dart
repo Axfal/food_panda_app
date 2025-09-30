@@ -472,6 +472,7 @@ class _MenuItemScreenState extends State<MenuItemScreen> {
                                 Expanded(
                                   flex: 2,
                                   child: TextField(
+                                    cursorColor: Colors.black54,
                                     controller: variations[index]['name'],
                                     style: const TextStyle(
                                       fontSize: 14,
@@ -503,6 +504,7 @@ class _MenuItemScreenState extends State<MenuItemScreen> {
                                 Expanded(
                                   flex: 1,
                                   child: TextField(
+                                    cursorColor: Colors.black54,
                                     controller: variations[index]['price'],
                                     style: const TextStyle(
                                       fontSize: 14,
@@ -658,7 +660,9 @@ class _MenuItemScreenState extends State<MenuItemScreen> {
             description: result['description'],
             price: result['price'],
             status: result['status'] ? 'available' : 'not_available',
-            photo: (result['photo'] != null && !result['photo'].toString().startsWith("http"))
+            photo:
+                (result['photo'] != null &&
+                    !result['photo'].toString().startsWith("http"))
                 ? File(result['photo'])
                 : null,
             variations: variationsList,

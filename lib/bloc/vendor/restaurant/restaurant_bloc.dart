@@ -25,12 +25,17 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
     on<LatChangeEvent>(_onLatChangeEvent);
   }
 
-  void _onPlaceIdChangeEvent(PlaceIdChangeEvent event, Emitter<RestaurantStates> emit) {
+  void _onPlaceIdChangeEvent(
+    PlaceIdChangeEvent event,
+    Emitter<RestaurantStates> emit,
+  ) {
     emit(state.copyWith(placeId: event.placeId));
   }
+
   void _onLngChangeEvent(LngChangeEvent event, Emitter<RestaurantStates> emit) {
     emit(state.copyWith(lng: event.lng));
   }
+
   void _onLatChangeEvent(LatChangeEvent event, Emitter<RestaurantStates> emit) {
     emit(state.copyWith(lat: event.lat));
   }
@@ -103,7 +108,7 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
       "hours": state.hours,
       "place_id": state.placeId,
       "lat": state.lat,
-      "lng":state.lng,
+      "lng": state.lng,
       "category_ids": categoryIdsString,
     };
 
@@ -188,7 +193,7 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
     emit(state.copyWith(registerRestaurantApi: ApiResponse.loading()));
     try {
       final userId = SessionController.user.id.toString();
-      final response = await restaurantApiRepository.fetchRestaurant(userId);
+      final response = await restaurantApiRepository.fetchRestaurant("10" /*userId*/);
 
       if (response != null) {
         final restaurantModel = RestaurantModel.fromJson(response);
@@ -271,7 +276,7 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
         "phone": state.phone,
         "place_id": state.placeId,
         "lat": state.lat,
-        "lng":state.lng,
+        "lng": state.lng,
         "status": currentRestaurant.status,
         "address": state.address,
         "logo": state.logo ?? currentRestaurant.logo,
