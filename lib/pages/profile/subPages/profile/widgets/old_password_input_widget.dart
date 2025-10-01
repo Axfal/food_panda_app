@@ -28,12 +28,12 @@ class _OldPasswordInputWidgetState extends State<OldPasswordInputWidget> {
       buildWhen: (current, previous) =>
           current.oldPassword != previous.oldPassword,
       builder: (context, state) {
-        if (state.oldPassword != oldPasswordController.text) {
-          oldPasswordController.text = state.oldPassword;
-          oldPasswordController.selection = TextSelection.fromPosition(
-            TextPosition(offset: oldPasswordController.text.length),
-          );
-        }
+        // if (state.oldPassword != oldPasswordController.text) {
+        //   oldPasswordController.text = state.oldPassword;
+        //   oldPasswordController.selection = TextSelection.fromPosition(
+        //     TextPosition(offset: oldPasswordController.text.length),
+        //   );
+        // }
 
         return CustomTextField(
           label: 'Old Password',

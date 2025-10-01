@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
 
     if (!locationSession.hasLocation) {
       Timer(const Duration(seconds: 1), () {
-        Navigator.of(context).push(_createRoute());
+        // Navigator.of(context).push(_createRoute());
       });
     }
   }

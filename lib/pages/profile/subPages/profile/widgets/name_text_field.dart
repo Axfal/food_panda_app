@@ -31,8 +31,7 @@ class _NameTextFieldState extends State<NameTextField> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileBloc, ProfileState>(
-      buildWhen: (current, previous) =>
-      current.name != previous.name,
+      buildWhen: (current, previous) => current.name != previous.name,
       builder: (context, state) {
         return CustomTextField(
           label: 'Name',
@@ -41,12 +40,12 @@ class _NameTextFieldState extends State<NameTextField> {
           focusNode: focusNode,
           keyboardType: TextInputType.text,
           textInputAction: TextInputAction.next,
-          // validator: (value) {
-          //   if (value == null || value.trim().isEmpty) {
-          //     return 'Please enter your name';
-          //   }
-          //   return null;
-          // },
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return 'Please enter your name';
+            }
+            return null;
+          },
           onChanged: (value) {
             context.read<ProfileBloc>().add(NameChangeEvent(name: value));
           },

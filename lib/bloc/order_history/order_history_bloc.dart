@@ -79,7 +79,7 @@ class OrderHistoryBloc extends Bloc<OrderHistoryEvent, OrderHistoryState> {
     final orderNumber = updateData['order_number'];
 
     final userId = SessionController.user.id.toString();
-    if (customerId != "2"/*userId*/) return;
+    if (customerId != "2" /*userId*/ ) return;
 
     final updatedOrders = state.orderHistoryModel.orders?.map((order) {
       if (order.orderNumber == orderNumber) {

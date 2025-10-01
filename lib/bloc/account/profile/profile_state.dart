@@ -26,7 +26,7 @@ class ProfileState extends Equatable {
   }) {
     return ProfileState(
       name: name ?? this.name,
-      photo: photo ?? photo,
+      photo: photo ?? this.photo,
       oldPassword: oldPassword ?? this.oldPassword,
       newPassword: newPassword ?? this.newPassword,
       userModel: userModel ?? this.userModel,

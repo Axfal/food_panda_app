@@ -24,6 +24,7 @@ class _NewPasswordInputWidgetState extends State<NewPasswordInputWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileBloc, ProfileState>(
+      buildWhen: (current, previous) => current.newPassword != previous.newPassword,
       builder: (context, state) {
         return CustomTextField(
           label: "New Password",

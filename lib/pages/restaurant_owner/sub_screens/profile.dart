@@ -1,1 +1,12 @@
-import '../restaurant_owner_exports.dart';
+
+
+
+
+
+
+
+
+
+
+
+/// Customer or Owner ki profile ki aik hi screen hy

@@ -30,9 +30,9 @@ class _SubmitInputWidgetState extends State<SubmitInputWidget> {
           context.flushBarSuccessMessage(
             message: state.profileApiResponse.data.toString(),
           );
-          context.read<ProfileBloc>().add(
-            FetchProfileEvent(id: state.userModel.id.toString()),
-          );
+          // context.read<ProfileBloc>().add(
+          //   FetchProfileEvent(id: state.userModel.id.toString()),
+          // );
         }
       },
       builder: (context, state) {

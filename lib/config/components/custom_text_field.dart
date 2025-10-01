@@ -37,7 +37,6 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return TextFormField(
       controller: controller,
       focusNode: focusNode,
@@ -78,7 +77,11 @@ class CustomTextField extends StatelessWidget {
         ),
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: AppColors.primary, width: 1),
+          borderSide: BorderSide(
+            color: AppColors.grey.withValues(alpha: 0.4),
+            style: BorderStyle.solid,
+            width: 1.2,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
