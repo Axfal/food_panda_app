@@ -16,11 +16,11 @@ class _TimingInputWidgetState extends State<TimingInputWidget> {
   @override
   void initState() {
     super.initState();
-    _parseTiming(widget.timing);
+    final bloc = context.read<RestaurantBloc>();
+    _parseTiming(bloc.state.hours);
 
-    // Always push initial state (default or parsed)
     context.read<RestaurantBloc>().add(
-      HoursChangeEvent(hours: _formatFullTiming(), id: widget.id ?? ''),
+      HoursChangeEvent(hours: _formatFullTiming(), id: "6" ?? ''),
     );
   }
 
@@ -32,7 +32,6 @@ class _TimingInputWidgetState extends State<TimingInputWidget> {
       _fromTime = _parseTime(parts[0]);
       _toTime = _parseTime(parts[1]);
     } catch (_) {
-      // Default → 12:00 am to 12:00 am
       _fromTime = const TimeOfDay(hour: 0, minute: 0);
       _toTime = const TimeOfDay(hour: 0, minute: 0);
     }

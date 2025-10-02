@@ -42,7 +42,7 @@ class _SubmitButtonState extends State<SubmitButton> {
 
           Future.delayed(const Duration(seconds: 2), () {
             if (SessionController.isLogin) {
-              Navigator.pushReplacementNamed(context, RoutesName.myRestaurant);
+              Navigator.pop(context);
             } else {
               Navigator.pushNamedAndRemoveUntil(
                 context,
@@ -58,24 +58,22 @@ class _SubmitButtonState extends State<SubmitButton> {
           title: widget.restaurant != null ? 'Update' : 'Save',
           loading: state.registerRestaurantApi.status == Status.loading,
           onPress: () async {
-            final selectedCategoryId = context
-                .read<CategoryBloc>()
-                .state
-                .selectedCategoryIds;
+            final bloc = context.read<RestaurantBloc>();
+            final selectedCategoryId = bloc.state.selectedCategoryIds;
             print("Anfal yeh check kr $selectedCategoryId");
             final isValid = widget.formKey.currentState?.validate() ?? false;
             if (isValid) {
-              if (widget.restaurant != null) {
+              if (bloc.state.restaurants != null && bloc.state.restaurants!.isNotEmpty) {
                 setState(() => isUpdate = true);
                 context.read<RestaurantBloc>().add(
-                  UpdateRestaurantEvent(id: widget.restaurant!.id),
+                  UpdateRestaurantEvent(id: 6),
                 );
               } else {
                 setState(() => isUpdate = false);
                 context.read<RestaurantBloc>().add(
                   SubmitFormEvent(
                     ownerId: widget.userId,
-                    selectedCategoryIds: selectedCategoryId,
+                    selectedCategoryIds: selectedCategoryId ?? [],
                   ),
                 );
               }

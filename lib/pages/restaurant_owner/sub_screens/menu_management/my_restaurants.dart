@@ -183,7 +183,7 @@ class _SelectRestaurantState extends State<SelectRestaurant> {
                                     const SizedBox(width: 4),
                                     Expanded(
                                       child: Text(
-                                        r.address,
+                                        r.location.address,
                                         style: GoogleFonts.poppins(
                                           fontSize: 13,
                                           color: Colors.grey[700],

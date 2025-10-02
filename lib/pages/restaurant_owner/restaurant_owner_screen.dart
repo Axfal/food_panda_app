@@ -50,8 +50,27 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
         int.tryParse(SessionController.restaurantId.toString()) ?? 0;
 
     final restaurant = bloc.state.restaurants?.firstWhere(
-      (r) => r.id == 6, // myRestaurantId,
-      orElse: () => const Restaurant(),
+      (r) => r.id == 56, // r.id == myRestaurantId,
+      orElse: () => const Restaurant(
+        name: '',
+        id: 0,
+        categories: [],
+        description: "",
+        status: '',
+        ownerId: 0,
+        hours: '',
+        phone: '',
+        createdAt: "",
+        location: Location(
+          restaurantId: 0,
+          placeId: '0',
+          address: "",
+          lat: "",
+          lng: "",
+        ),
+        rating: "",
+        logo: '',
+      ),
     );
 
     features = [
@@ -98,45 +117,6 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
       },
     ];
   }
-
-  Map<String, dynamic> data = {
-    "success": true,
-    "restaurant": {
-      "id": 6,
-      "owner_id": 10,
-      "name": "anfal....",
-      "description": "demo",
-      "phone": "03418410597",
-      "logo":
-          "https://itgenesis.space/Panda_API/API/uploads/logos/logo_68a2f88b7af861.04042819.png",
-      "status": "open",
-      "hours": "Mon-Fri 10:00 AM - 9:00 PM",
-      "rating": "0.0",
-      "created_at": "2025-08-11 09:29:09",
-      "categories": [
-        {
-          "id": 11,
-          "name": "Pizza",
-          "image":
-              "https://itgenesis.space/Panda_API/API/uploads/categories/6fcec3b2f173417f.jpg",
-        },
-        {
-          "id": 13,
-          "name": "Burgers",
-          "image":
-              "https://itgenesis.space/Panda_API/API/uploads/categories/1b0900cde36bea65.jpg",
-        },
-      ],
-      "location": {
-        "restaurant_id": 6,
-        "place_id": "ChIJibqgxR0DGTkR1D8YSFyh2gA",
-        "address":
-            "Sabzazar Sabzazar Housing Scheme Phase 1 & 2 Lahore, Pakistan",
-        "lat": "31.52088860",
-        "lng": "74.27005210",
-      },
-    },
-  };
 
   void _showOrderDialog(BuildContext context, WebSocketOrder order) {
     showDialog(

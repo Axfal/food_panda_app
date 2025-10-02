@@ -78,6 +78,6 @@ class RestaurantStates extends Equatable {
     address,
     description,
     selectedCategoryIds,
-    registerRestaurantApi
+    registerRestaurantApi,
   ];
 }

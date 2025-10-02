@@ -7,6 +7,20 @@ sealed class RestaurantEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class AddCategoryEvent extends RestaurantEvent {
+  final int categoryId;
+  const AddCategoryEvent({required this.categoryId});
+  @override
+  List<Object> get props => [categoryId];
+}
+
+class RemoveCategoryEvent extends RestaurantEvent {
+  final int categoryId;
+  const RemoveCategoryEvent({required this.categoryId});
+  @override
+  List<Object> get props => [categoryId];
+}
+
 class LogoChangeEvent extends RestaurantEvent {
   final File logo;
   const LogoChangeEvent({required this.logo});

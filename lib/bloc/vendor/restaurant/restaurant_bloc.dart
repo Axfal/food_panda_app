@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
 import 'package:excellent_trade_app/model/vender/restaurant/restaurant_model.dart';
 import 'package:excellent_trade_app/repository/restaurant/restaurant_api_repository.dart';
@@ -23,6 +25,34 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
     on<PlaceIdChangeEvent>(_onPlaceIdChangeEvent);
     on<LngChangeEvent>(_onLngChangeEvent);
     on<LatChangeEvent>(_onLatChangeEvent);
+    on<AddCategoryEvent>(_onAddCategoryEvent);
+    on<RemoveCategoryEvent>(_onRemoveCategoryEvent);
+  }
+
+  void _onAddCategoryEvent(
+    AddCategoryEvent event,
+    Emitter<RestaurantStates> emit,
+  ) {
+    final categoryIds = List<int>.from(state.selectedCategoryIds ?? []);
+
+    if (!categoryIds.contains(event.categoryId)) {
+      categoryIds.add(event.categoryId);
+    }
+
+    print("Updated selectedCategoryIds after ADD: $categoryIds");
+    emit(state.copyWith(selectedCategoryIds: categoryIds));
+  }
+
+  void _onRemoveCategoryEvent(
+    RemoveCategoryEvent event,
+    Emitter<RestaurantStates> emit,
+  ) {
+    final categoryIds = List<int>.from(state.selectedCategoryIds ?? []);
+
+    categoryIds.remove(event.categoryId);
+
+    print("Updated selectedCategoryIds after REMOVE: $categoryIds");
+    emit(state.copyWith(selectedCategoryIds: categoryIds));
   }
 
   void _onPlaceIdChangeEvent(
@@ -191,19 +221,36 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
     Emitter<RestaurantStates> emit,
   ) async {
     emit(state.copyWith(registerRestaurantApi: ApiResponse.loading()));
+
     try {
       final userId = SessionController.user.id.toString();
-      final response = await restaurantApiRepository.fetchRestaurant("10" /*userId*/);
+
+      final response = await restaurantApiRepository.fetchRestaurant("10");
 
       if (response != null) {
         final restaurantModel = RestaurantModel.fromJson(response);
 
-        if (restaurantModel.success) {
+        if (restaurantModel.success && restaurantModel.restaurants.isNotEmpty) {
+          // since only one restaurant will be in the list
+          final restaurant = restaurantModel.restaurants.first;
+
           emit(
             state.copyWith(
-              restaurants: restaurantModel.restaurants,
+              restaurants: [restaurant],
+              ownerId: restaurant.ownerId.toString(),
+              restaurantName: restaurant.name,
+              phone: restaurant.phone,
+              address: restaurant.location.address,
+              description: restaurant.description,
+              lat: restaurant.location.lat,
+              lng: restaurant.location.lng,
+              placeId: restaurant.location.placeId,
+              hours: restaurant.hours,
+              selectedCategoryIds: restaurant.categories
+                  .map((c) => c.id)
+                  .toList(),
               registerRestaurantApi: ApiResponse.completed(
-                "${restaurantModel.count} restaurants fetched successfully",
+                "${restaurantModel.count} restaurant fetched successfully",
               ),
             ),
           );
@@ -211,7 +258,7 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
           emit(
             state.copyWith(
               registerRestaurantApi: ApiResponse.error(
-                "Failed to fetch restaurants",
+                "Failed to fetch restaurant",
               ),
             ),
           );
@@ -234,9 +281,16 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
     UpdateRestaurantEvent event,
     Emitter<RestaurantStates> emit,
   ) async {
-    final currentRestaurant = state.restaurants?.firstWhere(
-      (r) => r.id == event.id,
-    );
+    Restaurant? currentRestaurant;
+
+    if (state.restaurants != null &&
+        state.restaurants!.any((r) => r.id == event.id)) {
+      currentRestaurant = state.restaurants!.firstWhere(
+        (r) => r.id == event.id,
+      );
+    } else {
+      currentRestaurant = null;
+    }
 
     if (currentRestaurant == null) return;
 
@@ -248,7 +302,7 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
           name: state.restaurantName,
           description: state.description,
           phone: state.phone,
-          address: state.address,
+          // location: state.address,
           status: restaurant.status,
           hours: state.hours,
           logo: state.logo.toString(),
@@ -269,8 +323,8 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
       };
     } else {
       data = {
-        "id": event.id,
-        "owner_id": userId,
+        "id": 6, //event.id,
+        "owner_id": 10, //userId,
         "name": state.restaurantName,
         "description": state.description,
         "phone": state.phone,

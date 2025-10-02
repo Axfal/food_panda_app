@@ -1,8 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
+
 import '../restaurant_exports.dart';
 
 class LogoInputWidget extends StatefulWidget {
-  final String? logo;
-  const LogoInputWidget({super.key, this.logo});
+  const LogoInputWidget({super.key});
 
   @override
   State<LogoInputWidget> createState() => _LogoInputWidgetState();
@@ -12,12 +13,11 @@ class _LogoInputWidgetState extends State<LogoInputWidget> {
   @override
   void initState() {
     super.initState();
-    if (widget.logo != null && widget.logo!.isNotEmpty) {
-      context.read<RestaurantBloc>().add(
-        LogoChangeEvent(logo: File(widget.logo!)),
-      );
-    }
+    // context.read<RestaurantBloc>().add(
+    //   LogoChangeEvent(logo: File("")),
+    // );
   }
+
   Future<void> _pickLogo() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -44,12 +44,20 @@ class _LogoInputWidgetState extends State<LogoInputWidget> {
                 child: CircleAvatar(
                   radius: 65,
                   backgroundColor: Colors.grey.shade100,
-                  backgroundImage: widget.logo != null
-                      ? NetworkImage(widget.logo!)               // FIXED
-                      : state.logo != null
-                      ? FileImage(state.logo!)
+                  backgroundImage: state.logo != null
+                      ? FileImage(state.logo ?? File(''))
+                      : (state.restaurants != null &&
+                      state.restaurants!.isNotEmpty &&
+                      state.restaurants!.first.logo != null &&
+                      state.restaurants!.first.logo!.isNotEmpty)
+                      ? CachedNetworkImageProvider(
+                    state.restaurants!.first.logo!,
+                  )
                       : null,
-                  child: (widget.logo == null && state.logo == null)
+                  child: (state.logo == null &&
+                      (state.restaurants == null ||
+                          state.restaurants!.isEmpty ||
+                          state.restaurants!.first.logo == null))
                       ? Icon(
                     Icons.camera_alt_rounded,
                     size: 42,
@@ -57,7 +65,9 @@ class _LogoInputWidgetState extends State<LogoInputWidget> {
                   )
                       : null,
                 ),
+
               ),
+
               const SizedBox(height: 16),
               Text(
                 'Tap to upload logo',

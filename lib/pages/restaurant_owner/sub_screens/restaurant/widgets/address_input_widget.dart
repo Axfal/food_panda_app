@@ -18,10 +18,11 @@ class _AddressInputWidgetState extends State<AddressInputWidget> {
   void initState() {
     super.initState();
 
-    if (widget.address != null && widget.address!.isNotEmpty) {
-      addressController.text = widget.address!;
+    final bloc = context.read<RestaurantBloc>().state;
+    if (bloc.address.isNotEmpty) {
+      addressController.text = bloc.address;
       context.read<RestaurantBloc>().add(
-        AddressChangeEvent(address: widget.address!),
+        AddressChangeEvent(address: bloc.address),
       );
     }
 
@@ -57,7 +58,9 @@ class _AddressInputWidgetState extends State<AddressInputWidget> {
 
           context.read<RestaurantBloc>().add(LngChangeEvent(lng: lng));
           context.read<RestaurantBloc>().add(LatChangeEvent(lat: lat));
-          context.read<RestaurantBloc>().add(PlaceIdChangeEvent(placeId: placeId));
+          context.read<RestaurantBloc>().add(
+            PlaceIdChangeEvent(placeId: placeId),
+          );
         }
       },
       child: Column(
@@ -131,7 +134,7 @@ class _AddressInputWidgetState extends State<AddressInputWidget> {
                 child: ListView.separated(
                   shrinkWrap: true,
                   itemCount: suggestions.length,
-                  separatorBuilder: (_, __) =>
+                  separatorBuilder: (_, _) =>
                       Divider(color: Colors.grey.shade300, height: 0),
                   itemBuilder: (context, index) {
                     final item = suggestions[index];

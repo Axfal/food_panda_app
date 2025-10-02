@@ -89,23 +89,23 @@ class _AccountPageState extends State<AccountPage> {
                 },
               ),
 
-              const SizedBox(height: 20),
-              Container(
-                height: 100,
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
-                child: const Center(
-                  child: Text(
-                    'Ad Placeholder',
-                    style: TextStyle(color: Colors.black87),
-                  ),
-                ),
-              ),
+              // const SizedBox(height: 20),
+              // Container(
+              //   height: 100,
+              //   width: double.infinity,
+              //   padding: const EdgeInsets.all(16),
+              //   decoration: BoxDecoration(
+              //     color: Colors.grey.shade100,
+              //     borderRadius: BorderRadius.circular(12),
+              //     border: Border.all(color: Colors.grey.shade300),
+              //   ),
+              //   child: const Center(
+              //     child: Text(
+              //       'Ad Placeholder',
+              //       style: TextStyle(color: Colors.black87),
+              //     ),
+              //   ),
+              // ),
               const SizedBox(height: 20),
               Row(
                 children: [

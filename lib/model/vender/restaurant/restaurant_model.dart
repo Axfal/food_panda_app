@@ -1,4 +1,3 @@
-import 'package:excellent_trade_app/model/category/category_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'restaurant_model.freezed.dart';
@@ -6,12 +5,10 @@ part 'restaurant_model.g.dart';
 
 @freezed
 class RestaurantModel with _$RestaurantModel {
-  const RestaurantModel._(); // 👈 required if you want to add custom getters later
-
   const factory RestaurantModel({
-    @Default(false) @JsonKey(name: 'success') bool success,
-    @Default(0) @JsonKey(name: 'count') int count,
-    @Default([]) @JsonKey(name: 'restaurants') List<Restaurant> restaurants,
+    @JsonKey(name: 'success') required bool success,
+    @JsonKey(name: 'count') required int count,
+    @JsonKey(name: 'restaurants') required List<Restaurant> restaurants,
   }) = _RestaurantModel;
 
   factory RestaurantModel.fromJson(Map<String, dynamic> json) =>
@@ -38,33 +35,27 @@ class RestaurantModel with _$RestaurantModel {
 
 @freezed
 class Restaurant with _$Restaurant {
-  const Restaurant._();
-
   const factory Restaurant({
-    @Default(0) @JsonKey(name: 'id') int id,
-    @Default(0) @JsonKey(name: 'owner_id') int ownerId,
-    @Default('') @JsonKey(name: 'name') String name,
-    @Default('') @JsonKey(name: 'description') String description,
-    @Default('') @JsonKey(name: 'phone') String phone,
-    @Default('') @JsonKey(name: 'address') String address,
+    @JsonKey(name: 'id') required int id,
+    @JsonKey(name: 'owner_id') required int ownerId,
+    @JsonKey(name: 'name') required String name,
+    @JsonKey(name: 'description') required String description,
+    @JsonKey(name: 'phone') required String phone,
     @JsonKey(name: 'logo') String? logo,
-    @Default('') @JsonKey(name: 'status') String status,
-    @Default('') @JsonKey(name: 'hours') String hours,
-    @Default('') @JsonKey(name: 'rating') String rating,
-    @Default('') @JsonKey(name: 'created_at') String createdAt,
-    @Default([]) @JsonKey(name: 'categories') List<Categories> categories,
+    @JsonKey(name: 'status') required String status,
+    @JsonKey(name: 'hours') required String hours,
+    @JsonKey(name: 'rating') required String rating,
+    @JsonKey(name: 'created_at') required String createdAt,
+    @JsonKey(name: 'categories') required List<Category> categories,
+    @JsonKey(name: 'location') required Location location,
   }) = _Restaurant;
 
   factory Restaurant.fromJson(Map<String, dynamic> json) =>
       _$RestaurantFromJson(json);
 
   @override
-  // TODO: implement address
-  String get address => throw UnimplementedError();
-
-  @override
   // TODO: implement categories
-  List<Categories> get categories => throw UnimplementedError();
+  List<Category> get categories => throw UnimplementedError();
 
   @override
   // TODO: implement createdAt
@@ -81,6 +72,10 @@ class Restaurant with _$Restaurant {
   @override
   // TODO: implement id
   int get id => throw UnimplementedError();
+
+  @override
+  // TODO: implement location
+  Location get location => throw UnimplementedError();
 
   @override
   // TODO: implement logo
@@ -105,6 +100,76 @@ class Restaurant with _$Restaurant {
   @override
   // TODO: implement status
   String get status => throw UnimplementedError();
+
+  @override
+  Map<String, dynamic> toJson() {
+    // TODO: implement toJson
+    throw UnimplementedError();
+  }
+}
+
+@freezed
+class Category with _$Category {
+  const factory Category({
+    @JsonKey(name: 'id') required int id,
+    @JsonKey(name: 'name') required String name,
+    @JsonKey(name: 'image') required String image,
+  }) = _Category;
+
+  factory Category.fromJson(Map<String, dynamic> json) =>
+      _$CategoryFromJson(json);
+
+  @override
+  // TODO: implement id
+  int get id => throw UnimplementedError();
+
+  @override
+  // TODO: implement image
+  String get image => throw UnimplementedError();
+
+  @override
+  // TODO: implement name
+  String get name => throw UnimplementedError();
+
+  @override
+  Map<String, dynamic> toJson() {
+    // TODO: implement toJson
+    throw UnimplementedError();
+  }
+}
+
+@freezed
+class Location with _$Location {
+  const factory Location({
+    @JsonKey(name: 'restaurant_id') required int restaurantId,
+    @JsonKey(name: 'place_id') required String placeId,
+    @JsonKey(name: 'address') required String address,
+    @JsonKey(name: 'lat') required String lat,
+    @JsonKey(name: 'lng') required String lng,
+  }) = _Location;
+
+  factory Location.fromJson(Map<String, dynamic> json) =>
+      _$LocationFromJson(json);
+
+  @override
+  // TODO: implement address
+  String get address => throw UnimplementedError();
+
+  @override
+  // TODO: implement lat
+  String get lat => throw UnimplementedError();
+
+  @override
+  // TODO: implement lng
+  String get lng => throw UnimplementedError();
+
+  @override
+  // TODO: implement placeId
+  String get placeId => throw UnimplementedError();
+
+  @override
+  // TODO: implement restaurantId
+  int get restaurantId => throw UnimplementedError();
 
   @override
   Map<String, dynamic> toJson() {

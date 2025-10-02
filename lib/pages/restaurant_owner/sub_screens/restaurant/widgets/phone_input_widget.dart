@@ -16,13 +16,13 @@ class _PhoneInputWidgetState extends State<PhoneInputWidget> {
   @override
   void initState() {
     super.initState();
-
-    if (widget.phone != null && widget.phone!.isNotEmpty) {
-      String cleaned = widget.phone!.replaceFirst(RegExp(r'^\+92'), '');
+    final bloc = context.read<RestaurantBloc>();
+    if (bloc.state.phone.isNotEmpty) {
+      String cleaned = bloc.state.phone.replaceFirst(RegExp(r'^\+92'), '');
       phoneController.text = cleaned;
 
       context.read<RestaurantBloc>().add(
-        PhoneChangeEvent(phone: widget.phone!),
+        PhoneChangeEvent(phone: bloc.state.phone),
       );
     }
   }

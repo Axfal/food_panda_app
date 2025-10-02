@@ -46,7 +46,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     /// Restaurant Logo
-                    LogoInputWidget(logo: widget.restaurant?.logo),
+                    LogoInputWidget(),
 
                     const SizedBox(height: 20),
 
@@ -55,9 +55,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                     const SizedBox(height: 16),
 
                     /// Category
-                    SetCategoryInputWidget(
-                      categories: widget.restaurant?.categories,
-                    ),
+                    SetCategoryInputWidget(),
                     const SizedBox(height: 16),
 
                     /// Time
@@ -71,7 +69,7 @@ class _RegisterRestaurantState extends State<RegisterRestaurant> {
                     PhoneInputWidget(phone: widget.restaurant?.phone),
 
                     /// Address
-                    AddressInputWidget(address: widget.restaurant?.address),
+                    AddressInputWidget(address: widget.restaurant?.location.address),
                     const SizedBox(height: 16),
 
                     /// Description

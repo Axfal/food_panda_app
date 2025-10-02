@@ -6,7 +6,8 @@ import 'package:excellent_trade_app/pages/profile/subPages/profile/widgets/new_p
 import 'package:excellent_trade_app/pages/profile/subPages/profile/widgets/old_password_input_widget.dart';
 import 'package:excellent_trade_app/pages/profile/subPages/profile/widgets/phone_text_field.dart';
 import 'package:excellent_trade_app/pages/profile/subPages/profile/widgets/submit_input_widget.dart';
-import 'package:excellent_trade_app/repository/auth/auth_repository.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,7 +30,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _pickImage() async {
     try {
-      final XFile? picked = await _picker.pickImage(source: ImageSource.gallery);
+      final XFile? picked = await _picker.pickImage(
+        source: ImageSource.gallery,
+      );
 
       if (picked == null) {
         print("No image selected");
@@ -48,7 +51,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print("Image picking failed: $e");
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -96,16 +98,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       height: 158,
                                       fit: BoxFit.cover,
                                     )
-                                  : Image.network(
-                                      photoUrl,
+                                  : CachedNetworkImage(
+                                      imageUrl: photoUrl,
                                       width: 158,
                                       height: 158,
                                       fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) => Icon(
+                                      placeholder: (context, url) =>
+                                          const Center(
+                                            child: CupertinoActivityIndicator(
+                                              color: Colors.white70,
+                                            ),
+                                          ),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(
                                             Icons.person,
                                             size: 55,
-                                            color: AppColors.white,
+                                            color: Colors.white,
                                           ),
                                     ),
                             ),

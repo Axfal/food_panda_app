@@ -63,7 +63,6 @@ class CategoryData with _$CategoryData {
     throw UnimplementedError();
   }
 
-
 }
 
 @freezed

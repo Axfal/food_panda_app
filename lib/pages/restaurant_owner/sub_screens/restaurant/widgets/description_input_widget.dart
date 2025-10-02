@@ -15,12 +15,12 @@ class _DescriptionInputWidgetState extends State<DescriptionInputWidget> {
   @override
   void initState() {
     super.initState();
-
+    final bloc = context.read<RestaurantBloc>();
     // Prefill from previous screen
-    if (widget.description != null && widget.description!.isNotEmpty) {
-      descriptionController.text = widget.description!;
+    if (bloc.state.description.isNotEmpty) {
+      descriptionController.text = bloc.state.description;
       context.read<RestaurantBloc>().add(
-        DescriptionChangeEvent(description: widget.description!),
+        DescriptionChangeEvent(description: bloc.state.description),
       );
     }
   }
