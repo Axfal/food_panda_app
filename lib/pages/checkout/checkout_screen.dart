@@ -189,7 +189,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     height: 54.h,
                     child: ElevatedButton.icon(
                       onPressed: isLoading
-                          ? null // disable button while loading
+                          ? null
                           : () {
                         if (deliveryAddress != null) {
                           deliveryAddress!

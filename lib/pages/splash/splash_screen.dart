@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:animate_do/animate_do.dart';
-
+import 'package:typewritertext/typewritertext.dart';
 import '../../Utils/constants/app_colors.dart';
 import '../../l10n/app_localizations.dart';
 import '../../service/splash/splash_service.dart';
-import 'package:typewritertext/typewritertext.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -36,7 +35,6 @@ class _SplashViewState extends State<SplashView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Animated Bike Image (slide-in + bounce)
               SlideInLeft(
                 duration: const Duration(milliseconds: 1600),
                 child: Bounce(

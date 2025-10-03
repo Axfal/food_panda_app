@@ -31,7 +31,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
       if (response != null) {
         if (response['success'] == true && response['results'] != null) {
-          /// Parse response into SearchModel
           final searchModel = SearchModel.fromJson(response);
 
           emit(state.copyWith(searchModel: searchModel));

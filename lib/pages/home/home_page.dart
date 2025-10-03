@@ -12,7 +12,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
   late String radius;
 
   @override
@@ -37,7 +36,7 @@ class _HomePageState extends State<HomePage> {
         FetchNearByRestaurantEvent(lat: lat, lng: lng),
       );
 
-      _selectLocation();
+      // _selectLocation();
 
       final bloc = context.read<TopRestaurantBloc>();
 
@@ -53,7 +52,7 @@ class _HomePageState extends State<HomePage> {
 
     if (!locationSession.hasLocation) {
       Timer(const Duration(seconds: 1), () {
-        // Navigator.of(context).push(_createRoute());
+        Navigator.of(context).push(_createRoute());
       });
     }
   }
@@ -78,14 +77,10 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _onNavItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final userName = SessionController.user.name;
+    print("name ======>  $userName");
     return Scaffold(
       backgroundColor: AppColors.lightPink,
       body: CustomScrollView(
@@ -161,7 +156,7 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Hi, Anfal 👋",
+                        "Hi, $userName 👋",
                         style: GoogleFonts.poppins(
                           fontSize: 24.sp,
                           fontWeight: FontWeight.w700,
@@ -174,7 +169,7 @@ class _HomePageState extends State<HomePage> {
                         style: GoogleFonts.poppins(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
-                          color: Colors.white.withOpacity(0.9),
+                          color: Colors.white.withValues(alpha: 0.9),
                         ),
                       ),
                     ],

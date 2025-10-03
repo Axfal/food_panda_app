@@ -5,7 +5,6 @@ import 'package:excellent_trade_app/service/location/location_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../globalWidgets/PrimeryWidgets/customeBottonNavBar.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -15,15 +14,8 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  int _selectedIndex = 2;
   final TextEditingController _searchController = TextEditingController();
   Timer? _debounce;
-
-  void _onNavItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   void _onSearchChanged(String query) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();

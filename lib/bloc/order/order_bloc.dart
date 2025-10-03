@@ -217,7 +217,6 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           response['success'] == true &&
           response['order_id'] != null &&
           response['order_number'] != null) {
-        // Send WebSocket notification
         webSocketService.sendMessage({
           "type": "new_order",
           ...data,

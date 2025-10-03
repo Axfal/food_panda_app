@@ -32,7 +32,7 @@ class RestaurantMenuBloc
     emit(state.copyWith(apiResponse: const ApiResponse.loading()));
     try {
       final response = await restaurantApiRepository.restaurantMenu(
-       "6"
+        restaurantId.toString(),
       );
 
       if (response != null &&
@@ -46,7 +46,9 @@ class RestaurantMenuBloc
         emit(
           state.copyWith(
             menus: updatedMenus,
-            apiResponse: const ApiResponse.completed('Success'),
+            apiResponse: const ApiResponse.completed(
+              'Restaurant menu fetched successfully',
+            ),
           ),
         );
       } else {

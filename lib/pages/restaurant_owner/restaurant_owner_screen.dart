@@ -50,7 +50,7 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
         int.tryParse(SessionController.restaurantId.toString()) ?? 0;
 
     final restaurant = bloc.state.restaurants?.firstWhere(
-      (r) => r.id == 56, // r.id == myRestaurantId,
+      (r) => r.id == myRestaurantId,
       orElse: () => const Restaurant(
         name: '',
         id: 0,

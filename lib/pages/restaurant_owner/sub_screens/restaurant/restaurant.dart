@@ -1,7 +1,5 @@
 import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/restaurant/widgets/set_category_input_widget.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/restaurant/widgets/timing_input_widget.dart';
-
-import '../../../../model/vender/restaurant/restaurant_model.dart';
 import 'restaurant_exports.dart';
 
 class RegisterRestaurant extends StatefulWidget {

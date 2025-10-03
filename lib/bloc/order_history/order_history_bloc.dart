@@ -20,7 +20,6 @@ class OrderHistoryBloc extends Bloc<OrderHistoryEvent, OrderHistoryState> {
     on<FetchOrdersHistoryEvent>(_onFetchCustomerOrderHistory);
     on<OrderStatusUpdatedEvent>(_onOrderStatusUpdated);
 
-    // Listen to WebSocket
     webSocketService.onMessage = (data) {
       if (data['type'] == 'order_status_update') {
         add(OrderStatusUpdatedEvent(data['data']));
@@ -34,7 +33,7 @@ class OrderHistoryBloc extends Bloc<OrderHistoryEvent, OrderHistoryState> {
   ) async {
     emit(state.copyWith(apiResponse: ApiResponse.loading()));
 
-    final data = {"customer_id": "2"}; // event.customerId};
+    final data = {"customer_id": event.customerId};
 
     try {
       final response = await orderApiRepository.getCustomerOrderHistory(data);
@@ -79,7 +78,7 @@ class OrderHistoryBloc extends Bloc<OrderHistoryEvent, OrderHistoryState> {
     final orderNumber = updateData['order_number'];
 
     final userId = SessionController.user.id.toString();
-    if (customerId != "2" /*userId*/ ) return;
+    if (customerId != userId) return;
 
     final updatedOrders = state.orderHistoryModel.orders?.map((order) {
       if (order.orderNumber == orderNumber) {

@@ -3,7 +3,7 @@ part of 'cart_bloc.dart';
 class CartState extends Equatable {
   final List<CartItemModel> items;
   final ApiResponse<String> apiResponse;
-  final String? restaurantId; // NEW
+  final String? restaurantId;
 
   const CartState({
     this.items = const [],

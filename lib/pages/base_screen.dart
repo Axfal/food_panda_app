@@ -1,4 +1,3 @@
-import 'package:excellent_trade_app/config/routes/route_export.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
 import 'package:excellent_trade_app/pages/grocery/grocery_page.dart';
 import 'package:excellent_trade_app/pages/profile/account_page.dart';

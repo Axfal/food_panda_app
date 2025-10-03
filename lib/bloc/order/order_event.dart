@@ -37,7 +37,7 @@ class CheckOutEvent extends OrderEvent {
   final String city;
   final List<OrderItem> items;
 
-  CheckOutEvent({
+  const CheckOutEvent({
     required this.customerId,
     required this.restaurantId,
     required this.totalAmount,

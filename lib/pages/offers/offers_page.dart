@@ -1,16 +1,8 @@
 import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/my_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../../Utils/constants/appWeight.dart';
 import '../../Utils/constants/app_colors.dart';
-import '../../globalWidgets/filter/filter_bar.dart';
-import '../Campaign/campain_page.dart';
-import '../home/widgets/cardList/card_list.dart';
 import '../data/card_data.dart';
-import '../home/widgets/discountCardList/discount_card_list.dart';
-import '../home/widgets/discountCardList/discount_data.dart';
-import 'widgets/Row_card.dart';
 
 class OffersPage extends StatefulWidget {
   const OffersPage({super.key});

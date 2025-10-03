@@ -6,7 +6,6 @@ import '../../bloc/account/profile/profile_bloc.dart';
 import '../auth/forgot_password/forget_password_export.dart';
 import 'subPages/addresses_page.dart';
 import 'subPages/fav_page.dart';
-import 'subPages/order_history_screen.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});

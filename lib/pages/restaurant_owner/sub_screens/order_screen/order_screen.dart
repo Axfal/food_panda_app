@@ -20,10 +20,11 @@ class _OrderScreenState extends State<OrderScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    final restaurantId = SessionController.restaurantId.toString();
 
     /// Trigger API fetch here
     context.read<OrderBloc>().add(
-      const FetchOrderEvent(restaurantId: "5", limit: "100000", offset: "0"),
+      FetchOrderEvent(restaurantId: restaurantId, limit: "1000", offset: "0"),
     );
   }
 

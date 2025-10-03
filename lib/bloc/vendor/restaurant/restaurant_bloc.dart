@@ -126,7 +126,7 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
     if (kDebugMode) {
       print("Selected ids are : => ${event.selectedCategoryIds}");
     }
-    final categoryIdsString = event.selectedCategoryIds.join(',') ?? '';
+    final categoryIdsString = event.selectedCategoryIds.join(',');
     final Map<String, dynamic> data = {
       "owner_id": state.ownerId,
       "name": state.restaurantName,
@@ -225,13 +225,12 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
     try {
       final userId = SessionController.user.id.toString();
 
-      final response = await restaurantApiRepository.fetchRestaurant("10");
+      final response = await restaurantApiRepository.fetchRestaurant(userId);
 
       if (response != null) {
         final restaurantModel = RestaurantModel.fromJson(response);
 
         if (restaurantModel.success && restaurantModel.restaurants.isNotEmpty) {
-          // since only one restaurant will be in the list
           final restaurant = restaurantModel.restaurants.first;
 
           emit(
@@ -323,8 +322,7 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
       };
     } else {
       data = {
-        "id": 6, //event.id,
-        "owner_id": 10, //userId,
+        "id": userId,
         "name": state.restaurantName,
         "description": state.description,
         "phone": state.phone,

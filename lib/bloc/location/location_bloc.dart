@@ -72,7 +72,6 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
           (response['results'] as List).isNotEmpty) {
         final googleMapLocationDetails = GoogleMapApiModel.fromJson(response);
 
-        // ✅ Convert to LocationDetailsModel
         final firstResult = googleMapLocationDetails.results!.first;
         final locationDetails = LocationDetailsModel(
           success: true,
@@ -85,7 +84,6 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
           ),
         );
 
-        // ✅ Save both models
         await LocationSessionController().saveLocation(locationDetails);
         await LocationSessionController().saveGoogleMapLocation(
           googleMapLocationDetails,

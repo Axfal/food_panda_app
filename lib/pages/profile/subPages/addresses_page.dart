@@ -1,4 +1,5 @@
 import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
+import 'package:excellent_trade_app/pages/home/home_exports.dart';
 import 'package:flutter/material.dart';
 
 import '../../../Utils/constants/appWeight.dart';
@@ -22,7 +23,14 @@ class AddressesPage extends StatelessWidget {
         ),
       ),
 
-      body: addressList.isEmpty
+      body: 1 == 1
+          ? Center(
+              child: Text(
+                'Coming Soon',
+                style: GoogleFonts.poppins(fontSize: 22, color: Colors.black54),
+              ),
+            )
+          : addressList.isEmpty
           ? Center(
               child: Padding(
                 padding: const EdgeInsets.all(24.0),

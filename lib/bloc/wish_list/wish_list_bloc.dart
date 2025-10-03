@@ -11,14 +11,16 @@ class WishListBloc extends Bloc<WishListEvent, WishListState> {
   final WishListApiRepository wishListApiRepository;
 
   WishListBloc({required this.wishListApiRepository})
-      : super(const WishListState()) {
+    : super(const WishListState()) {
     on<FetchWishListEvent>(_onFetchWishListEvent);
     on<AddWishListEvent>(_onAddWishListEvent);
     on<RemoveWishListEvent>(_onRemoveWishListEvent);
   }
 
   Future<void> _onFetchWishListEvent(
-      FetchWishListEvent event, Emitter<WishListState> emit) async {
+    FetchWishListEvent event,
+    Emitter<WishListState> emit,
+  ) async {
     emit(state.copyWith(apiResponse: ApiResponse.loading()));
     try {
       final response = await wishListApiRepository.fetchWishList({
@@ -29,14 +31,18 @@ class WishListBloc extends Bloc<WishListEvent, WishListState> {
           response['success'] == true &&
           response['restaurants'] != null) {
         final wishListModel = WishListModel.fromJson(response);
-        emit(state.copyWith(
-          apiResponse: ApiResponse.completed("Fetched successfully"),
-          wishListModel: wishListModel,
-        ));
+        emit(
+          state.copyWith(
+            apiResponse: ApiResponse.completed("Fetched successfully"),
+            wishListModel: wishListModel,
+          ),
+        );
       } else {
-        emit(state.copyWith(
-          apiResponse: ApiResponse.error("Failed to fetch wishlist"),
-        ));
+        emit(
+          state.copyWith(
+            apiResponse: ApiResponse.error("Failed to fetch wishlist"),
+          ),
+        );
       }
     } catch (e, st) {
       print("Error in FetchWishListEvent: $e\n$st");
@@ -45,7 +51,9 @@ class WishListBloc extends Bloc<WishListEvent, WishListState> {
   }
 
   Future<void> _onAddWishListEvent(
-      AddWishListEvent event, Emitter<WishListState> emit) async {
+    AddWishListEvent event,
+    Emitter<WishListState> emit,
+  ) async {
     emit(state.copyWith(apiResponse: ApiResponse.loading()));
     try {
       final response = await wishListApiRepository.addWishList({
@@ -55,13 +63,18 @@ class WishListBloc extends Bloc<WishListEvent, WishListState> {
       });
 
       if (response != null && response['success'] == true) {
-        emit(state.copyWith(
-            apiResponse: ApiResponse.completed("Added to wishlist")));
-        // Optionally re-fetch updated list
+        emit(
+          state.copyWith(
+            apiResponse: ApiResponse.completed("Added to wishlist"),
+          ),
+        );
         add(FetchWishListEvent(userId: event.userId));
       } else {
-        emit(state.copyWith(
-            apiResponse: ApiResponse.error("Failed to add to wishlist")));
+        emit(
+          state.copyWith(
+            apiResponse: ApiResponse.error("Failed to add to wishlist"),
+          ),
+        );
       }
     } catch (e, st) {
       print("Error in AddWishListEvent: $e\n$st");
@@ -70,7 +83,9 @@ class WishListBloc extends Bloc<WishListEvent, WishListState> {
   }
 
   Future<void> _onRemoveWishListEvent(
-      RemoveWishListEvent event, Emitter<WishListState> emit) async {
+    RemoveWishListEvent event,
+    Emitter<WishListState> emit,
+  ) async {
     emit(state.copyWith(apiResponse: ApiResponse.loading()));
     try {
       final response = await wishListApiRepository.removeWishList({
@@ -80,13 +95,18 @@ class WishListBloc extends Bloc<WishListEvent, WishListState> {
       });
 
       if (response != null && response['success'] == true) {
-        emit(state.copyWith(
-            apiResponse: ApiResponse.completed("Removed from wishlist")));
-        // Optionally refetch updated list
+        emit(
+          state.copyWith(
+            apiResponse: ApiResponse.completed("Removed from wishlist"),
+          ),
+        );
         add(FetchWishListEvent(userId: event.userId));
       } else {
-        emit(state.copyWith(
-            apiResponse: ApiResponse.error("Failed to remove from wishlist")));
+        emit(
+          state.copyWith(
+            apiResponse: ApiResponse.error("Failed to remove from wishlist"),
+          ),
+        );
       }
     } catch (e, st) {
       print("Error in RemoveWishListEvent: $e\n$st");

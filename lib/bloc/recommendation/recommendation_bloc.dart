@@ -27,90 +27,17 @@ class RecommendationBloc
       "cart_items": event.cartItem,
     };
 
-    final dato = {
-      "success": true,
-      "recommendations": [
-        {
-          "id": 27,
-          "name": "burger",
-          "category_id": 2,
-          "price": "123.00",
-          "photo": "uploads/menu_items/item_68a437e09732f5.40037927.png"
-        },{
-          "id": 27,
-          "name": "burger",
-          "category_id": 2,
-          "price": "123.00",
-          "photo": "uploads/menu_items/item_68a437e09732f5.40037927.png"
-        },{
-          "id": 27,
-          "name": "burger",
-          "category_id": 2,
-          "price": "123.00",
-          "photo": "uploads/menu_items/item_68a437e09732f5.40037927.png"
-        },{
-          "id": 27,
-          "name": "burger",
-          "category_id": 2,
-          "price": "123.00",
-          "photo": "uploads/menu_items/item_68a437e09732f5.40037927.png"
-        },
-        {
-          "id": 3,
-          "name": "Veg Pizza",
-          "category_id": 2,
-          "price": "1200.00",
-          "photo": "uploads/menu_items/item_689c1f236ad860.47484525.png"
-        },
-        {
-          "id": 6,
-          "name": "Veg Pizza",
-          "category_id": 2,
-          "price": "1200.00",
-          "photo": "uploads/menu_items/item_689c1f236ad860.47484525.png"
-        },
-        {
-          "id": 6,
-          "name": "Veg Pizza",
-          "category_id": 2,
-          "price": "1200.00",
-          "photo": "uploads/menu_items/item_689c1f236ad860.47484525.png"
-        },
-        {
-          "id": 6,
-          "name": "Veg Pizza",
-          "category_id": 2,
-          "price": "1200.00",
-          "photo": "uploads/menu_items/item_689c1f236ad860.47484525.png"
-        },
-        {
-          "id": 6,
-          "name": "Veg Pizza",
-          "category_id": 2,
-          "price": "1200.00",
-          "photo": "uploads/menu_items/item_689c1f236ad860.47484525.png"
-        },
-        {
-          "id": 6,
-          "name": "Veg Pizza",
-          "category_id": 2,
-          "price": "1200.00",
-          "photo": "uploads/menu_items/item_689c1f236ad860.47484525.png"
-        }
-      ]
-    };
-
     try {
       final response = await recommendationApiRepository.recommendedItem(data);
 
       if (response != null) {
         if (response['success'] == true &&
             response['recommendations'] != null) {
-          final recommendedItemModel = RecommendedItemModel.fromJson(dato);
+          final recommendedItemModel = RecommendedItemModel.fromJson(response);
 
           emit(
             state.copyWith(
-              apiResponse: const ApiResponse.completed("Success"),
+              apiResponse: const ApiResponse.completed("Data fetched successfully"),
               recommendedItemModel: recommendedItemModel,
             ),
           );

@@ -1,9 +1,6 @@
 import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
 import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/my_app_bar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../../../Utils/constants/appWeight.dart';
 import '../../data/card_data.dart';
 import 'widgets/favourites/fav_card.dart';
 

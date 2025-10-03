@@ -1,4 +1,3 @@
-import 'package:excellent_trade_app/Utils/constants/appWeight.dart';
 import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
 import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/customeButtons.dart';
 import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/my_app_bar.dart';

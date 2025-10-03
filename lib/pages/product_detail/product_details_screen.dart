@@ -33,8 +33,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
     context.read<RecommendationBloc>().add(
       FetchRecommendedItemsEvent(
-        cartItem: [2, 9], // [widget.menuItem.itemId],
-        restaurantId: '6', // restaurantId,
+        cartItem: [widget.menuItem.itemId],
+        restaurantId: widget.restaurantId.toString(),
       ),
     );
 

@@ -20,23 +20,23 @@ class _PerformanceScreenState extends State<PerformanceScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-
+    final restaurantId = SessionController.restaurantId.toString();
     final bloc = context.read<PerformanceBloc>();
     bloc.add(
-      const FetchWeeklyPerformanceEvent(
-        restaurantId: "5",
+      FetchWeeklyPerformanceEvent(
+        restaurantId: restaurantId,
         type: "weekly_performance",
       ),
     );
     bloc.add(
-      const FetchMonthlyPerformanceEvent(
-        restaurantId: "5",
+      FetchMonthlyPerformanceEvent(
+        restaurantId: restaurantId,
         type: "monthly_performance",
       ),
     );
     bloc.add(
-      const FetchYearlyPerformanceEvent(
-        restaurantId: "5",
+      FetchYearlyPerformanceEvent(
+        restaurantId: restaurantId,
         type: "yearly_performance",
       ),
     );

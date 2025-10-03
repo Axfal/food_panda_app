@@ -18,8 +18,7 @@ class LocationState extends Equatable {
   }) {
     return LocationState(
       locationDetailsModel: locationDetailsModel ?? this.locationDetailsModel,
-      locationSuggestionModel:
-          locationSuggestionModel ?? this.locationSuggestionModel,
+      locationSuggestionModel: locationSuggestionModel ?? this.locationSuggestionModel,
       apiResponse: apiResponse ?? this.apiResponse,
     );
   }

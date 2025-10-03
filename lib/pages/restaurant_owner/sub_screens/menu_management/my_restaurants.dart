@@ -61,7 +61,7 @@ class _SelectRestaurantState extends State<SelectRestaurant> {
 
             return ListView.separated(
               itemCount: state.restaurants!.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              separatorBuilder: (_, _) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
                 final r = state.restaurants![index];
                 final isOpen = r.status.toLowerCase() == 'open';

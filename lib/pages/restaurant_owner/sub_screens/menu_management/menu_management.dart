@@ -3,7 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:excellent_trade_app/bloc/vendor/menu_management/menu_management_bloc.dart';
 import 'package:excellent_trade_app/model/vender/menu_management/menu_category/menu_category_model.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart' hide Category;
-import 'package:excellent_trade_app/repository/auth/auth_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,7 +23,7 @@ class _MenuManagementState extends State<MenuManagement> {
   void initState() {
     super.initState();
     final bloc = context.read<MenuManagementBloc>();
-    if (bloc.state.categories == null || bloc.state.categories.isEmpty) {
+    if (bloc.state.categories.isEmpty) {
       context.read<MenuManagementBloc>().add(
         FetchCategoriesEvent(restaurantId: widget.restaurantId),
       );
@@ -58,7 +57,6 @@ class _MenuManagementState extends State<MenuManagement> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // grab handle
                       Container(
                         width: 50,
                         height: 5,
