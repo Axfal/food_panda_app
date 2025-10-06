@@ -6,6 +6,7 @@ import 'package:marquee/marquee.dart';
 import 'package:badges/badges.dart' as badges;
 import '../../../bloc/cart/cart_bloc.dart';
 import '../../../bloc/location/location_bloc.dart';
+import '../../../model/cart/cart_model.dart';
 import '../../../service/location/location_storage.dart';
 import '../../../service/cart/cart_service.dart'; // <-- for CartSessionController
 
@@ -159,13 +160,18 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
         ),
 
         BlocBuilder<CartBloc, CartState>(
-          buildWhen: (previous, current) => previous.items != current.items,
+          buildWhen: (previous, current) =>
+          previous is CartLoaded && current is CartLoaded,
           builder: (context, state) {
+            // Grab items safely
+            final cartItems =
+            state is CartLoaded ? state.items : <CartItemModel>[];
+
             return badges.Badge(
-              showBadge: cartSessionController.hasItems,
+              showBadge: cartItems.isNotEmpty,
               badgeContent: Text(
-                cartSessionController.cartCount.toString(),
-                style: TextStyle(
+                cartItems.length.toString(),
+                style: const TextStyle(
                   color: AppColors.primary,
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
@@ -180,7 +186,7 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => CartSection()),
+                    MaterialPageRoute(builder: (context) => const CartSection()),
                   );
                 },
                 icon: const Icon(CupertinoIcons.shopping_cart),
@@ -190,6 +196,7 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
             );
           },
         ),
+
 
         const SizedBox(width: 6),
       ],

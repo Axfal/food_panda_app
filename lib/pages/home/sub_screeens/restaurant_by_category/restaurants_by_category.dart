@@ -2,6 +2,7 @@ import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/my_app_bar.dart
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
 import 'package:excellent_trade_app/pages/home/sub_screeens/restaurant_by_category/widgets/restaurant_card.dart';
 import '../../../../bloc/restaurant_by_category/restaurant_by_category_bloc.dart';
+import '../../../../bloc/wish_list/wish_list_bloc.dart';
 
 class RestaurantsByCategory extends StatefulWidget {
   final String categoryId;
@@ -140,6 +141,9 @@ class _RestaurantsByCategoryState extends State<RestaurantsByCategory> {
                       delegate: SliverChildBuilderDelegate((context, index) {
                         final RestaurantData restaurantData =
                             restaurants[index];
+                        final restaurantId = restaurantData.restaurantId;
+                        final userId = SessionController.user.id.toString();
+
                         return Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,
@@ -153,18 +157,50 @@ class _RestaurantsByCategoryState extends State<RestaurantsByCategory> {
                                 arguments: {"restaurant_data": restaurantData},
                               );
                             },
-                            child: RestaurantCard(
-                              imagePath: restaurantData.restaurantLogo ?? "",
-                              title: restaurantData.restaurantName,
-                              rating:
-                                  4.5,
-                              reviewsCount: 120,
-                              duration: "30 min",
-                              priceLevel: "\$\$",
-                              cuisine: "Italian, Pizza",
-                              deliveryFee: 150,
-                              discountLabel: "30% OFF",
-                            ),
+                            child:
+                                BlocSelector<WishListBloc, WishListState, bool>(
+                                  selector: (wishListState) {
+                                    final currentWishList =
+                                        wishListState.wishListModel.restaurants;
+                                    return currentWishList.any(
+                                      (r) => r.id == restaurantId,
+                                    );
+                                  },
+                                  builder: (context, inWishList) {
+                                    return RestaurantCard(
+                                      imagePath:
+                                          restaurantData.restaurantLogo ?? "",
+                                      title: restaurantData.restaurantName,
+                                      rating: 4.5,
+                                      reviewsCount: 120,
+                                      duration: "30 min",
+                                      priceLevel: "\$\$",
+                                      cuisine: "Italian, Pizza",
+                                      deliveryFee: 150,
+                                      discountLabel: "30% OFF",
+                                      inWishList: inWishList,
+                                      onFavouriteTap: () {
+                                        if (inWishList) {
+                                          context.read<WishListBloc>().add(
+                                            RemoveWishListEvent(
+                                              userId: userId,
+                                              restaurantId: restaurantId
+                                                  .toString(),
+                                            ),
+                                          );
+                                        } else {
+                                          context.read<WishListBloc>().add(
+                                            AddWishListEvent(
+                                              userId: userId,
+                                              restaurantId: restaurantId
+                                                  .toString(),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                    );
+                                  },
+                                ),
                           ),
                         );
                       }, childCount: restaurants.length),

@@ -7,7 +7,7 @@ class CartSessionController {
   final LocalStorage _localStorage = LocalStorage();
 
   static final CartSessionController _instance =
-      CartSessionController._internal();
+  CartSessionController._internal();
 
   static List<CartItemModel> cartItems = [];
   static String? currentRestaurantId;
@@ -27,11 +27,15 @@ class CartSessionController {
 
       currentRestaurantId ??= item.restaurantId;
 
-      final index = cartItems.indexWhere((cartItem) => cartItem.id == item.id);
+      final index = cartItems.indexWhere(
+            (cartItem) =>
+        cartItem.id == item.id &&
+            cartItem.variationId == item.variationId,
+      );
 
       if (index != -1) {
         cartItems[index] = cartItems[index].copyWith(
-          quantity: (cartItems[index].quantity + item.quantity),
+          quantity: cartItems[index].quantity + item.quantity,
         );
       } else {
         cartItems.add(item);
@@ -90,26 +94,34 @@ class CartSessionController {
     await _loadCartOnStart();
   }
 
-  bool isItemInCart(String itemId) {
-    return cartItems.any((item) => item.id == itemId);
+  bool isItemInCart(String itemId, {int? variationId}) {
+    return cartItems.any((item) =>
+    item.id == itemId &&
+        (item.variationId == variationId || variationId == null));
   }
 
-  CartItemModel? getCartItem(String itemId) {
+  CartItemModel? getCartItem(String itemId, {int? variationId}) {
     try {
-      return cartItems.firstWhere((item) => item.id == itemId);
+      return cartItems.firstWhere((item) =>
+      item.id == itemId &&
+          (variationId == null || item.variationId == variationId));
     } catch (e) {
       return null; // Item not found
     }
   }
 
-  Future<void> updateItemQuantity(String itemId, int newQuantity) async {
+  Future<void> updateItemQuantity(
+      String itemId, int newQuantity, {int? variationId}) async {
     try {
-      final index = cartItems.indexWhere((item) => item.id == itemId);
+      final index = cartItems.indexWhere((item) =>
+      item.id == itemId &&
+          (variationId == null || item.variationId == variationId));
       if (index != -1) {
         if (newQuantity <= 0) {
           cartItems.removeAt(index);
         } else {
-          cartItems[index] = cartItems[index].copyWith(quantity: newQuantity);
+          cartItems[index] =
+              cartItems[index].copyWith(quantity: newQuantity);
         }
         await _persistCart();
       }
@@ -118,9 +130,11 @@ class CartSessionController {
     }
   }
 
-  Future<void> removeItem(String itemId) async {
+  Future<void> removeItem(String itemId, {int? variationId}) async {
     try {
-      cartItems.removeWhere((item) => item.id == itemId);
+      cartItems.removeWhere((item) =>
+      item.id == itemId &&
+          (variationId == null || item.variationId == variationId));
       await _persistCart();
     } catch (e) {
       debugPrint("Error removing item: $e");
@@ -136,4 +150,7 @@ class CartSessionController {
   bool get hasItems => cartItems.isNotEmpty;
 
   String? get restaurantId => currentRestaurantId;
+
+  /// ✅ New Getter for variationIds in cart
+  List<int?> get variationIds => cartItems.map((e) => e.variationId).toList();
 }

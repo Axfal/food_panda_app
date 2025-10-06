@@ -1,6 +1,7 @@
 import 'package:excellent_trade_app/pages/home/home_exports.dart';
 import 'package:flutter/cupertino.dart';
 import '../../../../Utils/constants/appWeight.dart';
+import '../../../../bloc/wish_list/wish_list_bloc.dart';
 import '../cards/large_foodCard.dart';
 import '../../../../bloc/near_by_restaurant/near_by_restaurant_bloc.dart';
 
@@ -21,7 +22,6 @@ class _ExploreWidgetState extends State<ExploreWidget> {
           current.nearByRestaurantModel != previous.nearByRestaurantModel ||
           current.apiResponse.status != previous.apiResponse.status,
       builder: (context, state) {
-
         if (state.apiResponse.status == Status.loading) {
           return SizedBox(
             height: 250,
@@ -83,34 +83,61 @@ class _ExploreWidgetState extends State<ExploreWidget> {
                 separatorBuilder: (_, _) => const SizedBox(height: 8),
                 itemBuilder: (context, index) {
                   final card = visibleData[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: LargeFoodCard(
-                      imagePath: card['imagePath'] as String,
-                      title: card['title'] as String,
-                      rating: card['rating'] as double,
-                      reviewsCount: card['reviewsCount'] as int,
-                      duration: card['duration'] as String,
-                      priceLevel: card['priceLevel'] as String,
-                      cuisine: card['cuisine'] as String,
-                      deliveryFee: card['deliveryFee'] as int,
-                      discountLabel: card['discountLabel'] as String,
-                      isAd: card['isAd'] as bool,
-                      onTap: () {
-                    // Navigator.pushNamed(
-                    // context,
-                    // RoutesName.menu,
-                    // arguments: {"restaurant_data": restaurantData},
-                    // );
-                      },
-                    ),
+                  final restaurantId =
+                      state.nearByRestaurantModel.restaurants[index].id;
+                  return BlocBuilder<WishListBloc, WishListState>(
+                    builder: (context, wishListState) {
+                      final currentWishList =
+                          wishListState.wishListModel.restaurants;
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: LargeFoodCard(
+                          imagePath: card['imagePath'] as String,
+                          title: card['title'] as String,
+                          rating: card['rating'] as double,
+                          reviewsCount: card['reviewsCount'] as int,
+                          duration: card['duration'] as String,
+                          priceLevel: card['priceLevel'] as String,
+                          cuisine: card['cuisine'] as String,
+                          deliveryFee: card['deliveryFee'] as int,
+                          discountLabel: card['discountLabel'] as String,
+                          isAd: card['isAd'] as bool,
+                          inWishList: currentWishList.any(
+                            (restaurant) => restaurant.id == restaurantId,
+                          ),
+                          onFavouriteTap: () {
+                            final isFavourite = currentWishList.any(
+                              (restaurant) => restaurant.id == restaurantId,
+                            );
+
+                            final userId = SessionController.user.id.toString();
+
+                            if (isFavourite) {
+                              context.read<WishListBloc>().add(
+                                RemoveWishListEvent(
+                                  userId: userId,
+                                  restaurantId: restaurantId.toString(),
+                                ),
+                              );
+                            } else {
+                              context.read<WishListBloc>().add(
+                                AddWishListEvent(
+                                  userId: userId,
+                                  restaurantId: restaurantId.toString(),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      );
+                    },
                   );
                 },
               ),
 
               const SizedBox(height: 8),
 
-              // Show More / Show Less Button
               if (cardsData.length > 1)
                 Center(
                   child: TextButton.icon(

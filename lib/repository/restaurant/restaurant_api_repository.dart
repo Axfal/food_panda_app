@@ -5,6 +5,7 @@ abstract class RestaurantApiRepository{
   Future<dynamic> deleteRestaurant(dynamic data);
   Future<dynamic> restaurantByCategory(String categoryId);
   Future<dynamic> restaurantMenu(String restaurantId);
+  Future<dynamic> restaurantMenuItem(dynamic data);
   Future<dynamic> newRestaurant(dynamic data);
   Future<dynamic> nearByRestaurant(dynamic data);
   Future<dynamic> topRestaurant(dynamic data);

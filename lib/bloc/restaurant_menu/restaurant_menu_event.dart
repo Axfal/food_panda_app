@@ -15,3 +15,16 @@ class FetchRestaurantMenuEvent extends RestaurantMenuEvent {
   @override
   List<Object?> get props => [restaurantId];
 }
+
+class FetchRestaurantMenuItemEvent extends RestaurantMenuEvent {
+  final int restaurantId;
+  final int categoryId;
+
+  const FetchRestaurantMenuItemEvent({
+    required this.restaurantId,
+    required this.categoryId,
+  });
+
+  @override
+  List<Object?> get props => [restaurantId, categoryId];
+}

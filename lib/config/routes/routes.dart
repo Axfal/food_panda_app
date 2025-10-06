@@ -52,6 +52,7 @@ class Routes {
       case RoutesName.productDetails:
         final args = settings.arguments as Map<String, dynamic>?;
         final int restaurantId = args?['restaurant_id'] ?? 0;
+        final int categoryId = args?['category_id'] ?? 0;
         final menu_model.MenuItem menuItem =
             args?['menu_item'] ??
             menu_model.MenuItem(
@@ -78,6 +79,7 @@ class Routes {
         }
         return MaterialPageRoute(
           builder: (BuildContext context) => ProductDetailsScreen(
+            categoryId: categoryId,
             menuItem: menuItem,
             restaurantId: restaurantId,
           ),

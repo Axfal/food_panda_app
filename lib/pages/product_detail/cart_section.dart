@@ -17,7 +17,7 @@ class _CartSectionState extends State<CartSection> {
   @override
   void initState() {
     super.initState();
-    context.read<CartBloc>().add(LoadCart());
+    // context.read<CartBloc>().add(LoadCart());
   }
 
   @override
@@ -28,7 +28,7 @@ class _CartSectionState extends State<CartSection> {
         backgroundColor: AppColors.primary,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
         title: Text(
           "Cart",
@@ -41,16 +41,21 @@ class _CartSectionState extends State<CartSection> {
       ),
 
       body: BlocBuilder<CartBloc, CartState>(
-        buildWhen: (previous, current) => previous.items != current.items,
+        buildWhen: (previous, current) =>
+            previous is CartLoaded && current is CartLoaded,
         builder: (context, state) {
-          final cartItems = state.items;
+          final cartItems = state is CartLoaded
+              ? state.items
+              : <CartItemModel>[];
 
           return SingleChildScrollView(
             child: Column(
               children: [
                 Padding(
-                  padding:
-                  EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 20.h,
+                  ),
                   child: IntrinsicHeight(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -88,11 +93,16 @@ class _CartSectionState extends State<CartSection> {
       ),
 
       bottomNavigationBar: BlocBuilder<CartBloc, CartState>(
-        buildWhen: (previous, current) => previous.items != current.items,
+        buildWhen: (previous, current) =>
+            previous is CartLoaded && current is CartLoaded,
         builder: (context, state) {
-          final total = state.items.fold(
+          final cartItems = state is CartLoaded
+              ? state.items
+              : <CartItemModel>[];
+
+          final total = cartItems.fold(
             0.0,
-                (sum, item) => sum + (item.price * item.quantity),
+            (sum, item) => sum + (item.price * item.quantity),
           );
 
           return SafeArea(
@@ -112,8 +122,10 @@ class _CartSectionState extends State<CartSection> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    padding:
-                    EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 14.w,
+                      vertical: 12.h,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.primary.withOpacity(0.05),
                       borderRadius: BorderRadius.circular(12.r),
@@ -147,7 +159,6 @@ class _CartSectionState extends State<CartSection> {
                             ),
                           ],
                         ),
-
                         Text(
                           'Rs. ${total.toStringAsFixed(2)}',
                           style: GoogleFonts.poppins(
@@ -166,12 +177,12 @@ class _CartSectionState extends State<CartSection> {
                     width: double.infinity,
                     height: 48.h,
                     child: ElevatedButton.icon(
-                      onPressed: state.items.isEmpty
+                      onPressed: cartItems.isEmpty
                           ? null
                           : () => Navigator.pushNamed(
-                        context,
-                        RoutesName.checkout,
-                      ),
+                              context,
+                              RoutesName.checkout,
+                            ),
                       icon: Icon(Icons.location_on_outlined, size: 18.sp),
                       label: Text(
                         "Confirm payment & address",
@@ -200,24 +211,25 @@ class _CartSectionState extends State<CartSection> {
   }
 
   Widget stepItem(
-      String number,
-      String label, {
-        bool isActive = false,
-        bool isCompleted = false,
-      }) {
-    final bgColor =
-    isCompleted || isActive ? AppColors.primary : Colors.grey.shade300;
+    String number,
+    String label, {
+    bool isActive = false,
+    bool isCompleted = false,
+  }) {
+    final bgColor = isCompleted || isActive
+        ? AppColors.primary
+        : Colors.grey.shade300;
 
     final content = isCompleted
         ? Icon(Icons.check, color: Colors.white, size: 16.sp)
         : Text(
-      number,
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 13.sp,
-        fontWeight: FontWeight.bold,
-      ),
-    );
+            number,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 13.sp,
+              fontWeight: FontWeight.bold,
+            ),
+          );
 
     return Column(
       children: [
@@ -243,11 +255,7 @@ class _CartSectionState extends State<CartSection> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 8,
-            offset: Offset(0, 4),
-          ),
+          BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 4)),
         ],
       ),
       child: Row(
@@ -314,18 +322,13 @@ class _CartSectionState extends State<CartSection> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 6,
-            offset: Offset(0, 3),
-          ),
+          BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
         ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.fastfood,
-              color: Colors.deepOrangeAccent, size: 30.sp),
+          Icon(Icons.fastfood, color: Colors.deepOrangeAccent, size: 30.sp),
           SizedBox(width: 12.w),
           Expanded(
             child: Column(
@@ -344,13 +347,11 @@ class _CartSectionState extends State<CartSection> {
                     counterWidget(Icons.remove, () {
                       final newQty = item.quantity - 1;
                       if (newQty <= 0) {
-                        context
-                            .read<CartBloc>()
-                            .add(RemoveCartItem(item.id));
+                        context.read<CartBloc>().add(RemoveCartItem(item.id));
                       } else {
-                        context
-                            .read<CartBloc>()
-                            .add(UpdateCartItemQuantity(item.id, newQty));
+                        context.read<CartBloc>().add(
+                          UpdateCartItemQuantity(item.id, newQty),
+                        );
                       }
                     }),
                     Padding(
@@ -365,9 +366,9 @@ class _CartSectionState extends State<CartSection> {
                     ),
                     counterWidget(Icons.add, () {
                       final newQty = item.quantity + 1;
-                      context
-                          .read<CartBloc>()
-                          .add(UpdateCartItemQuantity(item.id, newQty));
+                      context.read<CartBloc>().add(
+                        UpdateCartItemQuantity(item.id, newQty),
+                      );
                     }),
                   ],
                 ),

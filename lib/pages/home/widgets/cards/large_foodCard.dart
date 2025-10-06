@@ -16,6 +16,8 @@ class LargeFoodCard extends StatelessWidget {
   final String discountLabel;
   final bool isAd;
   final VoidCallback? onTap;
+  final VoidCallback? onFavouriteTap;
+  final bool inWishList;
 
   const LargeFoodCard({
     super.key,
@@ -29,7 +31,9 @@ class LargeFoodCard extends StatelessWidget {
     required this.deliveryFee,
     required this.discountLabel,
     this.isAd = false,
+    this.inWishList = false,
     this.onTap,
+    this.onFavouriteTap,
   });
 
   @override
@@ -85,7 +89,10 @@ class LargeFoodCard extends StatelessWidget {
                               return Container(
                                 color: Colors.grey.shade100,
                                 child: const Center(
-                                  child: CupertinoActivityIndicator(color: Colors.black54,)),
+                                  child: CupertinoActivityIndicator(
+                                    color: Colors.black54,
+                                  ),
+                                ),
                               );
                             },
                           ),
@@ -95,13 +102,16 @@ class LargeFoodCard extends StatelessWidget {
                 Positioned(
                   right: 10,
                   top: 10,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.black.withValues(alpha: 0.4),
-                    radius: 18,
-                    child: const Icon(
-                      Icons.favorite_border,
-                      size: 18,
-                      color: Colors.white,
+                  child: GestureDetector(
+                    onTap: onFavouriteTap,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.black.withValues(alpha: 0.4),
+                      radius: 18,
+                      child: Icon(
+                        inWishList ? Icons.favorite : Icons.favorite_border,
+                        size: 18,
+                        color: inWishList ? AppColors.primary : Colors.white,
+                      ),
                     ),
                   ),
                 ),

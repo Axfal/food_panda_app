@@ -36,7 +36,7 @@ class _CategoriesInputWidgetState extends State<CategoriesInputWidget> {
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: categories.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 14),
+              separatorBuilder: (_, _) => const SizedBox(width: 14),
               itemBuilder: (context, index) {
                 final category = categories[index];
                 return GestureDetector(

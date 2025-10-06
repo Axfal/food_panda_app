@@ -8,14 +8,21 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:excellent_trade_app/model/restaurant_menu/restaurant_menu_model.dart'
     as menu_model;
+import 'package:cached_network_image/cached_network_image.dart';
+import '../../bloc/cart/cart_bloc.dart';
+import '../../bloc/restaurant_menu/restaurant_menu_bloc.dart';
+import '../../model/cart/cart_model.dart';
+import '../../model/restaurant_menu_item/restaurant_menu_item_model.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final menu_model.MenuItem menuItem;
   final int restaurantId;
+  final int categoryId;
   const ProductDetailsScreen({
     super.key,
     required this.restaurantId,
     required this.menuItem,
+    required this.categoryId,
   });
 
   @override
@@ -38,17 +45,29 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       ),
     );
 
+    context.read<RestaurantMenuBloc>().add(
+      FetchRestaurantMenuItemEvent(
+        restaurantId: widget.restaurantId,
+        categoryId: widget.categoryId,
+      ),
+    );
+
     context.read<ProductReviewBloc>().add(
       FetchProductReviewEvent(restaurantId: 6, menuItemId: 32),
     );
+
+    /// Load existing cart state
+    context.read<CartBloc>().add(LoadCart());
   }
+
+  int? selectedVariationId;
 
   @override
   Widget build(BuildContext context) {
     final item = widget.menuItem;
-    final double oldPrice = double.parse(item.itemPrice) * 1.15;
 
     /// 15% by default jb tk response mn naheen a jata
+    final double oldPrice = double.parse(item.itemPrice) * 1.15;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -62,19 +81,23 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   height: 300.h,
                   width: double.infinity,
                   decoration: BoxDecoration(color: Colors.grey[200]),
-                  child: Image.network(
-                    item.itemPhoto,
+                  child: CachedNetworkImage(
+                    imageUrl: item.itemPhoto,
                     fit: BoxFit.cover,
                     width: double.infinity,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Center(
-                        child: Icon(
-                          Icons.broken_image_outlined,
-                          size: 60.sp,
-                          color: Colors.grey[400],
-                        ),
-                      );
-                    },
+                    placeholder: (context, url) => Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.grey[400],
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Center(
+                      child: Icon(
+                        Icons.broken_image_outlined,
+                        size: 60.sp,
+                        color: Colors.grey[400],
+                      ),
+                    ),
                   ),
                 ),
 
@@ -166,7 +189,29 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 ],
               ),
             ),
-            variationCardWidget(),
+
+            BlocBuilder<RestaurantMenuBloc, RestaurantMenuState>(
+              builder: (context, state) {
+                final itemId = widget.menuItem.itemId;
+                if (state.menuItem[widget.categoryId]?.items != null &&
+                    state.menuItem[widget.categoryId]!.items!.isNotEmpty &&
+                    (state
+                            .menuItem[widget.categoryId]!
+                            .items!
+                            .first
+                            .variations
+                            ?.isNotEmpty ??
+                        false)) {
+                  return variationCardWidget(
+                    context,
+                    widget.categoryId,
+                    itemId: itemId,
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+
             productReviewBox(context, menuItemId: 32, restaurantId: 6),
             SizedBox(height: 8.h),
             Padding(
@@ -296,58 +341,141 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
-        elevation: 12,
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(width: 8.w),
+      bottomNavigationBar: BlocBuilder<CartBloc, CartState>(
+        builder: (context, state) {
+          final item = widget.menuItem;
+          CartItemModel? existingItem;
 
-            /// Quantity Control
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+          if (state is CartLoaded) {
+            existingItem = state.items.firstWhere(
+              (i) => i.id == item.itemId.toString(),
+              orElse: () =>
+                  CartItemModel(id: '', name: '', price: 0, restaurantId: ''),
+            );
+            if (existingItem.id.isEmpty) existingItem = null;
+          }
 
+          final quantity = existingItem?.quantity ?? 1;
+          final isInCart = existingItem != null;
+          final bloc = context.read<RestaurantMenuBloc>();
+
+          final int itemId = item.itemId;
+          final items = bloc.state.menuItem[widget.categoryId]?.items;
+          final itemVariation = items?.firstWhere(
+            (item) => item.id == itemId,
+            orElse: () => Items(),
+          );
+
+          final bool haveVariations =
+              itemVariation?.variations != null &&
+              itemVariation!.variations!.isNotEmpty;
+
+          return BottomAppBar(
+            color: Colors.white,
+            elevation: 12,
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                counterWidget(Icons.remove, () {}),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w),
-                  child: Text(
-                    "1",
-                    style: GoogleFonts.poppins(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
+                SizedBox(width: 8.w),
+
+                /// Quantity Control
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    counterWidget(Icons.remove, () {
+                      if (isInCart && quantity > 1) {
+                        context.read<CartBloc>().add(
+                          UpdateCartItemQuantity(
+                            item.itemId.toString(),
+                            quantity - 1,
+                          ),
+                        );
+                      }
+                    }),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12.w),
+                      child: Text(
+                        "$quantity",
+                        style: GoogleFonts.poppins(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    counterWidget(Icons.add, () {
+                      if (isInCart) {
+                        context.read<CartBloc>().add(
+                          UpdateCartItemQuantity(
+                            item.itemId.toString(),
+                            quantity + 1,
+                          ),
+                        );
+                      }
+                    }),
+                  ],
+                ),
+
+                /// Add / Remove Cart Button
+                SizedBox(
+                  height: 45.h,
+                  child: ElevatedButton.icon(
+                    onPressed: (!haveVariations || selectedVariationId != null)
+                        ? () {
+                            if (isInCart) {
+                              // Remove from cart
+                              context.read<CartBloc>().add(
+                                RemoveCartItem(item.itemId.toString()),
+                              );
+                            } else {
+                              // Add to cart
+                              final newCartItem = CartItemModel(
+                                id: item.itemId.toString(),
+                                name: item.itemName,
+                                price: double.parse(item.itemPrice),
+                                variationId: selectedVariationId,
+                                restaurantId: widget.restaurantId.toString(),
+                                imageUrl: item.itemPhoto,
+                                quantity: 1,
+                              );
+                              context.read<CartBloc>().add(
+                                AddOrUpdateCartItem(newCartItem),
+                              );
+                            }
+                          }
+                        : null, // disabled if variations exist but none selected
+
+                    icon: Icon(
+                      isInCart
+                          ? Icons.delete_outline
+                          : Icons.shopping_cart_outlined,
+                      size: 18,
+                    ),
+
+                    label: Text(
+                      isInCart ? "Remove from Cart" : "Add to Cart",
+                      style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                    ),
+
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          (!haveVariations || selectedVariationId != null)
+                          ? (isInCart ? Colors.red : AppColors.primary)
+                          : Colors.grey.shade400,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
                     ),
                   ),
                 ),
-                counterWidget(Icons.add, () {}),
+
+                SizedBox(width: 4.w),
               ],
             ),
-
-            /// Add to Cart Button
-            SizedBox(
-              height: 45.h,
-              child: ElevatedButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.shopping_cart_outlined, size: 18),
-                label: Text(
-                  "Add to Cart",
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                ),
-              ),
-            ),
-            SizedBox(width: 4.w),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -427,7 +555,30 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Widget variationCardWidget() {
+  Widget variationCardWidget(
+    BuildContext context,
+    int categoryId, {
+    required int itemId,
+  }) {
+    final bloc = context.read<RestaurantMenuBloc>();
+    final menuItem = bloc.state.menuItem[categoryId];
+
+    if (menuItem == null || menuItem.items == null || menuItem.items!.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    // Find item by ID safely
+    final Items? item = menuItem.items!.firstWhere(
+      (element) => element.id == itemId,
+      orElse: () => Items(variations: []),
+    );
+
+    final variations = item?.variations ?? [];
+
+    if (variations.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
       child: Container(
@@ -455,6 +606,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     color: AppColors.black,
                   ),
                 ),
+
+                /// Tag
                 Container(
                   height: 25.h,
                   padding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -485,8 +638,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
             ),
             SizedBox(height: 6.h),
-            variationTile(title: 'Full', price: 'Rs. 355', original: 'Rs. 418'),
-            variationTile(title: 'Half', price: 'Rs. 210', original: 'Rs. 290'),
+
+            /// Dynamic list of variations
+            ...variations.map(
+              (v) => variationTile(
+                id: v.id,
+                title: v.name ?? '',
+                price: 'Rs. ${v.price ?? ''}',
+                original: 'Rs. ${v.price ?? ''}',
+              ),
+            ),
           ],
         ),
       ),
@@ -494,18 +655,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   Widget variationTile({
+    required int? id,
     required String title,
     required String price,
     required String original,
   }) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: Radio<String>(
-        value: title,
-        groupValue: selectedVariation,
+      leading: Radio<int>(
+        value: id ?? -1,
+        groupValue: selectedVariationId,
         onChanged: (value) {
           setState(() {
-            selectedVariation = value!;
+            selectedVariationId = value;
           });
         },
         activeColor: AppColors.primary,

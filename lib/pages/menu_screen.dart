@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
@@ -6,11 +7,13 @@ import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../bloc/restaurant_menu/restaurant_menu_bloc.dart';
 import '../bloc/cart/cart_bloc.dart';
+import '../bloc/wish_list/wish_list_bloc.dart';
 import '../config/routes/routes_name.dart';
 import 'package:excellent_trade_app/model/restaurant_by_category/restaurant_by_category_model.dart';
 import '../data/response/status.dart';
 import '../model/cart/cart_model.dart';
-import '../service/cart/cart_service.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../service/session_manager/session_controller.dart';
 
 class MenuScreen extends StatefulWidget {
   final RestaurantData restaurantData;
@@ -27,11 +30,39 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   void initState() {
     super.initState();
+
+    // Step 1: Fetch all categories when screen opens
     context.read<RestaurantMenuBloc>().add(
       FetchRestaurantMenuEvent(
         restaurantId: widget.restaurantData.restaurantId,
       ),
     );
+  }
+
+  /// shuru mn aik category ki menu item ki api hit krwani hy, baad mn jb user tap kre ga jis bhi category ko to uski api hit krwani hy.
+  Future<void> _getMenuItem() async {
+    final bloc = context.read<RestaurantMenuBloc>();
+    final restaurantId = 6; //widget.restaurantData.restaurantId;
+
+    // get first categoryId from menus
+    final categoryId =
+        bloc
+            .state
+            .menus[restaurantId]
+            ?.restaurant
+            .categories
+            .first
+            .categoryId ??
+        0;
+
+    if (categoryId != 0) {
+      bloc.add(
+        FetchRestaurantMenuItemEvent(
+          restaurantId: restaurantId,
+          categoryId: categoryId,
+        ),
+      );
+    }
   }
 
   @override
@@ -65,17 +96,58 @@ class _MenuScreenState extends State<MenuScreen> {
               ),
 
               actions: [
-                _buildActionButton(Icons.info_outline_rounded, () {}),
-                _buildActionButton(Icons.favorite_outline_rounded, () {}),
-                _buildActionButton(Icons.share_outlined, () {}),
+                // _buildActionButton(Icons.info_outline_rounded, () {}),
+                BlocSelector<WishListBloc, WishListState, bool>(
+                  selector: (wishListState) {
+                    final currentWishList =
+                        wishListState.wishListModel.restaurants;
+                    return currentWishList.any(
+                      (r) => r.id == widget.restaurantData.restaurantId,
+                    );
+                  },
+                  builder: (context, inWishList) {
+                    return _buildActionButton(
+                      inWishList
+                          ? Icons.favorite
+                          : Icons.favorite_outline_rounded,
+                      () {
+                        final userId = SessionController.user.id.toString();
+
+                        if (inWishList) {
+                          context.read<WishListBloc>().add(
+                            RemoveWishListEvent(
+                              userId: userId,
+                              restaurantId: widget.restaurantData.restaurantId
+                                  .toString(),
+                            ),
+                          );
+                        } else {
+                          context.read<WishListBloc>().add(
+                            AddWishListEvent(
+                              userId: userId,
+                              restaurantId: widget.restaurantData.restaurantId
+                                  .toString(),
+                            ),
+                          );
+                        }
+                      },
+                    );
+                  },
+                ),
+                // _buildActionButton(Icons.share_outlined, () {}),
               ],
               flexibleSpace: FlexibleSpaceBar(
-                background: Image.network(
-                  widget.restaurantData.restaurantLogo ?? '',
+                background: CachedNetworkImage(
+                  imageUrl: widget.restaurantData.restaurantLogo ?? '',
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Icon(Icons.restaurant, size: 80, color: Colors.grey);
-                  },
+                  placeholder: (context, url) => Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  errorWidget: (context, url, error) =>
+                      Icon(Icons.restaurant, size: 80, color: Colors.grey),
                 ),
               ),
             ),
@@ -90,44 +162,44 @@ class _MenuScreenState extends State<MenuScreen> {
               children: [
                 SizedBox(height: 10),
                 headerWidget(),
-                const TrackerWidget(),
 
-                Padding(
-                  padding: const EdgeInsets.only(top: 4.0, left: 16),
-                  child: Text(
-                    'Discount',
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
+                // const TrackerWidget(),
 
-                SizedBox(
-                  height: 130,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: 4,
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.only(left: 8, right: 8, top: 2),
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: discountWidget(
-                          "Get amazing discounts on your first order",
-                          "20",
-                          Icons.local_offer,
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(top: 4.0, left: 16),
+                //   child: Text(
+                //     'Discount',
+                //     style: GoogleFonts.poppins(
+                //       fontSize: 16,
+                //       fontWeight: FontWeight.w600,
+                //       color: Colors.black,
+                //     ),
+                //   ),
+                // ),
+
+                // SizedBox(
+                //   height: 130,
+                //   child: ListView.builder(
+                //     shrinkWrap: true,
+                //     physics: NeverScrollableScrollPhysics(),
+                //     itemCount: 4,
+                //     scrollDirection: Axis.horizontal,
+                //     padding: const EdgeInsets.only(left: 8, right: 8, top: 2),
+                //     itemBuilder: (context, index) {
+                //       return Padding(
+                //         padding: const EdgeInsets.only(right: 8),
+                //         child: discountWidget(
+                //           "Get amazing discounts on your first order",
+                //           "20",
+                //           Icons.local_offer,
+                //         ),
+                //       );
+                //     },
+                //   ),
+                // ),
 
                 /// search
-                searchWidget(),
-
+                // searchWidget(),
                 BlocBuilder<RestaurantMenuBloc, RestaurantMenuState>(
                   builder: (context, state) {
                     final menu = state
@@ -153,6 +225,11 @@ class _MenuScreenState extends State<MenuScreen> {
                     final categories = menu.categories;
                     final selectedCategory = categories[selectedCategoryIndex];
 
+                    // first category ki menu items get kr rha pehlay
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      _getMenuItem();
+                    });
+
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -176,6 +253,15 @@ class _MenuScreenState extends State<MenuScreen> {
                                   setState(() {
                                     selectedCategoryIndex = index;
                                   });
+                                  final restaurantId =
+                                      widget.restaurantData.restaurantId;
+                                  final categoryId = category.categoryId;
+                                  context.read<RestaurantMenuBloc>().add(
+                                    FetchRestaurantMenuItemEvent(
+                                      restaurantId: restaurantId,
+                                      categoryId: categoryId,
+                                    ),
+                                  );
                                 },
                                 child: AnimatedContainer(
                                   duration: const Duration(milliseconds: 250),
@@ -233,7 +319,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           itemCount: selectedCategory.items.length,
                           itemBuilder: (context, index) {
                             final item = selectedCategory.items[index];
-                            final cartController = CartSessionController();
+                            // final cartController = CartSessionController();
                             return GestureDetector(
                               onTap: () {
                                 Navigator.pushNamed(
@@ -243,6 +329,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                     "menu_item": item,
                                     'restaurant_id':
                                         widget.restaurantData.restaurantId,
+                                    "category_id": selectedCategoryIndex,
                                   },
                                 );
                               },
@@ -272,15 +359,28 @@ class _MenuScreenState extends State<MenuScreen> {
                                             ),
                                         child: Stack(
                                           children: [
-                                            Image.network(
-                                              item.itemPhoto ?? "",
+                                            CachedNetworkImage(
+                                              imageUrl: item.itemPhoto,
                                               width: double.infinity,
                                               fit: BoxFit.cover,
-                                              errorBuilder:
+                                              placeholder: (context, url) =>
+                                                  Container(
+                                                    width: double.infinity,
+                                                    height: double.infinity,
+                                                    color: Colors.grey.shade200,
+                                                    child: const Center(
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                            strokeWidth: 2,
+                                                            color: Colors.grey,
+                                                          ),
+                                                    ),
+                                                  ),
+                                              errorWidget:
                                                   (
                                                     context,
+                                                    url,
                                                     error,
-                                                    stackTrace,
                                                   ) => Container(
                                                     width: double.infinity,
                                                     height: double.infinity,
@@ -297,70 +397,71 @@ class _MenuScreenState extends State<MenuScreen> {
 
                                             BlocBuilder<CartBloc, CartState>(
                                               builder: (context, cartState) {
-                                                final isInCart = cartState.items
-                                                    .any(
-                                                      (i) =>
-                                                          i.id ==
-                                                          item.itemId
-                                                              .toString(),
-                                                    );
+                                                // Extract cart items in a null-safe way depending on the concrete state class
+                                                List<CartItemModel> cartItems = [];
+
+                                                // If you use a "CartLoaded" subtype (sealed-state approach)
+                                                if (cartState is CartLoaded) {
+                                                  cartItems = cartState.items;
+                                                }
+                                                // If you used a single CartState class that already has `items` field,
+                                                // this will still work (try-catch with dynamic fallback)
+                                                else {
+                                                  try {
+                                                    final dynamic maybe = cartState;
+                                                    if (maybe.items is List<CartItemModel>) {
+                                                      cartItems = List<CartItemModel>.from(maybe.items as List);
+                                                    }
+                                                  } catch (_) {
+                                                    cartItems = [];
+                                                  }
+                                                }
+
+                                                final bool isInCart = cartItems.any((i) => i.id == item.itemId.toString());
 
                                                 return Positioned(
                                                   bottom: 8,
                                                   right: 8,
                                                   child: InkWell(
                                                     onTap: () {
-                                                      final itemObject =
-                                                          CartItemModel(
-                                                            id: item.itemId
-                                                                .toString(),
-                                                            name: item.itemName,
-                                                            price: double.parse(
-                                                              item.itemPrice,
-                                                            ),
-                                                            quantity: 1,
-                                                            imageUrl:
-                                                                item.itemPhoto ??
-                                                                "",
-                                                            restaurantId: widget
-                                                                .restaurantData
-                                                                .restaurantId
-                                                                .toString(),
-                                                          );
+                                                      // final itemObject = CartItemModel(
+                                                      //   id: item.itemId.toString(),
+                                                      //   name: item.itemName,
+                                                      //   price: double.tryParse(item.itemPrice) ?? 0.0,
+                                                      //   quantity: 1,
+                                                      //   imageUrl: item.itemPhoto ?? "",
+                                                      //   restaurantId: widget.restaurantData.restaurantId.toString(),
+                                                      //   variationId: null, // set if you have a variation selected
+                                                      // );
 
                                                       if (isInCart) {
-                                                        context
-                                                            .read<CartBloc>()
-                                                            .add(
-                                                              RemoveCartItem(
-                                                                item.itemId
-                                                                    .toString(),
-                                                              ),
-                                                            );
+                                                        // remove item (if your RemoveCartItem expects variationId, pass it)
+                                                        context.read<CartBloc>().add(
+                                                          RemoveCartItem(item.itemId.toString()),
+                                                        );
                                                       } else {
-                                                        context
-                                                            .read<CartBloc>()
-                                                            .add(
-                                                              AddOrUpdateCartItem(
-                                                                itemObject,
-                                                              ),
-                                                            );
+                                                        // Option A: Navigate to details page (your current behavior)
+                                                        Navigator.pushNamed(
+                                                          context,
+                                                          RoutesName.productDetails,
+                                                          arguments: {
+                                                            "menu_item": item,
+                                                            "restaurant_id": widget.restaurantData.restaurantId,
+                                                          },
+                                                        );
+
+                                                        // Option B: Quick add directly to cart (uncomment if desired)
+                                                        // context.read<CartBloc>().add(AddOrUpdateCartItem(itemObject));
                                                       }
                                                     },
                                                     child: Container(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                            6,
-                                                          ),
+                                                      padding: const EdgeInsets.all(6),
                                                       decoration: BoxDecoration(
-                                                        color:
-                                                            AppColors.primary,
+                                                        color: AppColors.primary,
                                                         shape: BoxShape.circle,
                                                       ),
                                                       child: Icon(
-                                                        isInCart
-                                                            ? Icons.check
-                                                            : Icons.add,
+                                                        isInCart ? Icons.check : Icons.add,
                                                         color: Colors.white,
                                                         size: 25,
                                                       ),
@@ -369,6 +470,8 @@ class _MenuScreenState extends State<MenuScreen> {
                                                 );
                                               },
                                             ),
+
+
                                           ],
                                         ),
                                       ),

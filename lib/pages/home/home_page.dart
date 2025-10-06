@@ -2,6 +2,7 @@ import 'package:excellent_trade_app/bloc/near_by_restaurant/near_by_restaurant_b
 import 'package:excellent_trade_app/pages/home/widgets/brand_list.dart';
 import '../../Utils/constants/appWeight.dart';
 import '../../bloc/top_restaurant/top_restaurant_bloc.dart';
+import '../../bloc/wish_list/wish_list_bloc.dart';
 import 'home_exports.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,6 +24,8 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProfileBloc>().add(FetchProfileEvent(id: userId));
       context.read<CategoryBloc>().add(FetchCategoriesEvent());
+
+      context.read<WishListBloc>().add(FetchWishListEvent(userId: userId));
 
       final locationSessionController = LocationSessionController();
       final lat =
@@ -80,7 +83,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final userName = SessionController.user.name;
-    print("name ======>  $userName");
     return Scaffold(
       backgroundColor: AppColors.lightPink,
       body: CustomScrollView(

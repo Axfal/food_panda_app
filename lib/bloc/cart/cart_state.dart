@@ -1,28 +1,35 @@
 part of 'cart_bloc.dart';
 
-class CartState extends Equatable {
-  final List<CartItemModel> items;
-  final ApiResponse<String> apiResponse;
-  final String? restaurantId;
-
-  const CartState({
-    this.items = const [],
-    this.apiResponse = const ApiResponse.completed(''),
-    this.restaurantId,
-  });
-
-  CartState copyWith({
-    List<CartItemModel>? items,
-    ApiResponse<String>? apiResponse,
-    String? restaurantId,
-  }) {
-    return CartState(
-      items: items ?? this.items,
-      apiResponse: apiResponse ?? this.apiResponse,
-      restaurantId: restaurantId ?? this.restaurantId,
-    );
-  }
+sealed class CartState extends Equatable {
+  const CartState();
 
   @override
-  List<Object?> get props => [items, apiResponse, restaurantId];
+  List<Object?> get props => [];
+}
+
+class CartInitial extends CartState {}
+
+class CartLoading extends CartState {}
+
+class CartLoaded extends CartState {
+  final List<CartItemModel> items;
+
+  const CartLoaded(this.items);
+
+  double get totalPrice =>
+      items.fold(0, (sum, item) => sum + (item.price * item.quantity));
+
+  int get totalItems =>
+      items.fold(0, (sum, item) => sum + item.quantity);
+
+  @override
+  List<Object?> get props => [items];
+}
+
+class CartError extends CartState {
+  final String message;
+  const CartError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }

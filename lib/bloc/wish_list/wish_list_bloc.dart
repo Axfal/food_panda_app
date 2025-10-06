@@ -54,7 +54,7 @@ class WishListBloc extends Bloc<WishListEvent, WishListState> {
     AddWishListEvent event,
     Emitter<WishListState> emit,
   ) async {
-    emit(state.copyWith(apiResponse: ApiResponse.loading()));
+    // emit(state.copyWith(apiResponse: ApiResponse.loading()));
     try {
       final response = await wishListApiRepository.addWishList({
         "user_id": event.userId,
@@ -86,7 +86,7 @@ class WishListBloc extends Bloc<WishListEvent, WishListState> {
     RemoveWishListEvent event,
     Emitter<WishListState> emit,
   ) async {
-    emit(state.copyWith(apiResponse: ApiResponse.loading()));
+    // emit(state.copyWith(apiResponse: ApiResponse.loading()));
     try {
       final response = await wishListApiRepository.removeWishList({
         "user_id": event.userId,

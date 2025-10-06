@@ -123,10 +123,9 @@ class _AccountPageState extends State<AccountPage> {
                     child: buildIconCard(
                       icon: LucideIcons.heart,
                       label: 'Favourites',
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => FavouritesPage()),
-                      ),
+                      onTap: () {
+                        Navigator.pushNamed(context, RoutesName.wishList);
+                      },
                     ),
                   ),
                   const SizedBox(width: 12),

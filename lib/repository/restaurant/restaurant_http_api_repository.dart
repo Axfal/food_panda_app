@@ -74,4 +74,17 @@ class RestaurantHttpApiRepository implements RestaurantApiRepository {
     final response = await _networkServices.postApi(AppUrl.topRestaurant, data);
     return response;
   }
+
+  @override
+  Future restaurantMenuItem(data) async {
+    final uri = Uri.parse(
+      AppUrl.getRestaurantMenuItem,
+    ).replace(queryParameters: data);
+    try {
+      final response = await _networkServices.getApi(uri.toString());
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

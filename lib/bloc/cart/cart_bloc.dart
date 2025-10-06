@@ -1,64 +1,74 @@
-import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
-import 'package:excellent_trade_app/model/cart/cart_model.dart';
-import '../../service/cart/cart_service.dart';
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+
+import '../../model/cart/cart_model.dart';
 
 part 'cart_event.dart';
 part 'cart_state.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
-  final CartSessionController _cartSessionController = CartSessionController();
+  CartBloc() : super(CartInitial()) {
+    on<LoadCart>(_onLoadCart);
+    on<AddOrUpdateCartItem>(_onAddOrUpdateCartItem);
+    on<UpdateCartItemQuantity>(_onUpdateCartItemQuantity);
+    on<RemoveCartItem>(_onRemoveCartItem);
+    on<ClearCart>(_onClearCart);
+  }
 
-  CartBloc() : super(const CartState()) {
-    on<LoadCart>((event, emit) async {
-      await _cartSessionController.loadCart();
-      emit(
-        state.copyWith(
-          items: List.from(CartSessionController.cartItems),
-          restaurantId: CartSessionController.currentRestaurantId,
-        ),
-      );
-    });
+  void _onLoadCart(LoadCart event, Emitter<CartState> emit) {
+    emit(CartLoaded([]));
+  }
 
-    on<AddOrUpdateCartItem>((event, emit) async {
-      await _cartSessionController.addOrUpdateItem(event.item);
-      emit(
-        state.copyWith(
-          items: List.from(CartSessionController.cartItems),
-          restaurantId: CartSessionController.currentRestaurantId,
-        ),
-      );
-    });
+  void _onAddOrUpdateCartItem(
+    AddOrUpdateCartItem event,
+    Emitter<CartState> emit,
+  ) {
+    if (state is CartLoaded) {
+      final loadedState = state as CartLoaded;
+      final items = List<CartItemModel>.from(loadedState.items);
 
-    on<UpdateCartItemQuantity>((event, emit) async {
-      if (event.newQuantity <= 0) {
-        await _cartSessionController.removeItem(event.itemId);
-      } else {
-        await _cartSessionController.updateItemQuantity(
-          event.itemId,
-          event.newQuantity,
+      final index = items.indexWhere((i) => i.id == event.item.id);
+      if (index != -1) {
+        items[index] = event.item.copyWith(
+          quantity: items[index].quantity + event.item.quantity,
         );
+      } else {
+        items.add(event.item);
       }
-      emit(
-        state.copyWith(
-          items: List.from(CartSessionController.cartItems),
-          restaurantId: CartSessionController.currentRestaurantId,
-        ),
-      );
-    });
 
-    on<RemoveCartItem>((event, emit) async {
-      await _cartSessionController.removeItem(event.itemId);
-      emit(
-        state.copyWith(
-          items: List.from(CartSessionController.cartItems),
-          restaurantId: CartSessionController.currentRestaurantId,
-        ),
-      );
-    });
+      emit(CartLoaded(items));
+    }
+  }
 
-    on<ClearCart>((event, emit) async {
-      await _cartSessionController.clearCart();
-      emit(state.copyWith(items: [], restaurantId: null));
-    });
+  void _onUpdateCartItemQuantity(
+    UpdateCartItemQuantity event,
+    Emitter<CartState> emit,
+  ) {
+    if (state is CartLoaded) {
+      final loadedState = state as CartLoaded;
+      final items = List<CartItemModel>.from(loadedState.items);
+
+      final index = items.indexWhere((i) => i.id == event.itemId);
+      if (index != -1) {
+        final item = items[index];
+        items[index] = item.copyWith(quantity: event.newQuantity);
+      }
+
+      emit(CartLoaded(items));
+    }
+  }
+
+  void _onRemoveCartItem(RemoveCartItem event, Emitter<CartState> emit) {
+    if (state is CartLoaded) {
+      final loadedState = state as CartLoaded;
+      final items = loadedState.items
+          .where((i) => i.id != event.itemId)
+          .toList();
+      emit(CartLoaded(items));
+    }
+  }
+
+  void _onClearCart(ClearCart event, Emitter<CartState> emit) {
+    emit(CartLoaded([]));
   }
 }

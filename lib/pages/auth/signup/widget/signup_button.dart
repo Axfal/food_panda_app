@@ -8,7 +8,7 @@ class SignupButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<SignupBloc, SignupStates>(
       listenWhen: (previous, current) =>
-          previous.signupApi != current.signupApi &&
+          previous.signupApi != current.signupApi ||
           current.userId != previous.userId,
       listener: (context, state) {
         if (state.signupApi.status == Status.error) {

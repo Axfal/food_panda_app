@@ -14,6 +14,8 @@ class RestaurantCard extends StatelessWidget {
   final String discountLabel;
   final bool isAd;
   final VoidCallback? onTap;
+  final VoidCallback? onFavouriteTap;
+  final bool inWishList;
 
   const RestaurantCard({
     super.key,
@@ -28,6 +30,8 @@ class RestaurantCard extends StatelessWidget {
     required this.discountLabel,
     this.isAd = false,
     this.onTap,
+    this.inWishList = false,
+    this.onFavouriteTap,
   });
 
   @override
@@ -42,7 +46,6 @@ class RestaurantCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // 🔷 Image with Favorite & Ad Label
             Stack(
               children: [
                 ClipRRect(
@@ -83,13 +86,16 @@ class RestaurantCard extends StatelessWidget {
                 Positioned(
                   right: 10,
                   top: 10,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 16,
-                    child: const Icon(
-                      Icons.favorite_border,
-                      size: 18,
-                      color: Colors.grey,
+                  child: GestureDetector(
+                    onTap: onFavouriteTap,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.black.withValues(alpha: 0.4),
+                      radius: 18,
+                      child: Icon(
+                        inWishList ? Icons.favorite : Icons.favorite_border,
+                        size: 18,
+                        color: inWishList ? AppColors.primary : Colors.white,
+                      ),
                     ),
                   ),
                 ),

@@ -1,6 +1,7 @@
 import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/my_app_bar.dart';
 import 'package:excellent_trade_app/model/wish_list/wish_list_model.dart';
-import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart' hide Restaurant;
+import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart'
+    hide Restaurant;
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:excellent_trade_app/bloc/wish_list/wish_list_bloc.dart';
@@ -37,42 +38,50 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
       ),
-      body: BlocBuilder<WishListBloc, WishListState>(
-        builder: (context, state) {
-          try {
-            if (state.apiResponse.status == Status.loading) {
-              return const Center(
-                child: CupertinoActivityIndicator(color: Colors.black54),
-              );
-            }
-
-            if (state.apiResponse.status == Status.error) {
-              return _buildMessage(
-                state.apiResponse.message ?? "Something went wrong",
-                isError: true,
-              );
-            }
-
-            final restaurants = state.wishListModel.restaurants;
-
-            if (restaurants.isEmpty) {
-              return _buildMessage("No favourites yet");
-            }
-
-            return ListView.builder(
-              padding: const EdgeInsets.all(14),
-              itemCount: restaurants.length,
-              itemBuilder: (context, index) {
-                final restaurant = restaurants[index];
-                return _buildRestaurantCard(restaurant);
-              },
-            );
-          } catch (e, stack) {
-            debugPrint("Error building FavouriteScreen: $e");
-            debugPrint(stack.toString());
-            return _buildMessage("Unexpected error occurred", isError: true);
-          }
+      body: RefreshIndicator(
+        color: Colors.white,
+        backgroundColor: AppColors.primary,
+        onRefresh: () async {
+          userId = SessionController.user.id.toString();
+          context.read<WishListBloc>().add(FetchWishListEvent(userId: userId));
         },
+        child: BlocBuilder<WishListBloc, WishListState>(
+          builder: (context, state) {
+            try {
+              if (state.apiResponse.status == Status.loading) {
+                return const Center(
+                  child: CupertinoActivityIndicator(color: Colors.black54),
+                );
+              }
+
+              if (state.apiResponse.status == Status.error) {
+                return _buildMessage(
+                  state.apiResponse.message ?? "Something went wrong",
+                  isError: true,
+                );
+              }
+
+              final restaurants = state.wishListModel.restaurants;
+
+              if (restaurants.isEmpty) {
+                return _buildMessage("No favourites yet");
+              }
+
+              return ListView.builder(
+                padding: const EdgeInsets.all(14),
+                itemCount: restaurants.length,
+                itemBuilder: (context, index) {
+                  final restaurant = restaurants[index];
+                  return _buildRestaurantCard(restaurant);
+                },
+              );
+            } catch (e, stack) {
+              debugPrint("Error building FavouriteScreen: $e");
+              debugPrint(stack.toString());
+              return _buildMessage("Unexpected error occurred", isError: true);
+            }
+          },
+        ),
       ),
     );
   }
@@ -235,7 +244,11 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                         ),
 
                         const SizedBox(width: 12),
-
+                      ],
+                    ),
+                    SizedBox(height: 5),
+                    Row(
+                      children: [
                         Icon(
                           Icons.access_time,
                           size: 15,

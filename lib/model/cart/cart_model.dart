@@ -5,8 +5,10 @@ class CartItemModel {
   final int quantity;
   final String imageUrl;
   final String restaurantId;
+  final int? variationId;
 
   CartItemModel({
+    this.variationId,
     required this.id,
     required this.name,
     required this.price,
@@ -17,6 +19,7 @@ class CartItemModel {
 
   CartItemModel copyWith({
     String? id,
+    int? variationId,
     String? name,
     double? price,
     int? quantity,
@@ -25,6 +28,7 @@ class CartItemModel {
   }) {
     return CartItemModel(
       id: id ?? this.id,
+      variationId: variationId ?? this.variationId,
       name: name ?? this.name,
       price: price ?? this.price,
       quantity: quantity ?? this.quantity,
@@ -38,6 +42,7 @@ class CartItemModel {
       'id': id,
       'name': name,
       'price': price,
+      'variation': variationId,
       'quantity': quantity,
       'imageUrl': imageUrl,
       'restaurantId': restaurantId,
@@ -48,6 +53,7 @@ class CartItemModel {
     return CartItemModel(
       id: json['id'],
       name: json['name'],
+      variationId: json['variation_id'],
       price: (json['price'] as num).toDouble(),
       quantity: json['quantity'],
       imageUrl: json['imageUrl'] ?? '',
