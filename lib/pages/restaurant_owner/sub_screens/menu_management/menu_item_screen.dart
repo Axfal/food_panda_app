@@ -83,6 +83,20 @@ class _MenuItemScreenState extends State<MenuItemScreen> {
                   ),
                 );
               }
+              if (state.itemsByCategory[widget.categoryId.toString()] != null &&
+                  state
+                      .itemsByCategory[widget.categoryId.toString()]!
+                      .isEmpty) {
+                return Center(
+                  child: Text(
+                    'No items available',
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      color: Colors.black54,
+                    ),
+                  ),
+                );
+              }
 
               return MasonryGridView.count(
                 crossAxisCount: 2,

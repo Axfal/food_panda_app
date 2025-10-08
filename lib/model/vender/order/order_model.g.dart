@@ -13,17 +13,26 @@ _OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => _OrderModel(
           ?.map((e) => OrderData.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const [],
+  limit: (json['limit'] as num?)?.toInt() ?? 0,
+  offset: (json['offset'] as num?)?.toInt() ?? 0,
 );
 
 Map<String, dynamic> _$OrderModelToJson(_OrderModel instance) =>
-    <String, dynamic>{'success': instance.success, 'orders': instance.orders};
+    <String, dynamic>{
+      'success': instance.success,
+      'orders': instance.orders,
+      'limit': instance.limit,
+      'offset': instance.offset,
+    };
 
 _OrderData _$OrderDataFromJson(Map<String, dynamic> json) => _OrderData(
   id: (json['id'] as num?)?.toInt() ?? 0,
   orderNumber: json['order_number'] as String? ?? '',
   customerId: (json['customer_id'] as num?)?.toInt() ?? 0,
   restaurantId: (json['restaurant_id'] as num?)?.toInt() ?? 0,
+  deliveryBoyId: (json['delivery_boy_id'] as num?)?.toInt(),
   status: json['status'] as String? ?? '',
+  trackingStatus: json['tracking_status'] as String? ?? '',
   totalAmount: json['total_amount'] as String? ?? '0.00',
   discountAmount: json['discount_amount'] as String? ?? '0.00',
   finalAmount: json['final_amount'] as String? ?? '0.00',
@@ -32,13 +41,15 @@ _OrderData _$OrderDataFromJson(Map<String, dynamic> json) => _OrderData(
   specialInstructions: json['special_instructions'] as String? ?? '',
   createdAt: json['created_at'] as String? ?? '',
   updatedAt: json['updated_at'] as String? ?? '',
-  acceptedAt: json['accepted_at'] as String? ?? '',
+  acceptedAt: json['accepted_at'] as String?,
   readyAt: json['ready_at'] as String? ?? '',
   preparingAt: json['preparing_at'] as String? ?? '',
+  deliveryAcceptedAt: json['delivery_accepted_at'] as String? ?? '',
   pickedUpAt: json['picked_up_at'] as String? ?? '',
   deliveredAt: json['delivered_at'] as String?,
   canceledAt: json['canceled_at'] as String? ?? '',
   failedAt: json['failed_at'] as String? ?? '',
+  lastLocationUpdate: json['last_location_update'] as String? ?? '',
   lat: json['lat'] as String? ?? '0.0',
   lng: json['lng'] as String? ?? '0.0',
   houseNo: json['house_no'] as String? ?? '',
@@ -57,7 +68,9 @@ Map<String, dynamic> _$OrderDataToJson(_OrderData instance) =>
       'order_number': instance.orderNumber,
       'customer_id': instance.customerId,
       'restaurant_id': instance.restaurantId,
+      'delivery_boy_id': instance.deliveryBoyId,
       'status': instance.status,
+      'tracking_status': instance.trackingStatus,
       'total_amount': instance.totalAmount,
       'discount_amount': instance.discountAmount,
       'final_amount': instance.finalAmount,
@@ -69,10 +82,12 @@ Map<String, dynamic> _$OrderDataToJson(_OrderData instance) =>
       'accepted_at': instance.acceptedAt,
       'ready_at': instance.readyAt,
       'preparing_at': instance.preparingAt,
+      'delivery_accepted_at': instance.deliveryAcceptedAt,
       'picked_up_at': instance.pickedUpAt,
       'delivered_at': instance.deliveredAt,
       'canceled_at': instance.canceledAt,
       'failed_at': instance.failedAt,
+      'last_location_update': instance.lastLocationUpdate,
       'lat': instance.lat,
       'lng': instance.lng,
       'house_no': instance.houseNo,
@@ -92,6 +107,8 @@ _OrderItem _$OrderItemFromJson(Map<String, dynamic> json) => _OrderItem(
   finalPrice: json['final_price'] as String? ?? '0.00',
   totalPrice: json['total_price'] as String? ?? '0.00',
   createdAt: json['created_at'] as String? ?? '',
+  variationId: (json['variation_id'] as num?)?.toInt(),
+  variationName: json['variation_name'] as String? ?? '',
 );
 
 Map<String, dynamic> _$OrderItemToJson(_OrderItem instance) =>
@@ -106,4 +123,6 @@ Map<String, dynamic> _$OrderItemToJson(_OrderItem instance) =>
       'final_price': instance.finalPrice,
       'total_price': instance.totalPrice,
       'created_at': instance.createdAt,
+      'variation_id': instance.variationId,
+      'variation_name': instance.variationName,
     };

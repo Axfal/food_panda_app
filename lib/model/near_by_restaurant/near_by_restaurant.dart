@@ -179,7 +179,6 @@ class Location with _$Location {
     throw UnimplementedError();
   }
 
-
 }
 
 /// Helper functions to convert String to double and back

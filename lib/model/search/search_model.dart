@@ -37,6 +37,7 @@ class SearchModel with _$SearchModel {
     throw UnimplementedError();
   }
 
+
 }
 
 @freezed

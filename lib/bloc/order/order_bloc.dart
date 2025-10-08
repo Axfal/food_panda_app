@@ -18,23 +18,32 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   OrderBloc({required this.orderApiRepository, required this.webSocketService})
     : super(OrderState()) {
     on<CheckOutEvent>(_onCheckout);
-
     on<NewOrderReceivedEvent>(_onNewOrderReceived);
-
     on<FetchOrderEvent>(_onGetOrders);
-
     on<StatusUpdateEvent>(_onUpdateStatus);
 
     webSocketService.onMessage = (data) {
-      print(data);
 
       if (data['type'] == 'new_order') {
         try {
           final orderJson = data['data'] as Map<String, dynamic>;
           final order = WebSocketOrder.fromJson(orderJson);
 
-          print("New WebSocket order received: ${order.orderNumber}");
-          add(NewOrderReceivedEvent(order));
+          final currentRestaurantId = SessionController.restaurantId;
+
+          final incomingRestaurantId = order.restaurantId;
+
+          if (currentRestaurantId != null &&
+              incomingRestaurantId != null &&
+              incomingRestaurantId == currentRestaurantId) {
+
+            add(NewOrderReceivedEvent(order));
+          } else {
+            print(
+              "Ignored order ${order.orderNumber} for restaurant_id $incomingRestaurantId "
+              "(Current: $currentRestaurantId)",
+            );
+          }
         } catch (e) {
           print("Error parsing WebSocketOrder: $e");
         }
@@ -46,8 +55,6 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     StatusUpdateEvent event,
     Emitter<OrderState> emit,
   ) async {
-    // emit(state.copyWith(apiResponse: ApiResponse.loading()));
-
     final data = {
       "order_number": event.orderNumber,
       "restaurant_id": event.restaurantId,
@@ -180,10 +187,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         unreadOrders: state.unreadOrders + 1,
       ),
     );
-    NotificationSound.playNotification();
 
-    print("Total orders: ${updatedOrders.length}");
-    print("Latest order number: ${order.orderNumber}");
+    NotificationSound.playNotification();
   }
 
   Future<void> _onCheckout(

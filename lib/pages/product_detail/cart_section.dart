@@ -17,7 +17,7 @@ class _CartSectionState extends State<CartSection> {
   @override
   void initState() {
     super.initState();
-    // context.read<CartBloc>().add(LoadCart());
+    context.read<CartBloc>().add(LoadCart());
   }
 
   @override
@@ -41,8 +41,12 @@ class _CartSectionState extends State<CartSection> {
       ),
 
       body: BlocBuilder<CartBloc, CartState>(
-        buildWhen: (previous, current) =>
-            previous is CartLoaded && current is CartLoaded,
+        buildWhen: (previous, current) {
+          if (current is CartLoaded && previous is CartLoaded) {
+            return previous.items != current.items;
+          }
+          return true;
+        },
         builder: (context, state) {
           final cartItems = state is CartLoaded
               ? state.items

@@ -70,6 +70,7 @@ class OrderItem extends Equatable {
   final String itemName;
   final int quantity;
   final double price;
+  final int? variationId;
   final double discountAmount;
   final double finalPrice;
   final double totalPrice;
@@ -79,6 +80,7 @@ class OrderItem extends Equatable {
     required this.itemName,
     required this.quantity,
     required this.price,
+    this.variationId,
     required this.discountAmount,
     required this.finalPrice,
     required this.totalPrice,
@@ -89,6 +91,7 @@ class OrderItem extends Equatable {
     "item_name": itemName,
     "quantity": quantity,
     "price": price,
+    "variation_id": variationId,
     "discount_amount": discountAmount,
     "final_price": finalPrice,
     "total_price": totalPrice,
@@ -99,6 +102,7 @@ class OrderItem extends Equatable {
     itemId,
     itemName,
     quantity,
+    variationId,
     price,
     discountAmount,
     finalPrice,

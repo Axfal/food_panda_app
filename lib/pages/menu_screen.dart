@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print
 
+import 'dart:async';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
@@ -30,19 +32,22 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   void initState() {
     super.initState();
+    final bloc = context.read<RestaurantMenuBloc>();
+    final restaurantId = widget.restaurantData.restaurantId;
 
-    // Step 1: Fetch all categories when screen opens
-    context.read<RestaurantMenuBloc>().add(
-      FetchRestaurantMenuEvent(
-        restaurantId: widget.restaurantData.restaurantId,
-      ),
-    );
+    // menu fetch event
+    bloc.add(FetchRestaurantMenuEvent(restaurantId: restaurantId));
+
+    // Wait for bloc to update state after fetch — use addPostFrameCallback
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getMenuItem();
+    });
   }
 
   /// shuru mn aik category ki menu item ki api hit krwani hy, baad mn jb user tap kre ga jis bhi category ko to uski api hit krwani hy.
   Future<void> _getMenuItem() async {
     final bloc = context.read<RestaurantMenuBloc>();
-    final restaurantId = 6; //widget.restaurantData.restaurantId;
+    final restaurantId = widget.restaurantData.restaurantId;
 
     // get first categoryId from menus
     final categoryId =
@@ -96,7 +101,7 @@ class _MenuScreenState extends State<MenuScreen> {
               ),
 
               actions: [
-                // _buildActionButton(Icons.info_outline_rounded, () {}),
+                _buildActionButton(Icons.info_outline_rounded, () {}),
                 BlocSelector<WishListBloc, WishListState, bool>(
                   selector: (wishListState) {
                     final currentWishList =
@@ -134,7 +139,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     );
                   },
                 ),
-                // _buildActionButton(Icons.share_outlined, () {}),
+                _buildActionButton(Icons.share_outlined, () {}),
               ],
               flexibleSpace: FlexibleSpaceBar(
                 background: CachedNetworkImage(
@@ -319,7 +324,6 @@ class _MenuScreenState extends State<MenuScreen> {
                           itemCount: selectedCategory.items.length,
                           itemBuilder: (context, index) {
                             final item = selectedCategory.items[index];
-                            // final cartController = CartSessionController();
                             return GestureDetector(
                               onTap: () {
                                 Navigator.pushNamed(
@@ -329,7 +333,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                     "menu_item": item,
                                     'restaurant_id':
                                         widget.restaurantData.restaurantId,
-                                    "category_id": selectedCategoryIndex,
+                                    "category_id": selectedCategory.categoryId,
                                   },
                                 );
                               },
@@ -397,27 +401,38 @@ class _MenuScreenState extends State<MenuScreen> {
 
                                             BlocBuilder<CartBloc, CartState>(
                                               builder: (context, cartState) {
-                                                // Extract cart items in a null-safe way depending on the concrete state class
-                                                List<CartItemModel> cartItems = [];
+                                                List<CartItemModel> cartItems =
+                                                    [];
 
-                                                // If you use a "CartLoaded" subtype (sealed-state approach)
                                                 if (cartState is CartLoaded) {
                                                   cartItems = cartState.items;
-                                                }
-                                                // If you used a single CartState class that already has `items` field,
-                                                // this will still work (try-catch with dynamic fallback)
-                                                else {
+                                                } else {
                                                   try {
-                                                    final dynamic maybe = cartState;
-                                                    if (maybe.items is List<CartItemModel>) {
-                                                      cartItems = List<CartItemModel>.from(maybe.items as List);
+                                                    final dynamic maybe =
+                                                        cartState;
+                                                    if (maybe.items
+                                                        is List<
+                                                          CartItemModel
+                                                        >) {
+                                                      cartItems =
+                                                          List<
+                                                            CartItemModel
+                                                          >.from(
+                                                            maybe.items as List,
+                                                          );
                                                     }
                                                   } catch (_) {
                                                     cartItems = [];
                                                   }
                                                 }
 
-                                                final bool isInCart = cartItems.any((i) => i.id == item.itemId.toString());
+                                                final bool isInCart = cartItems
+                                                    .any(
+                                                      (i) =>
+                                                          i.id ==
+                                                          item.itemId
+                                                              .toString(),
+                                                    );
 
                                                 return Positioned(
                                                   bottom: 8,
@@ -436,32 +451,46 @@ class _MenuScreenState extends State<MenuScreen> {
 
                                                       if (isInCart) {
                                                         // remove item (if your RemoveCartItem expects variationId, pass it)
-                                                        context.read<CartBloc>().add(
-                                                          RemoveCartItem(item.itemId.toString()),
-                                                        );
+                                                        context
+                                                            .read<CartBloc>()
+                                                            .add(
+                                                              RemoveCartItem(
+                                                                item.itemId
+                                                                    .toString(),
+                                                              ),
+                                                            );
                                                       } else {
-                                                        // Option A: Navigate to details page (your current behavior)
                                                         Navigator.pushNamed(
                                                           context,
-                                                          RoutesName.productDetails,
+                                                          RoutesName
+                                                              .productDetails,
                                                           arguments: {
                                                             "menu_item": item,
-                                                            "restaurant_id": widget.restaurantData.restaurantId,
+                                                            'restaurant_id': widget
+                                                                .restaurantData
+                                                                .restaurantId,
+                                                            "category_id":
+                                                                selectedCategoryIndex,
                                                           },
                                                         );
 
-                                                        // Option B: Quick add directly to cart (uncomment if desired)
                                                         // context.read<CartBloc>().add(AddOrUpdateCartItem(itemObject));
                                                       }
                                                     },
                                                     child: Container(
-                                                      padding: const EdgeInsets.all(6),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                            6,
+                                                          ),
                                                       decoration: BoxDecoration(
-                                                        color: AppColors.primary,
+                                                        color:
+                                                            AppColors.primary,
                                                         shape: BoxShape.circle,
                                                       ),
                                                       child: Icon(
-                                                        isInCart ? Icons.check : Icons.add,
+                                                        isInCart
+                                                            ? Icons.check
+                                                            : Icons.add,
                                                         color: Colors.white,
                                                         size: 25,
                                                       ),
@@ -470,8 +499,6 @@ class _MenuScreenState extends State<MenuScreen> {
                                                 );
                                               },
                                             ),
-
-
                                           ],
                                         ),
                                       ),
@@ -661,7 +688,7 @@ class _MenuScreenState extends State<MenuScreen> {
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(color: AppColors.primary.withValues(alpha: 0.2)),
       ),
-      color: AppColors.primary.withValues(alpha: 0.06), // Light background fill
+      color: AppColors.primary.withValues(alpha: 0.06),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         child: Column(
@@ -770,7 +797,7 @@ class _TrackerWidgetState extends State<TrackerWidget> {
         side: BorderSide(color: AppColors.primary.withValues(alpha: 0.2)),
       ),
       elevation: 0,
-      color: AppColors.primary.withValues(alpha: 0.06), // Soft background
+      color: AppColors.primary.withValues(alpha: 0.06),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         child: Row(

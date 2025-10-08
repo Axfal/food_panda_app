@@ -160,8 +160,12 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
         ),
 
         BlocBuilder<CartBloc, CartState>(
-          buildWhen: (previous, current) =>
-          previous is CartLoaded && current is CartLoaded,
+          buildWhen: (previous, current) {
+            if (current is CartLoaded && previous is CartLoaded) {
+              return previous.items != current.items;
+            }
+            return true;
+          },
           builder: (context, state) {
             // Grab items safely
             final cartItems =

@@ -39,8 +39,10 @@ class MenuManagementBloc
   ) async {
     emit(state.copyWith(categoriesApiResponse: const ApiResponse.loading()));
 
+    Map<String, dynamic> data = {"restaurant_id": event.restaurantId};
+
     try {
-      final response = await vendorApiRepository.fetchMenuCategory();
+      final response = await vendorApiRepository.fetchMenuCategory(data);
 
       if (response is Map<String, dynamic>) {
         final categoryModel = MenuCategoryModel.fromJson(response);

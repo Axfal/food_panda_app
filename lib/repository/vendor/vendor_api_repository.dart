@@ -8,7 +8,7 @@ abstract class VendorApiRepository {
 
   /// Menu Category
 
-  Future<dynamic> fetchMenuCategory();
+  Future<dynamic> fetchMenuCategory(dynamic data);
   Future<dynamic> addMenuCategory(dynamic data);
   Future<dynamic> updateMenuCategory(dynamic data);
   Future<dynamic> deleteMenuCategory(dynamic data);

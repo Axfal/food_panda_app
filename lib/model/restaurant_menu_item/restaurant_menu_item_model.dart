@@ -30,7 +30,7 @@ class Items {
   final int? categoryId;
   final String? name;
   final String? description;
-  final String? price; // can be null or string
+  final String? price;
   final String? photo;
   final String? status;
   final List<Variations>? variations;

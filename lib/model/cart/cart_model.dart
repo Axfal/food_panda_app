@@ -42,7 +42,7 @@ class CartItemModel {
       'id': id,
       'name': name,
       'price': price,
-      'variation': variationId,
+      'variation_id': variationId,
       'quantity': quantity,
       'imageUrl': imageUrl,
       'restaurantId': restaurantId,

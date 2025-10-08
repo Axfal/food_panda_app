@@ -20,7 +20,7 @@ class AppUrl {
   /// Categories
   static const String getCategories = '$baseUrl/categories.php';
   static const String getMenuCategory =
-      '$baseUrl/get_menu_categories.php?restaurant_id=6';
+      '$baseUrl/get_menu_categories.php';
   static const String addMenuCategory = '$baseUrl/menu_categories.php';
   static const String deleteMenuCategory =
       '$baseUrl/menu_categories_delete.php';

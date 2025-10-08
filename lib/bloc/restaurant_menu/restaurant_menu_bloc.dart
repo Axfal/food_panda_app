@@ -34,7 +34,7 @@ class RestaurantMenuBloc
     emit(state.copyWith(apiResponse: const ApiResponse.loading()));
     try {
       final response = await restaurantApiRepository.restaurantMenu(
-        "6", //  restaurantId.toString(),
+        restaurantId.toString(),
       );
 
       if (response != null &&
@@ -84,8 +84,8 @@ class RestaurantMenuBloc
     emit(state.copyWith(apiResponse: ApiResponse.loading()));
 
     final Map<String, dynamic> data = {
-      "restaurant_id": "6", //event.restaurantId.toString(),
-      "category_id": "2",//event.categoryId.toString(),
+      "restaurant_id": event.restaurantId.toString(),
+      "category_id": event.categoryId.toString(),
     };
 
     try {

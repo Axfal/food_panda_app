@@ -52,8 +52,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       ),
     );
 
+    final restaurantId = widget.restaurantId;
+    final menuItemId = widget.menuItem.itemId;
     context.read<ProductReviewBloc>().add(
-      FetchProductReviewEvent(restaurantId: 6, menuItemId: 32),
+      FetchProductReviewEvent(
+        restaurantId: restaurantId,
+        menuItemId: menuItemId,
+      ),
     );
 
     /// Load existing cart state
@@ -191,6 +196,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ),
 
             BlocBuilder<RestaurantMenuBloc, RestaurantMenuState>(
+              buildWhen: (current, previous) =>
+                  current.menuItem[widget.categoryId] !=
+                  previous.menuItem[widget.categoryId],
               builder: (context, state) {
                 final itemId = widget.menuItem.itemId;
                 if (state.menuItem[widget.categoryId]?.items != null &&
@@ -342,6 +350,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ),
       ),
       bottomNavigationBar: BlocBuilder<CartBloc, CartState>(
+        // buildWhen: (previous, current) =>
+        //     previous is CartLoaded != current is CartLoaded || previous is CartLoading != current is CartLoading,
         builder: (context, state) {
           final item = widget.menuItem;
           CartItemModel? existingItem;
@@ -443,7 +453,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               );
                             }
                           }
-                        : null, // disabled if variations exist but none selected
+                        : null,
 
                     icon: Icon(
                       isInCart
@@ -568,12 +578,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     }
 
     // Find item by ID safely
-    final Items? item = menuItem.items!.firstWhere(
+    final Items item = menuItem.items!.firstWhere(
       (element) => element.id == itemId,
       orElse: () => Items(variations: []),
     );
 
-    final variations = item?.variations ?? [];
+    final variations = item.variations ?? [];
 
     if (variations.isEmpty) {
       return const SizedBox.shrink();
@@ -775,7 +785,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ),
           ],
         ),
-
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,

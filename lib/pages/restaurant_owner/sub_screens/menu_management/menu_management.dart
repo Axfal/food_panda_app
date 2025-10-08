@@ -2,7 +2,8 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:excellent_trade_app/bloc/vendor/menu_management/menu_management_bloc.dart';
 import 'package:excellent_trade_app/model/vender/menu_management/menu_category/menu_category_model.dart';
-import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart' hide Category;
+import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart'
+    hide Category;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,8 +25,9 @@ class _MenuManagementState extends State<MenuManagement> {
     super.initState();
     final bloc = context.read<MenuManagementBloc>();
     if (bloc.state.categories.isEmpty) {
+      final restaurantId = SessionController.restaurantId.toString();
       context.read<MenuManagementBloc>().add(
-        FetchCategoriesEvent(restaurantId: widget.restaurantId),
+        FetchCategoriesEvent(restaurantId: restaurantId),
       );
     }
   }
@@ -132,32 +134,35 @@ class _MenuManagementState extends State<MenuManagement> {
                             border: Border.all(color: Colors.grey.shade300),
                             image: imageFile != null
                                 ? DecorationImage(
-                              image: FileImage(imageFile!),
-                              fit: BoxFit.cover,
-                            )
+                                    image: FileImage(imageFile!),
+                                    fit: BoxFit.cover,
+                                  )
                                 : (existingPhoto != null &&
-                                existingPhoto!.isNotEmpty)
+                                      existingPhoto!.isNotEmpty)
                                 ? DecorationImage(
-                              image: NetworkImage(
-                                  existingPhoto!),
-                              fit: BoxFit.cover,
-                            )
+                                    image: NetworkImage(existingPhoto!),
+                                    fit: BoxFit.cover,
+                                  )
                                 : null,
                           ),
                           child: (imageFile == null && existingPhoto == null)
                               ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Icon(Icons.add_a_photo_outlined,
-                                  color: Colors.grey),
-                              SizedBox(height: 6),
-                              Text(
-                                "Upload Category Image",
-                                style: TextStyle(
-                                    color: Colors.black54, fontSize: 13),
-                              ),
-                            ],
-                          )
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Icon(
+                                      Icons.add_a_photo_outlined,
+                                      color: Colors.grey,
+                                    ),
+                                    SizedBox(height: 6),
+                                    Text(
+                                      "Upload Category Image",
+                                      style: TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ],
+                                )
                               : null,
                         ),
                       ),
@@ -166,7 +171,8 @@ class _MenuManagementState extends State<MenuManagement> {
                       // submit button
                       BlocBuilder<MenuManagementBloc, MenuManagementStates>(
                         builder: (context, state) {
-                          final isLoading = state.categoriesApiResponse.status ==
+                          final isLoading =
+                              state.categoriesApiResponse.status ==
                               Status.loading;
 
                           return ElevatedButton(
@@ -180,58 +186,65 @@ class _MenuManagementState extends State<MenuManagement> {
                             onPressed: isLoading
                                 ? null
                                 : () {
-                              final name = nameController.text.trim();
-                              if (name.isEmpty) return;
+                                    final restaurantId = SessionController
+                                        .restaurantId
+                                        .toString();
+                                    final name = nameController.text.trim();
+                                    if (name.isEmpty) return;
 
-                              if (category == null) {
-                                // add category
-                                if (imageFile == null) {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(const SnackBar(
-                                    content: Text(
-                                        'Please upload category image'),
-                                  ));
-                                  return;
-                                }
-                                context.read<MenuManagementBloc>().add(
-                                  AddCategoryEvent(
-                                    restaurantId: '6',
-                                    categoryName: name,
-                                    image: imageFile!,
-                                  ),
-                                );
-                              } else {
-                                // update category
-                                context.read<MenuManagementBloc>().add(
-                                  UpdateCategoryEvent(
-                                    categoryId: category.id.toString(),
-                                    restaurantId: '6',
-                                    name: name,
-                                    photo: imageFile,
-                                  ),
-                                );
-                              }
+                                    if (category == null) {
+                                      // add category
+                                      if (imageFile == null) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              'Please upload category image',
+                                            ),
+                                          ),
+                                        );
+                                        return;
+                                      }
+                                      context.read<MenuManagementBloc>().add(
+                                        AddCategoryEvent(
+                                          restaurantId: restaurantId,
+                                          categoryName: name,
+                                          image: imageFile!,
+                                        ),
+                                      );
+                                    } else {
+                                      // update category
+                                      context.read<MenuManagementBloc>().add(
+                                        UpdateCategoryEvent(
+                                          categoryId: category.id.toString(),
+                                          restaurantId: restaurantId,
+                                          name: name,
+                                          photo: imageFile,
+                                        ),
+                                      );
+                                    }
 
-                              Navigator.pop(context);
-                            },
+                                    Navigator.pop(context);
+                                  },
                             child: isLoading
                                 ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ),
+                                  )
                                 : Text(
-                              category == null
-                                  ? 'Add Category'
-                                  : 'Update Category',
-                              style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
+                                    category == null
+                                        ? 'Add Category'
+                                        : 'Update Category',
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
                           );
                         },
                       ),
@@ -331,11 +344,13 @@ class _MenuManagementState extends State<MenuManagement> {
                               onPressed: isDeleting
                                   ? null
                                   : () {
+                                      final restaurantId = SessionController
+                                          .restaurantId
+                                          .toString();
                                       context.read<MenuManagementBloc>().add(
                                         DeleteCategoryEvent(
-                                          categoryId: '18', //cat.id.toString(),
-                                          restaurantId:
-                                              '6', // widget.restaurantId,
+                                          categoryId: cat.id.toString(),
+                                          restaurantId: restaurantId,
                                         ),
                                       );
                                       Navigator.of(ctx).pop();
@@ -372,7 +387,7 @@ class _MenuManagementState extends State<MenuManagement> {
   @override
   Widget build(BuildContext context) {
     final randomHeights = [180.0, 220.0, 160.0, 200.0, 240.0];
-
+    final restaurantId = SessionController.restaurantId.toString();
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: MyAppBar(
@@ -391,7 +406,7 @@ class _MenuManagementState extends State<MenuManagement> {
         backgroundColor: AppColors.primary,
         onRefresh: () async {
           context.read<MenuManagementBloc>().add(
-            FetchCategoriesEvent(restaurantId: widget.restaurantId),
+            FetchCategoriesEvent(restaurantId: restaurantId),
           );
           await Future.delayed(const Duration(milliseconds: 300));
         },
@@ -408,6 +423,9 @@ class _MenuManagementState extends State<MenuManagement> {
                   ),
                 ],
               );
+            }
+            if(state.categories.isEmpty){
+              return Center(child: Text('No category available', style: GoogleFonts.poppins(fontSize: 18, color: Colors.black54),),);
             }
 
             if (state.categoriesApiResponse.status == Status.error) {
@@ -442,7 +460,10 @@ class _MenuManagementState extends State<MenuManagement> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const MenuItemScreen(restaurantId: 6, categoryId: 2,),
+                          builder: (context) => MenuItemScreen(
+                            restaurantId: cat.restaurantId,
+                            categoryId: cat.id,
+                          ),
                         ),
                       );
                     },

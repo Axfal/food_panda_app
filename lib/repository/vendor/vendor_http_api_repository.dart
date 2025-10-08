@@ -18,8 +18,9 @@ class VendorHttpApiRepository implements VendorApiRepository {
   }
 
   @override
-  Future<dynamic> fetchMenuCategory() async {
-    final response = await _apiServices.getApi(AppUrl.getMenuCategory);
+  Future<dynamic> fetchMenuCategory(dynamic data) async {
+    final uri = Uri.parse(AppUrl.getMenuCategory).replace(queryParameters: data);
+    final response = await _apiServices.getApi(uri.toString());
     return response;
   }
 
