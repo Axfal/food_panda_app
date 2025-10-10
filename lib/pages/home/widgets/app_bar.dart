@@ -29,10 +29,8 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if(!locationSession.hasLocation) {
-        context.read<LocationBloc>().add(
-        GetCurrentLocationEvent(),
-      );
+      if (!locationSession.hasLocation) {
+        context.read<LocationBloc>().add(GetCurrentLocationEvent());
       }
     });
 
@@ -161,15 +159,16 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
 
         BlocBuilder<CartBloc, CartState>(
           buildWhen: (previous, current) {
-            if (current is CartLoaded && previous is CartLoaded) {
-              return previous.items != current.items;
+            if (previous is CartLoaded && current is CartLoaded) {
+              return previous.items.length != current.items.length ||
+                  previous.items.hashCode != current.items.hashCode;
             }
             return true;
           },
           builder: (context, state) {
-            // Grab items safely
-            final cartItems =
-            state is CartLoaded ? state.items : <CartItemModel>[];
+            final cartItems = state is CartLoaded
+                ? state.items
+                : <CartItemModel>[];
 
             return badges.Badge(
               showBadge: cartItems.isNotEmpty,
@@ -187,11 +186,16 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
                 padding: EdgeInsets.all(6),
               ),
               child: IconButton(
-                onPressed: () {
-                  Navigator.push(
+                onPressed: () async {
+                  await Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const CartSection()),
+                    MaterialPageRoute(
+                      builder: (context) => const CartSection(),
+                    ),
                   );
+                  if (context.mounted) {
+                    context.read<CartBloc>().add(LoadCart());
+                  }
                 },
                 icon: const Icon(CupertinoIcons.shopping_cart),
                 color: Colors.white,
@@ -200,7 +204,6 @@ class _HCustomAppBarState extends State<HCustomAppBar> {
             );
           },
         ),
-
 
         const SizedBox(width: 6),
       ],

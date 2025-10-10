@@ -1,6 +1,7 @@
 import 'package:excellent_trade_app/globalWidgets/PrimeryWidgets/my_app_bar.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
 import 'package:excellent_trade_app/pages/home/sub_screeens/restaurant_by_category/widgets/restaurant_card.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../../bloc/restaurant_by_category/restaurant_by_category_bloc.dart';
 import '../../../../bloc/wish_list/wish_list_bloc.dart';
 
@@ -99,13 +100,57 @@ class _RestaurantsByCategoryState extends State<RestaurantsByCategory> {
 
               case Status.completed:
                 if (restaurants.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      "No restaurants found",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
+                  return Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey.shade100,
+                          ),
+                          child: Icon(
+                            Icons.restaurant_menu_rounded,
+                            size: 60,
+                            color: Colors.grey.shade400,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          "No Restaurants Found!",
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          "Try refreshing or exploring nearby areas.",
+                          style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton.icon(
+                          onPressed: () => _refreshData(),
+                          icon: const Icon(Icons.refresh_rounded, size: 18),
+                          label: const Text("Refresh"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 10,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 }
@@ -136,7 +181,6 @@ class _RestaurantsByCategoryState extends State<RestaurantsByCategory> {
                       ),
                     ),
 
-                    // Restaurant list
                     SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
                         final RestaurantData restaurantData =

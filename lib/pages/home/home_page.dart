@@ -102,10 +102,10 @@ class _HomePageState extends State<HomePage> {
             final locationSessionController = LocationSessionController();
             final lat =
                 locationSessionController.currentPlace?.lat.toString() ??
-                '31.15060600';
+                '0.0';
             final lng =
                 locationSessionController.currentPlace?.lng.toString() ??
-                '73.91907590';
+                '0.0';
             radius = "5";
             context.read<NearByRestaurantBloc>().add(
               FetchNearByRestaurantEvent(lat: lat, lng: lng),

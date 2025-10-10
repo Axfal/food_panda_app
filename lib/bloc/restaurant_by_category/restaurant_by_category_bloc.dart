@@ -21,7 +21,6 @@ class RestaurantByCategoryBloc
       FetchRestaurantsByCategoryEvent event,
       Emitter<RestaurantByCategoryState> emit,
       ) async {
-    // Check cache
     if (state.restaurantDataByCategory.containsKey(event.categoryId)) {
       print("Data already exists for categoryId ${event.categoryId}, skipping API call.");
       emit(
