@@ -108,7 +108,6 @@ class Restaurant with _$Restaurant {
     throw UnimplementedError();
   }
 
-
 }
 
 @freezed

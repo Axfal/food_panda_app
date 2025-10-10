@@ -470,7 +470,8 @@ class _MenuScreenState extends State<MenuScreen> {
                                                                 .restaurantData
                                                                 .restaurantId,
                                                             "category_id":
-                                                                selectedCategoryIndex,
+                                                                selectedCategory
+                                                                    .categoryId,
                                                           },
                                                         );
 

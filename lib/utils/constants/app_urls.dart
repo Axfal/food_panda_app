@@ -19,8 +19,7 @@ class AppUrl {
 
   /// Categories
   static const String getCategories = '$baseUrl/categories.php';
-  static const String getMenuCategory =
-      '$baseUrl/get_menu_categories.php';
+  static const String getMenuCategory = '$baseUrl/get_menu_categories.php';
   static const String addMenuCategory = '$baseUrl/menu_categories.php';
   static const String deleteMenuCategory =
       '$baseUrl/menu_categories_delete.php';
@@ -33,10 +32,9 @@ class AppUrl {
   static const String getRestaurant = '$baseUrl/restaurants_get.php?owner_id=';
   static const String updateRestaurant = '$baseUrl/restaurants_update.php';
   static const String restaurantByCategory =
-      '$baseUrl/restaurants_by_category.php?category_id=';
+      '$baseUrl/restaurants_by_category.php';
   static const String restaurantMenu = '$baseUrl/menu_get.php?restaurant_id=';
-  static const String newRestaurant =
-      '$baseUrl/new_restaurants_get.php?lat=31.15060600&lng=73.91907590';
+  static const String newRestaurant = '$baseUrl/new_restaurants_get.php';
   static const String nearByRestaurant = '$baseUrl/restaurants_nearby.php';
   static const String topRestaurant = '$baseUrl/get_top_restaurants.php';
   static const String getRestaurantMenuItem = '$baseUrl/get_menu_items.php';

@@ -3,6 +3,7 @@ import 'package:excellent_trade_app/Utils/constants/appWeight.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../Utils/constants/app_colors.dart';
 import '../../globalWidgets/PrimeryWidgets/customeButtons.dart';
+import '../../globalWidgets/PrimeryWidgets/my_app_bar.dart';
 import '../home/widgets/cards/large_foodCard.dart';
 
 class CampaignPage extends StatelessWidget {
@@ -23,157 +24,181 @@ class CampaignPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 250,
-              width: double.infinity,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Container(
-                    decoration: const BoxDecoration(color: Colors.white),
-                    child: Center(
-                      child: Icon(
-                        Icons.fastfood_rounded,
-                        color: Colors.black12.withValues(alpha: 0.3),
-                        size: 120,
-                      ),
-                    ),
-                  ),
-
-                  Positioned(
-                    left: 16,
-                    top: 60,
-                    child: InkWell(
-                      onTap: () => Navigator.pop(context),
-                      borderRadius: BorderRadius.circular(50),
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black26,
-                              blurRadius: 8,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: const Icon(
-                          Icons.arrow_back_ios_new,
-                          color: Colors.black,
-                          size: 18,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+      appBar: MyAppBar(
+        title: 'Home Chief',
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+        ),
+      ),
+      body: 1 == 1
+          ? Center(
+              child: Text(
+                'Coming Soon',
+                style: GoogleFonts.poppins(color: Colors.black54, fontSize: 18),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            )
+          : SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 📣 Campaign Info Card
-                  GestureDetector(
-                    onTap: () => showCampaignSheet(
-                      context,
-                      title: sheetTitle,
-                      subtitle: sheetSubtitle,
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.grey.shade200),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.08),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
+                  SizedBox(
+                    height: 250,
+                    width: double.infinity,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Container(
+                          decoration: const BoxDecoration(color: Colors.white),
+                          child: Center(
+                            child: Icon(
+                              Icons.fastfood_rounded,
+                              color: Colors.black12.withValues(alpha: 0.3),
+                              size: 120,
+                            ),
                           ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.info_outline, color: AppColors.black54),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              "Campaign Info",
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.black,
+                        ),
+
+                        Positioned(
+                          left: 16,
+                          top: 60,
+                          child: InkWell(
+                            onTap: () => Navigator.pop(context),
+                            borderRadius: BorderRadius.circular(50),
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: const Icon(
+                                Icons.arrow_back_ios_new,
+                                color: Colors.black,
+                                size: 18,
                               ),
                             ),
                           ),
-                          Text(
-                            "Read more",
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.black54,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 24,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // 📣 Campaign Info Card
+                        GestureDetector(
+                          onTap: () => showCampaignSheet(
+                            context,
+                            title: sheetTitle,
+                            subtitle: sheetSubtitle,
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 14,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: Colors.grey.shade200),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.08),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.info_outline,
+                                  color: AppColors.black54,
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    "Campaign Info",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.black,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  "Read more",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.black54,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Icon(
+                                  Icons.chevron_right,
+                                  size: 18,
+                                  color: AppColors.black54,
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(width: 4),
-                          Icon(Icons.chevron_right, size: 18, color: AppColors.black54),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // 🧭 Explore Title
-                  Text(
-                    "Explore More",
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.black,
-                    ),
-                  ),
-
-
-                  // 🍔 Food Cards
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: cardsData.length,
-                    itemBuilder: (context, index) {
-                      final card = cardsData[index];
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 16),
-                        child: LargeFoodCard(
-                          imagePath: card['imagePath'],
-                          title: card['title'],
-                          rating: card['rating'],
-                          reviewsCount: card['reviewsCount'],
-                          duration: card['duration'],
-                          priceLevel: card['priceLevel'],
-                          cuisine: card['cuisine'],
-                          deliveryFee: card['deliveryFee'],
-                          discountLabel: card['discountLabel'],
-                          isAd: card['isAd'],
                         ),
-                      );
-                    },
+
+                        const SizedBox(height: 24),
+
+                        // 🧭 Explore Title
+                        Text(
+                          "Explore More",
+                          style: GoogleFonts.poppins(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.black,
+                          ),
+                        ),
+
+                        // 🍔 Food Cards
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: cardsData.length,
+                          itemBuilder: (context, index) {
+                            final card = cardsData[index];
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 16),
+                              child: LargeFoodCard(
+                                imagePath: card['imagePath'],
+                                title: card['title'],
+                                rating: card['rating'],
+                                reviewsCount: card['reviewsCount'],
+                                duration: card['duration'],
+                                priceLevel: card['priceLevel'],
+                                cuisine: card['cuisine'],
+                                deliveryFee: card['deliveryFee'],
+                                discountLabel: card['discountLabel'],
+                                isAd: card['isAd'],
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-
-
-          ],
-        ),
-      ),
     );
   }
 }
