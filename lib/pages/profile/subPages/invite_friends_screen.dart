@@ -100,7 +100,7 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen>
           icon: Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
       ),
-      body: SafeArea(
+      body: 1 == 1? Center(child: Text("Coming Soon", style: GoogleFonts.poppins(fontSize: 22, color: Colors.black54, fontWeight: FontWeight.w600),)): SafeArea(
         minimum: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: SingleChildScrollView(
           child: Column(

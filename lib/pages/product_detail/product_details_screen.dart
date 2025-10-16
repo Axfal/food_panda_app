@@ -512,8 +512,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         TextField(
           maxLines: 3,
           cursorColor: Colors.black87,
+
           keyboardType: TextInputType.text,
-          style: GoogleFonts.poppins(fontSize: 13.sp),
+          style: GoogleFonts.poppins(fontSize: 13.sp, color: Colors.black87),
           decoration: InputDecoration(
             // labelText: 'Instruction',
             hintText: 'e.g. No mayo, extra spicy',

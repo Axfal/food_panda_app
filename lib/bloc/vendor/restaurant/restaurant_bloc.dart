@@ -20,7 +20,7 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
     on<SubmitFormEvent>(_onSubmitForm);
     on<FetchRestaurantEvent>(_onFetchRestaurants);
     on<DeleteRestaurantEvent>(_onDeleteRestaurant);
-    on<UpdateRestaurantEvent>(_onUpdateRestaurant);
+    on<UpdateRestaurantEvent>(_onUpdateRestaurantEvent);
     on<HoursChangeEvent>(_onHoursChange);
     on<PlaceIdChangeEvent>(_onPlaceIdChangeEvent);
     on<LngChangeEvent>(_onLngChangeEvent);
@@ -276,7 +276,7 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
     }
   }
 
-  void _onUpdateRestaurant(
+  Future<void> _onUpdateRestaurantEvent(
     UpdateRestaurantEvent event,
     Emitter<RestaurantStates> emit,
   ) async {
@@ -295,26 +295,10 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
 
     emit(state.copyWith(registerRestaurantApi: ApiResponse.loading()));
 
-    final updatedList = state.restaurants?.map((restaurant) {
-      if (restaurant.id == event.id) {
-        return restaurant.copyWith(
-          name: state.restaurantName,
-          description: state.description,
-          phone: state.phone,
-          // location: state.address,
-          status: restaurant.status,
-          hours: state.hours,
-          logo: state.logo.toString(),
-        );
-      }
-      return restaurant;
-    }).toList();
-
-    emit(state.copyWith(restaurants: updatedList));
-
     final userId = SessionController.user.id;
     Map<String, dynamic> data;
-    if (event.status != null && event.status != '') {
+
+    if (event.status != null && event.status!.isNotEmpty) {
       data = {
         "id": event.id,
         "owner_id": userId,
@@ -322,33 +306,68 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantStates> {
       };
     } else {
       data = {
-        "id": userId,
-        "name": state.restaurantName,
-        "description": state.description,
-        "phone": state.phone,
-        "place_id": state.placeId,
-        "lat": state.lat,
-        "lng": state.lng,
+        "id": event.id,
+        "owner_id": userId,
+        "name": state.restaurantName.isNotEmpty
+            ? state.restaurantName
+            : currentRestaurant.name,
+        "description": state.description.isNotEmpty
+            ? state.description
+            : currentRestaurant.description,
+        "phone": state.phone.isNotEmpty ? state.phone : currentRestaurant.phone,
+        "place_id": state.placeId!.isNotEmpty
+            ? state.placeId
+            : currentRestaurant.location.placeId,
+        "lat": state.lat!.isNotEmpty
+            ? state.lat
+            : currentRestaurant.location.lat,
+        "lng": state.lng!.isNotEmpty
+            ? state.lng
+            : currentRestaurant.location.lng,
         "status": currentRestaurant.status,
-        "address": state.address,
-        "logo": state.logo ?? currentRestaurant.logo,
-        "hours": state.hours,
+        "address": state.address.isNotEmpty
+            ? state.address
+            : currentRestaurant.location.address,
+        if (state.logo != null) "logo": state.logo,
+        "hours": state.hours.isNotEmpty ? state.hours : currentRestaurant.hours,
       };
     }
 
     try {
       final response = await restaurantApiRepository.updateRestaurant(data);
+
       if (response != null && response['success'] == true) {
-        print(response['message']);
+        final resData = response['data'];
+
+        final updatedList = state.restaurants!.map((restaurant) {
+          if (restaurant.id == event.id) {
+            return restaurant.copyWith(
+              name: resData['name'] ?? restaurant.name,
+              description: resData['description'] ?? restaurant.description,
+              phone: resData['phone'] ?? restaurant.phone,
+              status: resData['status'] ?? restaurant.status,
+              hours: resData['hours'] ?? restaurant.hours,
+              logo: resData['logo_url'] ?? "",
+              location: restaurant.location.copyWith(
+                placeId: resData['place_id'] ?? restaurant.location.placeId,
+                address: resData['address'] ?? restaurant.location.address,
+                lat: resData['lat'] ?? restaurant.location.lat,
+                lng: resData['lng'] ?? restaurant.location.lng,
+              ),
+            );
+          }
+          return restaurant;
+        }).toList();
+
         emit(
           state.copyWith(
+            restaurants: updatedList,
             registerRestaurantApi: ApiResponse.completed(
               response['message'] ?? 'Restaurant updated successfully',
             ),
           ),
         );
       } else {
-        print(response['error']);
         emit(
           state.copyWith(
             registerRestaurantApi: ApiResponse.error(

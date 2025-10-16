@@ -471,7 +471,6 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
                     current.weeklyIncomeModel != previous.weeklyIncomeModel ||
                     current.monthIncomeModel != previous.monthIncomeModel,
                 builder: (context, incomeState) {
-                  // get values from state; fall back to 0 if null
                   final today = incomeState.todayIncomeModel.todayIncome ?? 0;
                   final week = incomeState.weeklyIncomeModel.weekIncome ?? 0;
                   final month = incomeState.monthIncomeModel.monthIncome ?? 0;
@@ -479,34 +478,50 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
                   return Container(
                     margin: const EdgeInsets.all(16),
                     padding: const EdgeInsets.symmetric(
-                      vertical: 18,
-                      horizontal: 16,
+                      vertical: 16,
+                      horizontal: 12,
                     ),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          AppColors.primary.withValues(alpha: 0.95),
-                          AppColors.primary.withValues(alpha: 0.75),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(16),
-                      // border: Border.all(color: AppColors.primary)
-                      // boxShadow: [
-                      //   BoxShadow(
-                      //     color: AppColors.black54.withValues(alpha: 0.3),
-                      //     blurRadius: 6,
-                      //     offset: const Offset(2, 4),
-                      //   ),
-                      // ],
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.099),
+                          blurRadius: 5,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        SummaryItem(title: "Today", value: "Rs $today"),
-                        SummaryItem(title: "This Week", value: "Rs $week"),
-                        SummaryItem(title: "This Month", value: "Rs $month"),
+                        SummaryItem(
+                          title: "Today",
+                          value: "Rs $today",
+                          circleColor: Colors.white,
+                          gradientColors: [
+                            Colors.orange.shade400,
+                            Colors.deepOrange.shade600,
+                          ],
+                        ),
+                        SummaryItem(
+                          title: "This Week",
+                          value: "Rs $week",
+                          circleColor: Colors.white,
+                          gradientColors: [
+                            Colors.blue.shade400,
+                            Colors.blue.shade700,
+                          ],
+                        ),
+                        SummaryItem(
+                          title: "This Month",
+                          value: "Rs $month",
+                          circleColor: Colors.white,
+                          gradientColors: [
+                            Colors.green.shade400,
+                            Colors.green.shade700,
+                          ],
+                        ),
                       ],
                     ),
                   );
@@ -515,18 +530,18 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
 
               Expanded(
                 child: GridView.builder(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 14,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 1.09,
                   ),
                   itemCount: features.length,
                   itemBuilder: (context, index) {
                     final feature = features[index];
-                    return FeatureCard(
-                      title: feature["title"],
-                      icon: feature["icon"],
+                    return InkWell(
+                      borderRadius: BorderRadius.circular(12),
                       onTap: () {
                         if (feature.containsKey("route")) {
                           if (feature.containsKey('arg')) {
@@ -542,10 +557,47 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
                           feature["action"](context);
                         }
                       },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.099),
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              feature["icon"],
+                              size: 35,
+                              color: AppColors.primary
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              feature["title"],
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(
+                                fontSize: 12.5,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.primary,
+                                height: 1.3,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     );
                   },
                 ),
-              ),
+              )
+
             ],
           ),
         ),

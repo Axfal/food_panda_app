@@ -217,7 +217,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                     discountAmount: 150,
                                     finalAmount: subtotal,
                                     paymentMethod: "COD",
-                                    specialInstructions: "specialInstructions",
+                                    specialInstructions: "special Instructions",
                                     lat: deliveryAddress!.lat,
                                     lng: deliveryAddress!.lng,
                                     houseNo: deliveryAddress!.houseNo,

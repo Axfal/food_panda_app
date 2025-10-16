@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:excellent_trade_app/bloc/auth/auth_exports.dart';
 import 'package:excellent_trade_app/config/components/round_button_widget.dart';
 import 'package:excellent_trade_app/model/vender/restaurant/restaurant_model.dart';
@@ -62,14 +64,17 @@ class _SubmitButtonState extends State<SubmitButton> {
             final selectedCategoryId = bloc.state.selectedCategoryIds;
             print("Anfal yeh check kr $selectedCategoryId");
             final isValid = widget.formKey.currentState?.validate() ?? false;
+            final restaurantId = SessionController.restaurantId;
             if (isValid) {
               if (bloc.state.restaurants != null && bloc.state.restaurants!.isNotEmpty) {
                 setState(() => isUpdate = true);
                 context.read<RestaurantBloc>().add(
-                  UpdateRestaurantEvent(id: 6),
+                  UpdateRestaurantEvent(id: restaurantId),
                 );
+                print("updating...");
               } else {
                 setState(() => isUpdate = false);
+                print("adding....");
                 context.read<RestaurantBloc>().add(
                   SubmitFormEvent(
                     ownerId: widget.userId,
@@ -77,6 +82,8 @@ class _SubmitButtonState extends State<SubmitButton> {
                   ),
                 );
               }
+            }else{
+              print("nothing happens...");
             }
           },
         );
