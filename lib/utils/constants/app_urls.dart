@@ -78,4 +78,11 @@ class AppUrl {
   /// Product Review
   static const String getProductReview = '$baseUrl/get_product_reviews.php';
   static const String addProductReview = '$baseUrl/add_product_review.php';
+  
+  /// Banners get & post both apis
+  static const String banner = '$baseUrl/banner_api.php';
+
+  /// Chat Section (Vendor & Customer)
+  static const String chat = '$baseUrl/chat.php';
+  
 }

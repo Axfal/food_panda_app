@@ -1,9 +1,12 @@
 import 'package:excellent_trade_app/bloc/near_by_restaurant/near_by_restaurant_bloc.dart';
 import 'package:excellent_trade_app/pages/home/widgets/brand_list.dart';
 import '../../Utils/constants/appWeight.dart';
+import '../../bloc/banner/banner_bloc.dart';
 import '../../bloc/top_restaurant/top_restaurant_bloc.dart';
 import '../../bloc/wish_list/wish_list_bloc.dart';
 import 'home_exports.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -24,7 +27,7 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProfileBloc>().add(FetchProfileEvent(id: userId));
       context.read<CategoryBloc>().add(FetchCategoriesEvent());
-
+      context.read<BannerBloc>().add(FetchBannerEvent());
       context.read<WishListBloc>().add(FetchWishListEvent(userId: userId));
 
       final locationSessionController = LocationSessionController();
@@ -82,7 +85,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final userName = SessionController.user.name;
+    // final userName = SessionController.user.name;
     return Scaffold(
       backgroundColor: AppColors.lightPink,
       body: RefreshIndicator(
@@ -94,18 +97,16 @@ class _HomePageState extends State<HomePage> {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             context.read<ProfileBloc>().add(FetchProfileEvent(id: userId));
             context.read<CategoryBloc>().add(FetchCategoriesEvent());
-
+            context.read<BannerBloc>().add(FetchBannerEvent());
             context.read<WishListBloc>().add(
               FetchWishListEvent(userId: userId),
             );
 
             final locationSessionController = LocationSessionController();
             final lat =
-                locationSessionController.currentPlace?.lat.toString() ??
-                '0.0';
+                locationSessionController.currentPlace?.lat.toString() ?? '0.0';
             final lng =
-                locationSessionController.currentPlace?.lng.toString() ??
-                '0.0';
+                locationSessionController.currentPlace?.lng.toString() ?? '0.0';
             radius = "5";
             context.read<NearByRestaurantBloc>().add(
               FetchNearByRestaurantEvent(lat: lat, lng: lng),
@@ -127,101 +128,69 @@ class _HomePageState extends State<HomePage> {
           slivers: [
             /// Location Header
             SliverAppBar(
-              pinned: false,
+              pinned: true,
               floating: false,
               snap: false,
-              expandedHeight: 127.h,
+              expandedHeight: 65.h,
               toolbarHeight: 55.h,
               backgroundColor: AppColors.primary,
               elevation: 0,
               automaticallyImplyLeading: false,
               flexibleSpace: FlexibleSpaceBar(
                 collapseMode: CollapseMode.parallax,
-                background: Column(
-                  children: [
-                    HCustomAppBar(),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
-                      child: Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(8.w),
-                        margin: EdgeInsets.only(bottom: 10.h),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12.r),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.05),
-                              blurRadius: 5,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          "🍽️ Special Deal: 30% OFF on Top Restaurants!",
-                          style: GoogleFonts.poppins(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                background: HCustomAppBar(),
               ),
             ),
-            SliverAppBar(
-              pinned: true,
-              floating: false,
-              snap: false,
-              toolbarHeight: 80.h,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              automaticallyImplyLeading: false,
-              flexibleSpace: Container(
-                decoration: BoxDecoration(color: Colors.white),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(24.r),
-                      bottomRight: Radius.circular(24.r),
-                    ),
-                  ),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 12.h,
-                  ),
-                  child: SafeArea(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Hi, $userName 👋",
-                          style: GoogleFonts.poppins(
-                            fontSize: 24.sp,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
-                        ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          "Don’t wait, just mate with food – FoodMate!",
-                          style: GoogleFonts.poppins(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white.withValues(alpha: 0.9),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
+            // SliverAppBar(
+            //   pinned: true,
+            //   floating: false,
+            //   snap: false,
+            //   toolbarHeight: 80.h,
+            //   backgroundColor: Colors.transparent,
+            //   elevation: 0,
+            //   automaticallyImplyLeading: false,
+            //   flexibleSpace: Container(
+            //     decoration: BoxDecoration(color: Colors.white),
+            //     child: Container(
+            //       decoration: BoxDecoration(
+            //         color: AppColors.primary,
+            //         borderRadius: BorderRadius.only(
+            //           bottomLeft: Radius.circular(24.r),
+            //           bottomRight: Radius.circular(24.r),
+            //         ),
+            //       ),
+            //       padding: EdgeInsets.symmetric(
+            //         horizontal: 16.w,
+            //         vertical: 12.h,
+            //       ),
+            //       child: SafeArea(
+            //         child: Column(
+            //           crossAxisAlignment: CrossAxisAlignment.start,
+            //           mainAxisAlignment: MainAxisAlignment.center,
+            //           children: [
+            //             Text(
+            //               "Hi, $userName 👋",
+            //               style: GoogleFonts.poppins(
+            //                 fontSize: 24.sp,
+            //                 fontWeight: FontWeight.w700,
+            //                 color: Colors.white,
+            //               ),
+            //             ),
+            //             SizedBox(height: 4.h),
+            //             Text(
+            //               "Don’t wait, just mate with food – FoodMate!",
+            //               style: GoogleFonts.poppins(
+            //                 fontSize: 14.sp,
+            //                 fontWeight: FontWeight.w500,
+            //                 color: Colors.white.withValues(alpha: 0.9),
+            //               ),
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             /// Search Bar
             // SliverAppBar(
             //   pinned: true,
@@ -313,11 +282,238 @@ class _HomePageState extends State<HomePage> {
             //   ),
             // ),
 
+            /// Enhanced White Background Banner Section
+            SliverToBoxAdapter(
+              child: Container(
+                width: double.infinity,
+                color: Colors.white,
+                padding: EdgeInsets.symmetric(vertical: 14.h),
+                child: BlocBuilder<BannerBloc, BannerState>(
+                  builder: (context, state) {
+                    if (state.apiResponse.status == Status.loading) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        child: Shimmer.fromColors(
+                          baseColor: Colors.grey.shade300,
+                          highlightColor: Colors.grey.shade100,
+                          child: Container(
+                            height: 160.h,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(20.r),
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
+                    if (state.apiResponse.status == Status.error) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 10.h,
+                        ),
+                        child: Container(
+                          height: 160.h,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(18.r),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.08),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Text(
+                            'Failed to load banners',
+                            style: GoogleFonts.poppins(
+                              color: Colors.redAccent,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
+                    final banners = state.bannerModel.banners ?? [];
+                    if (banners.isEmpty) return const SizedBox.shrink();
+
+                    final pageController = PageController(
+                      viewportFraction: 0.88,
+                    );
+                    final ValueNotifier<int> currentPage = ValueNotifier(0);
+
+                    Future.microtask(() async {
+                      while (true) {
+                        await Future.delayed(const Duration(seconds: 4));
+                        if (pageController.hasClients && banners.isNotEmpty) {
+                          int nextPage =
+                              (currentPage.value + 1) % banners.length;
+                          pageController.animateToPage(
+                            nextPage,
+                            duration: const Duration(milliseconds: 700),
+                            curve: Curves.easeInOut,
+                          );
+                          currentPage.value = nextPage;
+                        }
+                      }
+                    });
+
+                    return Column(
+                      children: [
+                        SizedBox(
+                          height: 200.h,
+                          child: PageView.builder(
+                            controller: pageController,
+                            itemCount: banners.length,
+                            onPageChanged: (index) => currentPage.value = index,
+                            itemBuilder: (context, index) {
+                              final banner = banners[index];
+                              return AnimatedBuilder(
+                                animation: pageController,
+                                builder: (context, child) {
+                                  double scale = 1.0;
+                                  if (pageController.position.haveDimensions) {
+                                    scale = (pageController.page! - index)
+                                        .abs()
+                                        .clamp(0, 1);
+                                    scale = 1 - (scale * 0.1);
+                                  }
+                                  return Transform.scale(
+                                    scale: scale,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 0.w,
+                                        vertical: 6.h,
+                                      ),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(
+                                            20.r,
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withValues(
+                                                alpha: 0.08,
+                                              ),
+                                              blurRadius: 10,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
+                                        ),
+                                        clipBehavior: Clip.hardEdge,
+                                        child: Stack(
+                                          fit: StackFit.expand,
+                                          children: [
+                                            Image.network(
+                                              banner.imageUrl ?? '',
+                                              fit: BoxFit.cover,
+                                              errorBuilder:
+                                                  (
+                                                    context,
+                                                    error,
+                                                    stackTrace,
+                                                  ) => Container(
+                                                    color: Colors.grey.shade200,
+                                                    alignment: Alignment.center,
+                                                    child: const Icon(
+                                                      Icons
+                                                          .broken_image_rounded,
+                                                      color: Colors.grey,
+                                                      size: 50,
+                                                    ),
+                                                  ),
+                                            ),
+
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  begin: Alignment.bottomCenter,
+                                                  end: Alignment.topCenter,
+                                                  colors: [
+                                                    Colors.black.withValues(
+                                                      alpha: 0.55,
+                                                    ),
+                                                    Colors.transparent,
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+
+                                            if (banner.title != null &&
+                                                banner.title!.isNotEmpty)
+                                              Positioned(
+                                                left: 14.w,
+                                                bottom: 14.h,
+                                                right: 14.w,
+                                                child: Text(
+                                                  banner.title!,
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: GoogleFonts.poppins(
+                                                    color: Colors.white,
+                                                    fontSize: 17.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    shadows: const [
+                                                      Shadow(
+                                                        offset: Offset(0, 1),
+                                                        blurRadius: 2,
+                                                        color: Colors.black45,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ),
+
+                        ValueListenableBuilder<int>(
+                          valueListenable: currentPage,
+                          builder: (context, value, _) {
+                            return Padding(
+                              padding: EdgeInsets.only(top: 8.h),
+                              child: SmoothPageIndicator(
+                                controller: pageController,
+                                count: banners.length,
+                                effect: ExpandingDotsEffect(
+                                  dotHeight: 7.h,
+                                  dotWidth: 7.h,
+                                  activeDotColor: AppColors.primary,
+                                  dotColor: Colors.grey.shade400,
+                                  expansionFactor: 5,
+                                  spacing: 5.w,
+                                  radius: 10,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ),
+
             /// 🏷 Content Section
             SliverToBoxAdapter(
               child: Container(
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 8.w),
+                padding: EdgeInsets.symmetric(vertical: 20.h),
                 decoration: const BoxDecoration(
                   color: AppColors.white,
                   // borderRadius: BorderRadius.only(
