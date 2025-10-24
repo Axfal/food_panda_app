@@ -8,12 +8,11 @@ class ConversationModel extends Equatable {
 
   factory ConversationModel.fromJson(Map<String, dynamic> json) {
     return ConversationModel(
-      success: json['success'],
-      conversations: json['conversations'] != null
-          ? (json['conversations'] as List)
-                .map((v) => Conversations.fromJson(v))
-                .toList()
-          : [],
+      success: json['success'] as bool?,
+      conversations: (json['conversations'] as List<dynamic>?)
+          ?.map((v) => Conversations.fromJson(v))
+          .toList() ??
+          [],
     );
   }
 
@@ -32,6 +31,10 @@ class Conversations extends Equatable {
   final int? customerId;
   final String? lastMessageAt;
   final String? lastMessage;
+  final String? restaurantName;
+  final String? restaurantLogo;
+  final String? customerName;
+  final String? customerRole;
 
   const Conversations({
     this.id,
@@ -39,15 +42,23 @@ class Conversations extends Equatable {
     this.customerId,
     this.lastMessageAt,
     this.lastMessage,
+    this.restaurantName,
+    this.restaurantLogo,
+    this.customerName,
+    this.customerRole,
   });
 
   factory Conversations.fromJson(Map<String, dynamic> json) {
     return Conversations(
-      id: json['id'],
-      restaurantId: json['restaurant_id'],
-      customerId: json['customer_id'],
-      lastMessageAt: json['last_message_at'],
-      lastMessage: json['last_message'],
+      id: json['id'] as int?,
+      restaurantId: json['restaurant_id'] as int?,
+      customerId: json['customer_id'] as int?,
+      lastMessageAt: json['last_message_at'] as String?,
+      lastMessage: json['last_message'] as String?,
+      restaurantName: json['restaurant_name'] as String?,
+      restaurantLogo: json['restaurant_logo'] as String?,
+      customerName: json['customer_name'] as String?,
+      customerRole: json['customer_role'] as String?,
     );
   }
 
@@ -57,6 +68,10 @@ class Conversations extends Equatable {
     'customer_id': customerId,
     'last_message_at': lastMessageAt,
     'last_message': lastMessage,
+    'restaurant_name': restaurantName,
+    'restaurant_logo': restaurantLogo,
+    'customer_name': customerName,
+    'customer_role': customerRole,
   };
 
   @override
@@ -66,5 +81,9 @@ class Conversations extends Equatable {
     customerId,
     lastMessageAt,
     lastMessage,
+    restaurantName,
+    restaurantLogo,
+    customerName,
+    customerRole,
   ];
 }

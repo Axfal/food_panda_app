@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'package:excellent_trade_app/bloc/account/profile/profile_bloc.dart';
 import 'package:excellent_trade_app/bloc/banner/banner_bloc.dart';
+import 'package:excellent_trade_app/bloc/chat/chat_bloc.dart';
 import 'package:excellent_trade_app/bloc/income/income_bloc.dart';
 import 'package:excellent_trade_app/bloc/location/location_bloc.dart';
 import 'package:excellent_trade_app/bloc/near_by_restaurant/near_by_restaurant_bloc.dart';
@@ -185,7 +186,13 @@ class MyApp extends StatelessWidget {
                         webSocketService: getIt<WebSocketService>(),
                       ),
                     ),
-                    BlocProvider<BannerBloc>(create: (context) => BannerBloc(bannerApiRepository: getIt()))
+                    BlocProvider<BannerBloc>(
+                      create: (context) =>
+                          BannerBloc(bannerApiRepository: getIt()),
+                    ),
+                    BlocProvider<ChatBloc>(
+                      create: (context) => ChatBloc(chatApiRepository: getIt()),
+                    ),
                   ],
                   child: MaterialApp(
                     debugShowCheckedModeBanner: false,

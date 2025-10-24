@@ -9,7 +9,7 @@ class ChatHttpApiRepository extends ChatApiRepository {
   final BaseApiServices _apiServices = NetworkApiService();
 
   @override
-  Future conservation(data) async {
+  Future getConservation(dynamic data) async {
     try {
       final uri = Uri.parse(AppUrl.chat).replace(queryParameters: data);
       final response = await _apiServices.getApi(uri.toString());
@@ -22,6 +22,18 @@ class ChatHttpApiRepository extends ChatApiRepository {
 
   @override
   Future message(data) async {
+    try {
+      final uri = Uri.parse(AppUrl.chat).replace(queryParameters: data);
+      final response = await _apiServices.getApi(uri.toString());
+      return response;
+    } catch (e) {
+      print('error: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future getMessage(data) async {
     try {
       final uri = Uri.parse(AppUrl.chat).replace(queryParameters: data);
       final response = await _apiServices.getApi(uri.toString());

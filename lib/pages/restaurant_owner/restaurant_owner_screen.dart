@@ -3,6 +3,7 @@ import 'package:excellent_trade_app/bloc/income/income_bloc.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/featured_card.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/logout_dialog_box.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/widgets/summary_itme.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import '../../bloc/account/profile/profile_bloc.dart';
 import '../../bloc/order/order_bloc.dart';
 import '../../bloc/vendor/restaurant/restaurant_bloc.dart';
@@ -411,8 +412,17 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
       child: Scaffold(
         backgroundColor: Colors.grey[50],
         appBar: MyAppBar(
-          title: 'Vendor Dashboard',
+          title: 'Dashboard',
           actions: [
+            IconButton(
+              onPressed: () =>
+                  Navigator.pushNamed(context, RoutesName.conversationScreen),
+              icon: const Icon(
+                size: 25,
+                LucideIcons.messageCircle,
+                color: Colors.white,
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(right: 12),
               child: BlocBuilder<OrderBloc, OrderState>(
@@ -450,7 +460,7 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
                       ),
                       child: const Icon(
                         Icons.notifications_rounded,
-                        size: 30,
+                        size: 25,
                         color: Colors.white,
                       ),
                     ),
@@ -530,7 +540,10 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
 
               Expanded(
                 child: GridView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 8,
+                  ),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 10,
@@ -569,15 +582,21 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
                             ),
                           ],
                         ),
-                        margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 4,
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 12,
+                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
                               feature["icon"],
                               size: 35,
-                              color: AppColors.primary
+                              color: AppColors.primary,
                             ),
                             const SizedBox(height: 8),
                             Text(
@@ -596,8 +615,7 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
                     );
                   },
                 ),
-              )
-
+              ),
             ],
           ),
         ),

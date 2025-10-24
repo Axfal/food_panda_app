@@ -1,5 +1,7 @@
 import 'package:excellent_trade_app/repository/banner/banner_api_repository.dart';
 import 'package:excellent_trade_app/repository/banner/banner_http_api_reposiory.dart';
+import 'package:excellent_trade_app/repository/chat/chat_api_repository.dart';
+import 'package:excellent_trade_app/repository/chat/chat_http_api_repository.dart';
 import 'package:excellent_trade_app/repository/income/income_api_repository.dart';
 import 'package:excellent_trade_app/repository/income/income_http_api_repository.dart';
 import 'package:excellent_trade_app/repository/location/location_api_response.dart';
@@ -69,6 +71,9 @@ class ServiceLocator {
     );
     getIt.registerLazySingleton<BannerApiRepository>(
       () => BannerHttpApiRepository(),
+    );
+    getIt.registerLazySingleton<ChatApiRepository>(
+      () => ChatHttpApiRepository(),
     );
   }
 }

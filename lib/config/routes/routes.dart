@@ -1,9 +1,12 @@
 import 'package:excellent_trade_app/pages/checkout/widgets/google_map.dart';
 import 'package:excellent_trade_app/pages/home/home_exports.dart';
 import 'package:excellent_trade_app/pages/order_now.dart';
+import 'package:excellent_trade_app/pages/profile/subPages/chat/conversation_screen.dart';
+import 'package:excellent_trade_app/pages/profile/subPages/chat/message_screen.dart';
 import 'package:excellent_trade_app/pages/profile/subPages/order_history_screen.dart';
 import 'package:excellent_trade_app/pages/restaurant_owner/sub_screens/order_notifications_screen/order_notification_screen.dart';
 import 'package:excellent_trade_app/pages/restuarant_item_screen.dart';
+import '../../model/chat/conversation_model.dart';
 import '../../pages/auth/forgot_password/forget_password_export.dart';
 import 'package:excellent_trade_app/model/restaurant_menu/restaurant_menu_model.dart'
     as menu_model;
@@ -231,6 +234,29 @@ class Routes {
 
       case RoutesName.orderHistoryScreen:
         return MaterialPageRoute(builder: (context) => OrderHistoryScreen());
+
+      case RoutesName.conversationScreen:
+        return MaterialPageRoute(builder: (context) => ConversationScreen());
+
+      case RoutesName.messageScreen:
+        final args = settings.arguments;
+        if (args is Map<String, dynamic> &&
+            args['conversation'] is Conversations) {
+          final Conversations conversation = args['conversation'];
+          return MaterialPageRoute(
+            builder: (context) => MessageScreen(conversations: conversation),
+          );
+        }
+        return MaterialPageRoute(
+          builder: (context) => Scaffold(
+            body: Center(
+              child: Text(
+                'Default Screen',
+                style: GoogleFonts.poppins(fontSize: 18, color: Colors.black54),
+              ),
+            ),
+          ),
+        );
 
       default:
         return MaterialPageRoute(

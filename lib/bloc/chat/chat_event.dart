@@ -14,6 +14,16 @@ class GetConversationEvent extends ChatEvent {
   List<Object> get props => [action, userType];
 }
 
+class GetMessageEvent extends ChatEvent {
+  final String action;
+  final String conversationId;
+  const GetMessageEvent({required this.action, required this.conversationId});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [action, conversationId];
+}
+
 class MessageEvent extends ChatEvent {
   final String? customerId;
   final String? restaurantId;

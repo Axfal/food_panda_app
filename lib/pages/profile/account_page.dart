@@ -131,12 +131,9 @@ class _AccountPageState extends State<AccountPage> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: buildIconCard(
-                      icon: LucideIcons.mapPin,
-                      label: 'Addresses',
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => AddressesPage()),
-                      ),
+                      icon: LucideIcons.messageCircle,
+                      label: 'Chat',
+                      onTap: () => Navigator.pushNamed(context, RoutesName.conversationScreen)
                     ),
                   ),
                 ],

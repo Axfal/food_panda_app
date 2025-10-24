@@ -65,4 +65,7 @@ class RoutesName {
 
   static const String orderHistoryScreen = 'order_history_screen';
 
+  static const String conversationScreen = 'conversation_screen';
+
+  static const String messageScreen = 'message_screen';
 }
