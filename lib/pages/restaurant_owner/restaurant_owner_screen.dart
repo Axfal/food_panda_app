@@ -75,10 +75,14 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
     );
 
     features = [
-      {"title": "Profile", "icon": Icons.person, "route": RoutesName.profile},
+      {
+        "title": "Profile",
+        "icon": LucideIcons.user,
+        "route": RoutesName.profile,
+      },
       {
         "title": "My Restaurants",
-        "icon": Icons.store,
+        "icon": LucideIcons.store,
         "route": RoutesName.registerRestaurant,
         'arg': {'user_id': userId, "restaurant": restaurant},
       },
@@ -92,13 +96,13 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
         "title": "Menu",
 
         /// menu management
-        "icon": Icons.fastfood,
+        "icon": LucideIcons.utensilsCrossed,
         "route": RoutesName.menuManagement,
         'arg': {'restaurant_id': "5"},
       },
       {
         "title": "Orders",
-        "icon": Icons.shopping_bag,
+        "icon": LucideIcons.shoppingBag,
         "route": RoutesName.orderScreen,
       },
       // {
@@ -108,12 +112,12 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
       // },
       {
         "title": "Performance",
-        "icon": Icons.bar_chart,
+        "icon": LucideIcons.pieChart,
         "route": RoutesName.performanceScreen,
       },
       {
         "title": "Logout",
-        "icon": Icons.logout,
+        "icon": LucideIcons.logOut,
         "action": (context) => showLogoutDialog(context),
       },
     ];
@@ -414,17 +418,9 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
         appBar: MyAppBar(
           title: 'Dashboard',
           actions: [
-            IconButton(
-              onPressed: () =>
-                  Navigator.pushNamed(context, RoutesName.conversationScreen),
-              icon: const Icon(
-                size: 25,
-                LucideIcons.messageCircle,
-                color: Colors.white,
-              ),
-            ),
+
             Padding(
-              padding: const EdgeInsets.only(right: 12),
+              padding: const EdgeInsets.only(right: 4),
               child: BlocBuilder<OrderBloc, OrderState>(
                 builder: (context, state) {
                   return InkWell(
@@ -468,6 +464,16 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
                 },
               ),
             ),
+            IconButton(
+              onPressed: () =>
+                  Navigator.pushNamed(context, RoutesName.conversationScreen),
+              icon: const Icon(
+                size: 25,
+                LucideIcons.messageCircle,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(width: 4,)
           ],
         ),
 
@@ -572,41 +578,55 @@ class _RestaurantOwnerScreenState extends State<RestaurantOwnerScreen> {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
+                          gradient: LinearGradient(
+                            colors: [Colors.white, Colors.grey.shade50],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.099),
-                              blurRadius: 5,
-                              offset: const Offset(0, 3),
+                              color: Colors.black.withValues(alpha: 0.08),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
                             ),
                           ],
                         ),
                         margin: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                          vertical: 4,
+                          horizontal: 6,
+                          vertical: 6,
                         ),
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 12,
+                          horizontal: 12,
+                          vertical: 16,
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
-                              feature["icon"],
-                              size: 35,
-                              color: AppColors.primary,
+                            Container(
+                              height: 42,
+                              width: 42,
+                              decoration: BoxDecoration(
+                                color: AppColors.primary.withValues(
+                                  alpha: 0.08,
+                                ),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                feature["icon"],
+                                size: 22,
+                                color: AppColors.primary,
+                              ),
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: 10),
                             Text(
                               feature["title"],
                               textAlign: TextAlign.center,
                               style: GoogleFonts.poppins(
-                                fontSize: 12.5,
+                                fontSize: 13,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.primary,
-                                height: 1.3,
+                                height: 1.4,
                               ),
                             ),
                           ],

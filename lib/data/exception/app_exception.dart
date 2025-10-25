@@ -5,7 +5,7 @@ class AppException implements Exception {
 
   /// Constructor for creating an [AppException] instance.
   ///
-  /// The [message] parameter represents the message associated with the exception,
+  /// The [sendMessage] parameter represents the message associated with the exception,
   /// and the [prefix] parameter represents the prefix for the exception.
   AppException([this._message, this._prefix]);
 

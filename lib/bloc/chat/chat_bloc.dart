@@ -14,7 +14,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   ChatBloc({required this.chatApiRepository}) : super(const ChatState()) {
     on<GetConversationEvent>(_onGetConversation);
-    on<MessageEvent>(_onMessageEvent);
+    on<SendMessageEvent>(_onSendMessageEvent);
     on<GetMessageEvent>(_onGetMessageEvent);
   }
 
@@ -78,7 +78,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       final Map<String, dynamic> data = {
         "action": event.action,
         "user_type": event.userType,
-        "user_id": "8", //userId,
+        "user_id": userId,
       };
 
       final response = await chatApiRepository.getConservation(data);
@@ -118,32 +118,97 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 
-  Future<void> _onMessageEvent(
-    MessageEvent event,
+  Future<void> _onSendMessageEvent(
+    SendMessageEvent event,
     Emitter<ChatState> emit,
   ) async {
-    Map<String, dynamic> data = {
-      if (event.customerId != null) "customer_id": event.customerId,
-      if (event.restaurantId != null) "restaurant_id": event.restaurantId,
-      if (event.senderType != null) "sender_type": event.senderType,
-      if (event.senderId != null) "sender_id": event.senderId,
-      if (event.message != null) "message": event.message,
-    };
-    final response = await chatApiRepository.message(data);
-    if (response == null) return print("No response from server");
-    if (response['success'] == true && response['message_id'] != null) {
-      // on successful response add message to conversation and message state
-    } else {
+    try {
+      emit(state.copyWith(apiResponse: ApiResponse.loading()));
+
+      Map<String, dynamic> data = {
+        "customer_id": event.customerId.toString(),
+        "restaurant_id": event.restaurantId.toString(),
+        "sender_type": event.senderType,
+        "sender_id": event.senderId.toString(),
+        "message": event.message,
+      };
+
+      final response = await chatApiRepository.sendMessage(data);
+
+      if (response == null) {
+        emit(
+          state.copyWith(
+            apiResponse: ApiResponse.error("No response from server"),
+          ),
+        );
+        print("No response from server");
+        return;
+      }
+
+      if (response['success'] == true && response['message_id'] != null) {
+        final newMessage = Messages(
+          id: response['message_id'],
+          senderType: event.senderType,
+          senderId: event.senderId,
+          messageText: event.message,
+          createdAt: DateTime.now().toIso8601String(),
+          senderName: response['sender_name'] ?? 'You',
+          restaurantLogo: response['restaurant_logo'],
+        );
+
+        final updatedMessages = List<Messages>.from(state.messageModel.messages)
+          ..add(newMessage);
+
+        final updatedMessageModel = state.messageModel.copyWith(
+          messages: updatedMessages,
+        );
+
+        final updatedConversations = List<Conversations>.from(
+          state.conversationModel.conversations ?? [],
+        );
+
+        final conversationIndex = updatedConversations.indexWhere(
+          (c) => c.id == response['conversation_id'],
+        );
+
+        if (conversationIndex != -1) {
+          final oldConversation = updatedConversations[conversationIndex];
+          updatedConversations[conversationIndex] = oldConversation.copyWith(
+            lastMessage: event.message,
+            lastMessageAt: DateTime.now().toIso8601String(),
+          );
+        }
+
+        final updatedConversationModel = state.conversationModel.copyWith(
+          conversations: updatedConversations,
+        );
+
+        emit(
+          state.copyWith(
+            apiResponse: ApiResponse.completed("Message sent successfully"),
+            messageModel: updatedMessageModel,
+            conversationModel: updatedConversationModel,
+          ),
+        );
+
+        print("Message sent & state updated successfully");
+      } else {
+        emit(
+          state.copyWith(
+            apiResponse: ApiResponse.error(
+              response['error'] ?? 'Error while sending message',
+            ),
+          ),
+        );
+        print("Error: ${response['error']}");
+      }
+    } catch (e) {
       emit(
         state.copyWith(
-          apiResponse: ApiResponse.error(
-            response['error'] ?? 'error while fetching data from server',
-          ),
+          apiResponse: ApiResponse.error("Exception: ${e.toString()}"),
         ),
       );
-      print(
-        "error: ${response['error'] ?? 'error while fetching data from server'}",
-      );
+      print("Exception while sending message: $e");
     }
   }
 }

@@ -1,7 +1,13 @@
+import 'package:excel/excel.dart';
 import 'package:excellent_trade_app/pages/auth/forgot_password/forget_password_export.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../bloc/performance/performance_bloc.dart';
 import '../../restaurant_owner_exports.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 class PerformanceScreen extends StatefulWidget {
   const PerformanceScreen({super.key});
@@ -49,11 +55,11 @@ class _PerformanceScreenState extends State<PerformanceScreen>
   }
 
   Widget buildMetricCard(
-      String title,
-      String value,
-      Color color,
-      IconData icon,
-      ) {
+    String title,
+    String value,
+    Color color,
+    IconData icon,
+  ) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -91,11 +97,136 @@ class _PerformanceScreenState extends State<PerformanceScreen>
     );
   }
 
+  Future<void> _exportToExcel(context) async {
+    final blocState = context.read<PerformanceBloc>().state;
+
+    final excel = Excel.createExcel();
+
+    List<CellValue> row(List<dynamic> values) =>
+        values.map((v) => TextCellValue(v.toString())).toList();
+
+    final weeklySheet = excel['Weekly Performance'];
+    weeklySheet.appendRow(row(['Day', 'Income', 'Total Orders', 'Avg Order']));
+    final weeklyBreakdown =
+        blocState.weeklyPerformance.weeklyPerformance?.breakdown ?? [];
+    for (var data in weeklyBreakdown) {
+      weeklySheet.appendRow(
+        row([
+          data.day ?? '',
+          data.income ?? '0',
+          data.totalOrders?.toString() ?? '0',
+          data.avgOrder ?? '0',
+        ]),
+      );
+    }
+    weeklySheet.appendRow([]);
+    weeklySheet.appendRow(
+      row([
+        'Total Income',
+        blocState.weeklyPerformance.weeklyPerformance?.totals?.totalIncome ??
+            '0',
+        'Total Orders',
+        blocState.weeklyPerformance.weeklyPerformance?.totals?.totalOrders ??
+            '0',
+      ]),
+    );
+
+    final monthlySheet = excel['Monthly Performance'];
+    monthlySheet.appendRow(row(['Day', 'Income', 'Total Orders', 'Avg Order']));
+    final monthlyBreakdown =
+        blocState.monthlyPerformance.monthlyPerformance?.breakdown ?? [];
+    for (var data in monthlyBreakdown) {
+      monthlySheet.appendRow(
+        row([
+          data.day ?? '',
+          data.income ?? '0',
+          data.totalOrders?.toString() ?? '0',
+          data.avgOrder ?? '0',
+        ]),
+      );
+    }
+    monthlySheet.appendRow([]);
+    monthlySheet.appendRow(
+      row([
+        'Total Income',
+        blocState.monthlyPerformance.monthlyPerformance?.totals?.totalIncome ??
+            '0',
+        'Total Orders',
+        blocState.monthlyPerformance.monthlyPerformance?.totals?.totalOrders ??
+            '0',
+      ]),
+    );
+
+    final yearlySheet = excel['Yearly Performance'];
+    yearlySheet.appendRow(
+      row(['Month', 'Income', 'Total Orders', 'Avg Order']),
+    );
+    final yearlyBreakdown =
+        blocState.yearlyPerformance.yearlyPerformance?.breakdown ?? [];
+    for (var data in yearlyBreakdown) {
+      yearlySheet.appendRow(
+        row([
+          data.month ?? '',
+          data.income ?? '0',
+          data.totalOrders?.toString() ?? '0',
+          data.avgOrder ?? '0',
+        ]),
+      );
+    }
+    yearlySheet.appendRow([]);
+    yearlySheet.appendRow(
+      row([
+        'Total Income',
+        blocState.yearlyPerformance.yearlyPerformance?.totals?.totalIncome ??
+            '0',
+        'Total Orders',
+        blocState.yearlyPerformance.yearlyPerformance?.totals?.totalOrders ??
+            '0',
+      ]),
+    );
+
+    final bytes = excel.encode();
+    if (bytes == null) return;
+
+    Directory? dir;
+    try {
+      dir = Directory('/storage/emulated/0/Download');
+      if (!await dir.exists()) {
+        dir = await getExternalStorageDirectory();
+      }
+    } catch (e) {
+      dir = await getApplicationDocumentsDirectory();
+    }
+
+    final filePath =
+        '${dir!.path}/Vendor_Performance_${DateTime.now().millisecondsSinceEpoch}.xlsx';
+    final file = File(filePath)
+      ..createSync(recursive: true)
+      ..writeAsBytesSync(bytes);
+
+    if (!kIsWeb) {
+      try {
+        await OpenFilex.open(file.path);
+      } catch (e) {
+        debugPrint('Error opening file: $e');
+      }
+    }
+
+    context.flushBarSuccessMessage(
+      message: 'Excel file saved to: ${file.path}',
+    );
+  }
+
   Widget buildPerformanceChart(List<double> data, String title) {
     if (data.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.all(20),
-        child: Center(child: Text("No data available")),
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 210),
+        child: Center(
+          child: Text(
+            "No data available",
+            style: GoogleFonts.poppins(color: Colors.black54, fontSize: 18),
+          ),
+        ),
       );
     }
 
@@ -201,7 +332,7 @@ class _PerformanceScreenState extends State<PerformanceScreen>
                     ),
                     spots: List.generate(
                       data.length,
-                          (index) => FlSpot(index.toDouble(), data[index]),
+                      (index) => FlSpot(index.toDouble(), data[index]),
                     ),
                   ),
                 ],
@@ -231,13 +362,13 @@ class _PerformanceScreenState extends State<PerformanceScreen>
   }
 
   Widget buildTabContent(
-      ApiResponse<String> apiResponse,
-      List<double> data,
-      String title,
-      String totalIncome,
-      String totalOrders,
-      String avgOrder,
-      ) {
+    ApiResponse<String> apiResponse,
+    List<double> data,
+    String title,
+    String totalIncome,
+    String totalOrders,
+    String avgOrder,
+  ) {
     if (apiResponse.status == Status.loading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -289,6 +420,12 @@ class _PerformanceScreenState extends State<PerformanceScreen>
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(LucideIcons.fileSpreadsheet, color: Colors.white),
+            onPressed: () => _exportToExcel(context),
+          ),
+        ],
         bottom: TabBar(
           controller: _tabController,
           labelStyle: GoogleFonts.poppins(
@@ -307,16 +444,17 @@ class _PerformanceScreenState extends State<PerformanceScreen>
       ),
       body: BlocBuilder<PerformanceBloc, PerformanceState>(
         builder: (context, state) {
-          final weeklyData = state.weeklyPerformance.weeklyPerformance?.breakdown
-              ?.map((e) => double.tryParse(e.income ?? "0") ?? 0.0)
-              .toList() ??
+          final weeklyData =
+              state.weeklyPerformance.weeklyPerformance?.breakdown
+                  ?.map((e) => double.tryParse(e.income ?? "0") ?? 0.0)
+                  .toList() ??
               [];
 
           final monthlyData =
               state.monthlyPerformance.monthlyPerformance?.breakdown
                   ?.map((e) => double.tryParse(e.income ?? "0") ?? 0.0)
                   .toList() ??
-                  [];
+              [];
 
           final yearlyBreakdown =
               state.yearlyPerformance.yearlyPerformance?.breakdown ?? [];
@@ -337,10 +475,14 @@ class _PerformanceScreenState extends State<PerformanceScreen>
                 state.apiResponse,
                 weeklyData,
                 "Weekly",
-                state.weeklyPerformance.weeklyPerformance?.totals?.totalIncome ??
+                state
+                        .weeklyPerformance
+                        .weeklyPerformance
+                        ?.totals
+                        ?.totalIncome ??
                     "0",
                 state.weeklyPerformance.weeklyPerformance?.totals?.totalOrders
-                    ?.toString() ??
+                        ?.toString() ??
                     "0",
                 state.weeklyPerformance.weeklyPerformance?.totals?.avgOrder ??
                     "0",
@@ -349,11 +491,14 @@ class _PerformanceScreenState extends State<PerformanceScreen>
                 state.apiResponse,
                 monthlyData,
                 "Monthly",
-                state.monthlyPerformance.monthlyPerformance?.totals
-                    ?.totalIncome ??
+                state
+                        .monthlyPerformance
+                        .monthlyPerformance
+                        ?.totals
+                        ?.totalIncome ??
                     "0",
                 state.monthlyPerformance.monthlyPerformance?.totals?.totalOrders
-                    ?.toString() ??
+                        ?.toString() ??
                     "0",
                 state.monthlyPerformance.monthlyPerformance?.totals?.avgOrder ??
                     "0",
@@ -362,10 +507,14 @@ class _PerformanceScreenState extends State<PerformanceScreen>
                 state.apiResponse,
                 yearlyData,
                 "Yearly",
-                state.yearlyPerformance.yearlyPerformance?.totals?.totalIncome ??
+                state
+                        .yearlyPerformance
+                        .yearlyPerformance
+                        ?.totals
+                        ?.totalIncome ??
                     "0",
                 state.yearlyPerformance.yearlyPerformance?.totals?.totalOrders
-                    ?.toString() ??
+                        ?.toString() ??
                     "0",
                 state.yearlyPerformance.yearlyPerformance?.totals?.avgOrder ??
                     "0",

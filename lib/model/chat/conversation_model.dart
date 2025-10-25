@@ -1,25 +1,41 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'package:equatable/equatable.dart';
 
 class ConversationModel extends Equatable {
-  final bool? success;
-  final List<Conversations>? conversations;
+  final bool success;
+  final List<Conversations> conversations;
 
-  const ConversationModel({this.success, this.conversations});
+  const ConversationModel({
+    this.success = false,
+    this.conversations = const [],
+  });
 
   factory ConversationModel.fromJson(Map<String, dynamic> json) {
     return ConversationModel(
-      success: json['success'] as bool?,
+      success: json['success'] ?? false,
       conversations: (json['conversations'] as List<dynamic>?)
-          ?.map((v) => Conversations.fromJson(v))
+          ?.map((e) => Conversations.fromJson(e))
           .toList() ??
-          [],
+          const [],
     );
   }
 
   Map<String, dynamic> toJson() => {
     'success': success,
-    'conversations': conversations?.map((v) => v.toJson()).toList(),
+    'conversations': conversations.map((e) => e.toJson()).toList(),
   };
+
+  /// ✅ Added copyWith method
+  ConversationModel copyWith({
+    bool? success,
+    List<Conversations>? conversations,
+  }) {
+    return ConversationModel(
+      success: success ?? this.success,
+      conversations: conversations ?? this.conversations,
+    );
+  }
 
   @override
   List<Object?> get props => [success, conversations];
@@ -50,15 +66,15 @@ class Conversations extends Equatable {
 
   factory Conversations.fromJson(Map<String, dynamic> json) {
     return Conversations(
-      id: json['id'] as int?,
-      restaurantId: json['restaurant_id'] as int?,
-      customerId: json['customer_id'] as int?,
-      lastMessageAt: json['last_message_at'] as String?,
-      lastMessage: json['last_message'] as String?,
-      restaurantName: json['restaurant_name'] as String?,
-      restaurantLogo: json['restaurant_logo'] as String?,
-      customerName: json['customer_name'] as String?,
-      customerRole: json['customer_role'] as String?,
+      id: json['id'],
+      restaurantId: json['restaurant_id'],
+      customerId: json['customer_id'],
+      lastMessageAt: json['last_message_at'],
+      lastMessage: json['last_message'],
+      restaurantName: json['restaurant_name'],
+      restaurantLogo: json['restaurant_logo'],
+      customerName: json['customer_name'],
+      customerRole: json['customer_role'],
     );
   }
 
@@ -73,6 +89,31 @@ class Conversations extends Equatable {
     'customer_name': customerName,
     'customer_role': customerRole,
   };
+
+  /// ✅ Added copyWith method
+  Conversations copyWith({
+    int? id,
+    int? restaurantId,
+    int? customerId,
+    String? lastMessageAt,
+    String? lastMessage,
+    String? restaurantName,
+    String? restaurantLogo,
+    String? customerName,
+    String? customerRole,
+  }) {
+    return Conversations(
+      id: id ?? this.id,
+      restaurantId: restaurantId ?? this.restaurantId,
+      customerId: customerId ?? this.customerId,
+      lastMessageAt: lastMessageAt ?? this.lastMessageAt,
+      lastMessage: lastMessage ?? this.lastMessage,
+      restaurantName: restaurantName ?? this.restaurantName,
+      restaurantLogo: restaurantLogo ?? this.restaurantLogo,
+      customerName: customerName ?? this.customerName,
+      customerRole: customerRole ?? this.customerRole,
+    );
+  }
 
   @override
   List<Object?> get props => [

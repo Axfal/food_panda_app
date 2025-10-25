@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:excellent_trade_app/Utils/constants/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../bloc/restaurant_menu/restaurant_menu_bloc.dart';
 import '../bloc/cart/cart_bloc.dart';
 import '../bloc/wish_list/wish_list_bloc.dart';
@@ -139,7 +140,13 @@ class _MenuScreenState extends State<MenuScreen> {
                     );
                   },
                 ),
-                _buildActionButton(Icons.share_outlined, () {}),
+                _buildActionButton(LucideIcons.messageSquare, () {
+                  Navigator.pushNamed(
+                    context,
+                    RoutesName.messageScreen,
+                    arguments: {"restaurant_data": widget.restaurantData},
+                  );
+                }),
               ],
               flexibleSpace: FlexibleSpaceBar(
                 background: CachedNetworkImage(

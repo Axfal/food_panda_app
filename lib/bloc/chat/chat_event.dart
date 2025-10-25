@@ -24,19 +24,19 @@ class GetMessageEvent extends ChatEvent {
   List<Object?> get props => [action, conversationId];
 }
 
-class MessageEvent extends ChatEvent {
-  final String? customerId;
-  final String? restaurantId;
-  final String? senderType;
-  final String? senderId;
-  final String? message;
+class SendMessageEvent extends ChatEvent {
+  final int? customerId;
+  final int? restaurantId;
+  final String senderType;
+  final int? senderId;
+  final String message;
 
-  const MessageEvent({
-    this.restaurantId,
-    this.customerId,
-    this.senderType,
-    this.senderId,
-    this.message,
+  const SendMessageEvent({
+    required this.restaurantId,
+    required this.customerId,
+    required this.senderType,
+    required this.senderId,
+    required this.message,
   });
 
   @override

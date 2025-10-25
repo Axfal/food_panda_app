@@ -27,7 +27,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
         ? 'customer'
         : 'restaurant';
     final bloc = context.read<ChatBloc>();
-    if (bloc.state.conversationModel.conversations == null) {
+    if (bloc.state.conversationModel.conversations.isEmpty) {
       bloc.add(
         GetConversationEvent(action: 'get_conversations', userType: userType),
       );
@@ -72,7 +72,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
               );
             }
 
-            final conversations = state.conversationModel.conversations ?? [];
+            final conversations = state.conversationModel.conversations;
 
             if (conversations.isEmpty) {
               return _buildEmptyState();
@@ -113,7 +113,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
     }
 
     final imageUrl = '${AppUrl.baseUrl}/${conversation.restaurantLogo}';
-
     return InkWell(
       onTap: () {
         print("Open chat with ${conversation.id}");
@@ -130,10 +129,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
             CircleAvatar(
               radius: 26,
               backgroundColor: AppColors.primary.withValues(alpha: 0.2),
-              backgroundImage: (imageUrl != null && imageUrl.isNotEmpty)
+              backgroundImage: (imageUrl.isNotEmpty)
                   ? NetworkImage(imageUrl)
                   : null,
-              child: (imageUrl == null || imageUrl.isEmpty)
+              child: (imageUrl.isEmpty)
                   ? const Icon(Icons.person, color: Colors.white, size: 28)
                   : null,
             ),
@@ -174,27 +173,27 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     color: Colors.grey.shade600,
                   ),
                 ),
-                const SizedBox(height: 6),
-                if (conversation.lastMessage != null &&
-                    conversation.lastMessage!.isNotEmpty)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      "1",
-                      style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
+                // const SizedBox(height: 6),
+                // if (conversation.lastMessage != null &&
+                //     conversation.lastMessage!.isNotEmpty)
+                //   Container(
+                //     padding: const EdgeInsets.symmetric(
+                //       horizontal: 6,
+                //       vertical: 2,
+                //     ),
+                //     decoration: BoxDecoration(
+                //       color: AppColors.primary,
+                //       borderRadius: BorderRadius.circular(12),
+                //     ),
+                //     child: Text(
+                //       "1",
+                //       style: GoogleFonts.poppins(
+                //         color: Colors.white,
+                //         fontSize: 11,
+                //         fontWeight: FontWeight.w600,
+                //       ),
+                //     ),
+                //   ),
               ],
             ),
           ],

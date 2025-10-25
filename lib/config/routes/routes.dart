@@ -240,15 +240,24 @@ class Routes {
 
       case RoutesName.messageScreen:
         final args = settings.arguments;
-        if (args is Map<String, dynamic> &&
-            args['conversation'] is Conversations) {
+
+        if (args is Map<String, dynamic> && args['conversation'] is Conversations) {
           final Conversations conversation = args['conversation'];
           return MaterialPageRoute(
             builder: (context) => MessageScreen(conversations: conversation),
           );
         }
+
+        if (args is Map<String, dynamic> && args['restaurant_data'] is RestaurantData) {
+          final RestaurantData restaurantData = args['restaurant_data'];
+          return MaterialPageRoute(
+            builder: (context) => MessageScreen(restaurantData: restaurantData),
+          );
+        }
+
         return MaterialPageRoute(
           builder: (context) => Scaffold(
+            backgroundColor: Colors.white,
             body: Center(
               child: Text(
                 'Default Screen',
@@ -257,6 +266,7 @@ class Routes {
             ),
           ),
         );
+
 
       default:
         return MaterialPageRoute(

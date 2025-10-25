@@ -21,10 +21,9 @@ class ChatHttpApiRepository extends ChatApiRepository {
   }
 
   @override
-  Future message(data) async {
+  Future sendMessage(dynamic data) async {
     try {
-      final uri = Uri.parse(AppUrl.chat).replace(queryParameters: data);
-      final response = await _apiServices.getApi(uri.toString());
+      final response = await _apiServices.postApi("${AppUrl.chat}?action=send_message", data);
       return response;
     } catch (e) {
       print('error: $e');

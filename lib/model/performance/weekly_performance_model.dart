@@ -2,17 +2,15 @@ class WeeklyPerformanceModel {
   final bool? success;
   final WeeklyPerformanceData? weeklyPerformance;
 
-  const WeeklyPerformanceModel({
-    this.success,
-    this.weeklyPerformance,
-  });
+  const WeeklyPerformanceModel({this.success, this.weeklyPerformance});
 
   factory WeeklyPerformanceModel.fromJson(Map<String, dynamic> json) {
     return WeeklyPerformanceModel(
       success: json['success'] as bool?,
       weeklyPerformance: json['weekly_performance'] != null
           ? WeeklyPerformanceData.fromJson(
-          json['weekly_performance'] as Map<String, dynamic>)
+              json['weekly_performance'] as Map<String, dynamic>,
+            )
           : null,
     );
   }
@@ -27,10 +25,7 @@ class WeeklyPerformanceData {
   final List<WeeklyBreakdown>? breakdown;
   final WeeklyTotals? totals;
 
-  const WeeklyPerformanceData({
-    this.breakdown,
-    this.totals,
-  });
+  const WeeklyPerformanceData({this.breakdown, this.totals});
 
   factory WeeklyPerformanceData.fromJson(Map<String, dynamic> json) {
     return WeeklyPerformanceData(
@@ -84,11 +79,7 @@ class WeeklyTotals {
   final int? totalOrders;
   final String? avgOrder;
 
-  const WeeklyTotals({
-    this.totalIncome,
-    this.totalOrders,
-    this.avgOrder,
-  });
+  const WeeklyTotals({this.totalIncome, this.totalOrders, this.avgOrder});
 
   factory WeeklyTotals.fromJson(Map<String, dynamic> json) {
     return WeeklyTotals(

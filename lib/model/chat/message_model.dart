@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+/// ✅ Message Model - represents the API response for messages
 class MessageModel extends Equatable {
   final bool success;
   final List<Messages> messages;
@@ -12,7 +13,7 @@ class MessageModel extends Equatable {
   factory MessageModel.fromJson(Map<String, dynamic> json) {
     return MessageModel(
       success: json['success'] ?? false,
-      messages: (json['messages'] as List<dynamic>?)
+      messages: (json['messages'] as List?)
           ?.map((e) => Messages.fromJson(e as Map<String, dynamic>))
           .toList() ??
           const [],
@@ -24,10 +25,22 @@ class MessageModel extends Equatable {
     'messages': messages.map((v) => v.toJson()).toList(),
   };
 
+  /// Copy with new data (optional but very useful for BLoC updates)
+  MessageModel copyWith({
+    bool? success,
+    List<Messages>? messages,
+  }) {
+    return MessageModel(
+      success: success ?? this.success,
+      messages: messages ?? this.messages,
+    );
+  }
+
   @override
   List<Object?> get props => [success, messages];
 }
 
+/// ✅ Messages Model - represents a single chat message
 class Messages extends Equatable {
   final int? id;
   final String? senderType;
@@ -69,7 +82,35 @@ class Messages extends Equatable {
     'restaurant_logo': restaurantLogo,
   };
 
+  /// Copy with new data (useful when updating message state)
+  Messages copyWith({
+    int? id,
+    String? senderType,
+    int? senderId,
+    String? messageText,
+    String? createdAt,
+    String? senderName,
+    String? restaurantLogo,
+  }) {
+    return Messages(
+      id: id ?? this.id,
+      senderType: senderType ?? this.senderType,
+      senderId: senderId ?? this.senderId,
+      messageText: messageText ?? this.messageText,
+      createdAt: createdAt ?? this.createdAt,
+      senderName: senderName ?? this.senderName,
+      restaurantLogo: restaurantLogo ?? this.restaurantLogo,
+    );
+  }
+
   @override
-  List<Object?> get props =>
-      [id, senderType, senderId, messageText, createdAt, senderName, restaurantLogo];
+  List<Object?> get props => [
+    id,
+    senderType,
+    senderId,
+    messageText,
+    createdAt,
+    senderName,
+    restaurantLogo,
+  ];
 }

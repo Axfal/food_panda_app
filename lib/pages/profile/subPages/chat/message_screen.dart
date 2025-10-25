@@ -8,8 +8,9 @@ import 'package:intl/intl.dart';
 import '../../../../bloc/chat/chat_bloc.dart';
 
 class MessageScreen extends StatefulWidget {
-  final Conversations conversations;
-  const MessageScreen({super.key, required this.conversations});
+  final Conversations? conversations;
+  final RestaurantData? restaurantData;
+  const MessageScreen({super.key, this.conversations, this.restaurantData});
 
   @override
   State<MessageScreen> createState() => _MessageScreenState();
@@ -25,125 +26,144 @@ class _MessageScreenState extends State<MessageScreen> {
   }
 
   void _fetchMessages() {
-    context.read<ChatBloc>().add(
-      GetMessageEvent(
-        action: 'get_messages',
-        conversationId: widget.conversations.id.toString(),
-      ),
-    );
+    if (widget.conversations != null) {
+      context.read<ChatBloc>().add(
+        GetMessageEvent(
+          action: 'get_messages',
+          conversationId: widget.conversations!.id.toString(),
+        ),
+      );
+    }
+  }
+
+  String _getChatName() {
+    final testRestaurantId = SessionController.restaurantId;
+    return (testRestaurantId != 0)
+        ? widget.conversations?.customerName ??
+              widget.restaurantData?.restaurantName ??
+              'Unknown'
+        : widget.conversations?.restaurantName ??
+              widget.restaurantData?.restaurantName ??
+              'Unknown';
   }
 
   @override
   Widget build(BuildContext context) {
-    final restaurantId = SessionController.restaurantId;
-    final name = (restaurantId != 0)
-        ? widget.conversations.customerName ?? 'Unknown'
-        : widget.conversations.restaurantName ?? 'Unknown';
+    final chatName = _getChatName();
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: MyAppBar(
-        title: name,
+        title: chatName,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
       ),
-      body: BlocBuilder<ChatBloc, ChatState>(
+      body: BlocConsumer<ChatBloc, ChatState>(
+        listener: (context, state) {
+          if (state.apiResponse.status == Status.error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.apiResponse.message ?? 'Error')),
+            );
+          }
+        },
+        buildWhen: (cur, pre) =>
+            cur.messageModel.messages != pre.messageModel.messages,
         builder: (context, state) {
-          if (state.apiResponse.status == Status.loading) {
+          if (state.apiResponse.status == Status.loading &&
+              (state.messageModel.messages.isEmpty)) {
             return _buildShimmer();
           }
 
-          if (state.apiResponse.status == Status.error) {
-            return Center(
-              child: Text(
-                "Error: ${state.apiResponse.message}",
-                style: const TextStyle(color: Colors.red, fontSize: 14),
-              ),
-            );
-          }
-
           final messages = state.messageModel.messages;
-          if (messages.isEmpty) {
-            return const Center(
-              child: Text("No messages yet.", style: TextStyle(fontSize: 15)),
-            );
-          }
-
           return Column(
             children: [
               Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(12),
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    final msg = messages[index];
-                    final isMe =
-                        (restaurantId == 0 && msg.senderType == "customer") ||
-                        (restaurantId != 0 && msg.senderType == "restaurant");
-
-                    String formattedTime = '';
-                    try {
-                      final dateTime = DateTime.parse(msg.createdAt ?? '');
-                      formattedTime = DateFormat('hh:mm a').format(dateTime);
-                    } catch (e) {
-                      formattedTime = '';
-                    }
-
-                    return Align(
-                      alignment: isMe
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 4),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 10,
+                child: messages.isEmpty
+                    ? const Center(
+                        child: Text(
+                          "Start the conversation",
+                          style: TextStyle(fontSize: 18),
                         ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: const Radius.circular(16),
-                            topRight: const Radius.circular(16),
-                            bottomLeft: Radius.circular(isMe ? 16 : 0),
-                            bottomRight: Radius.circular(isMe ? 0 : 16),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade300,
-                              blurRadius: 3,
-                              offset: const Offset(1, 2),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: isMe
-                              ? CrossAxisAlignment.end
-                              : CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              msg.messageText ?? '',
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                color: Colors.black87,
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.all(12),
+                        itemCount: messages.length,
+                        itemBuilder: (context, index) {
+                          final msg = messages[index];
+                          final testRestaurantId =
+                              SessionController.restaurantId;
+
+                          final isMe =
+                              (testRestaurantId == 0 &&
+                                  msg.senderType == "customer") ||
+                              (testRestaurantId != 0 &&
+                                  msg.senderType == "restaurant");
+
+                          String formattedTime = '';
+                          try {
+                            final dateTime = DateTime.parse(
+                              msg.createdAt ?? '',
+                            );
+                            formattedTime = DateFormat(
+                              'hh:mm a',
+                            ).format(dateTime);
+                          } catch (_) {}
+
+                          return Align(
+                            alignment: isMe
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: const Radius.circular(16),
+                                  topRight: const Radius.circular(16),
+                                  bottomLeft: Radius.circular(isMe ? 16 : 0),
+                                  bottomRight: Radius.circular(isMe ? 0 : 16),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.shade300,
+                                    blurRadius: 3,
+                                    offset: const Offset(1, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: isMe
+                                    ? CrossAxisAlignment.end
+                                    : CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    msg.messageText ?? '',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    formattedTime,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 11,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              formattedTime,
-                              style: GoogleFonts.poppins(
-                                fontSize: 11,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               ),
 
               SafeArea(
@@ -233,7 +253,42 @@ class _MessageScreenState extends State<MessageScreen> {
     final text = _messageController.text.trim();
     if (text.isEmpty) return;
 
-    // TODO: send message via Bloc or API
+    final testRestaurantId = SessionController.restaurantId;
+    final userSession = SessionController.user;
+
+    if (widget.conversations != null) {
+      final restaurantId = widget.conversations?.restaurantId;
+      final customerId = widget.conversations?.customerId;
+      final senderType = testRestaurantId == 0 ? "customer" : "restaurant";
+      final senderId = testRestaurantId == 0
+          ? userSession.id
+          : userSession.restaurantId;
+
+      context.read<ChatBloc>().add(
+        SendMessageEvent(
+          restaurantId: restaurantId,
+          customerId: customerId,
+          senderType: senderType,
+          senderId: senderId,
+          message: text,
+        ),
+      );
+    } else if (widget.restaurantData != null) {
+      final restaurantId = widget.restaurantData?.restaurantId;
+      final customerId = userSession.id;
+      final senderId = userSession.id;
+      final senderType = "customer";
+      context.read<ChatBloc>().add(
+        SendMessageEvent(
+          restaurantId: restaurantId,
+          customerId: customerId,
+          senderType: senderType,
+          senderId: senderId,
+          message: text,
+        ),
+      );
+    }
+
     _messageController.clear();
   }
 }
