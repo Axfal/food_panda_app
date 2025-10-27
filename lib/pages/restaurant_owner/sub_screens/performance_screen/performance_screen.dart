@@ -97,7 +97,7 @@ class _PerformanceScreenState extends State<PerformanceScreen>
     );
   }
 
-  Future<void> _exportToExcel(context) async {
+  Future<void> _exportToExcel(BuildContext context) async {
     final blocState = context.read<PerformanceBloc>().state;
 
     final excel = Excel.createExcel();
@@ -199,7 +199,7 @@ class _PerformanceScreenState extends State<PerformanceScreen>
     }
 
     final filePath =
-        '${dir!.path}/Vendor_Performance_${DateTime.now().millisecondsSinceEpoch}.xlsx';
+        '${dir!.path}/Restaurant_Performance_${DateTime.now().millisecondsSinceEpoch}.xlsx';
     final file = File(filePath)
       ..createSync(recursive: true)
       ..writeAsBytesSync(bytes);
